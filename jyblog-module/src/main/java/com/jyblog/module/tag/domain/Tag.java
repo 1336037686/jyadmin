@@ -1,4 +1,4 @@
-package com.jyblog.system.datadict.domain;
+package com.jyblog.module.tag.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 
@@ -6,16 +6,15 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import lombok.Data;
 
 /**
- * 数据字典表
- * @TableName sys_data_dict
+ * 博客标签表
+ * @TableName tb_tag
  */
-@TableName(value ="sys_data_dict")
+@TableName(value ="tb_tag")
 @Data
-public class SysDataDict implements Serializable {
+public class Tag implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -27,46 +26,22 @@ public class SysDataDict implements Serializable {
     private String id;
 
     /**
-     * 字典类型
-     */
-    @TableField(value = "dict_type")
-    private String dictType;
-
-    /**
-     * 字典名称
+     * 标签名称
      */
     @TableField(value = "name")
     private String name;
 
     /**
-     * 字典编码
+     * 标签编码
      */
     @TableField(value = "code")
     private String code;
 
     /**
-     * 字典值
+     * 简介
      */
-    @TableField(value = "value")
-    private String value;
-
-    /**
-     * 排序
-     */
-    @TableField(value = "sort")
-    private Integer sort;
-
-    /**
-     * 父类别ID
-     */
-    @TableField(value = "parent_id")
-    private String parentId;
-
-    /**
-     * 是否根结点
-     */
-    @TableField(value = "is_root")
-    private Integer isRoot;
+    @TableField(value = "intro")
+    private String intro;
 
     /**
      * 创建人
@@ -115,15 +90,11 @@ public class SysDataDict implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        SysDataDict other = (SysDataDict) that;
+        Tag other = (Tag) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getDictType() == null ? other.getDictType() == null : this.getDictType().equals(other.getDictType()))
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
-            && (this.getValue() == null ? other.getValue() == null : this.getValue().equals(other.getValue()))
-            && (this.getSort() == null ? other.getSort() == null : this.getSort().equals(other.getSort()))
-            && (this.getParentId() == null ? other.getParentId() == null : this.getParentId().equals(other.getParentId()))
-            && (this.getIsRoot() == null ? other.getIsRoot() == null : this.getIsRoot().equals(other.getIsRoot()))
+            && (this.getIntro() == null ? other.getIntro() == null : this.getIntro().equals(other.getIntro()))
             && (this.getCreateBy() == null ? other.getCreateBy() == null : this.getCreateBy().equals(other.getCreateBy()))
             && (this.getUpdateBy() == null ? other.getUpdateBy() == null : this.getUpdateBy().equals(other.getUpdateBy()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
@@ -136,13 +107,9 @@ public class SysDataDict implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getDictType() == null) ? 0 : getDictType().hashCode());
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getCode() == null) ? 0 : getCode().hashCode());
-        result = prime * result + ((getValue() == null) ? 0 : getValue().hashCode());
-        result = prime * result + ((getSort() == null) ? 0 : getSort().hashCode());
-        result = prime * result + ((getParentId() == null) ? 0 : getParentId().hashCode());
-        result = prime * result + ((getIsRoot() == null) ? 0 : getIsRoot().hashCode());
+        result = prime * result + ((getIntro() == null) ? 0 : getIntro().hashCode());
         result = prime * result + ((getCreateBy() == null) ? 0 : getCreateBy().hashCode());
         result = prime * result + ((getUpdateBy() == null) ? 0 : getUpdateBy().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
@@ -158,17 +125,13 @@ public class SysDataDict implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", dictType=").append(dictType);
         sb.append(", name=").append(name);
         sb.append(", code=").append(code);
-        sb.append(", value=").append(value);
-        sb.append(", sort=").append(sort);
-        sb.append(", parentId=").append(parentId);
-        sb.append(", isRoot=").append(isRoot);
-        sb.append(", createBy=").append(createBy);
-        sb.append(", updateBy=").append(updateBy);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
+        sb.append(", intro=").append(intro);
+        sb.append(", create_by=").append(createBy);
+        sb.append(", update_by=").append(updateBy);
+        sb.append(", create_time=").append(createTime);
+        sb.append(", update_time=").append(updateTime);
         sb.append(", deleted=").append(deleted);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

@@ -1,5 +1,6 @@
 package com.jyblog.domain;
 
+import com.jyblog.consts.JyBusinessStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,24 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class PageResult<T> {
+
+    /**
+     * 状态码
+     */
+    @ApiModelProperty(value = "状态码", name = "code")
+    private Integer code;
+
+    /**
+     * 执行状态
+     */
+    @ApiModelProperty(value = "执行状态", name = "success")
+    private Boolean success;
+
+    /**
+     * 响应消息
+     */
+    @ApiModelProperty(value = "响应消息", name = "msg")
+    private String msg;
 
     /**
      * 当前页页码
@@ -64,4 +83,14 @@ public class PageResult<T> {
     @ApiModelProperty(value = "是否存在下一页", name = "hasNext")
     private Boolean hasNext;
 
+    public PageResult<T> setStatus(JyBusinessStatus status) {
+        this.code = status.getValue();
+        this.msg = status.getReasonPhrase();
+        return this;
+    }
+
+    public PageResult<T> setSuccess(Boolean success) {
+        this.success = success;
+        return this;
+    }
 }

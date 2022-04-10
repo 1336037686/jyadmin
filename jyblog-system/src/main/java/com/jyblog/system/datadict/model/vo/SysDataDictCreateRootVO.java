@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull;
  * Create by 2022-04-07 22:06 <br>
  * @description: SysDataDictVO <br>
  */
-@ApiModel("数据字典-根节点-数据模型")
+@ApiModel("数据字典-创建-根节点-数据模型")
 @Data
-public class SysDataDictRootVO {
+public class SysDataDictCreateRootVO {
 
     /**
      * 字典类型

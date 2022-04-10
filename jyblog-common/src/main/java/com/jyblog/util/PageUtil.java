@@ -2,6 +2,7 @@ package com.jyblog.util;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyblog.consts.JyBusinessStatus;
 import com.jyblog.domain.PageResult;
 
 /**
@@ -20,6 +21,8 @@ public class PageUtil {
      */
     public static <T> PageResult<T> toPageResult (Page<T> page) {
         return new PageResult<T>()
+        .setStatus(JyBusinessStatus.SUCCESS)
+        .setSuccess(true)
         .setPageNumber(page.getCurrent())
         .setPageSize(page.getSize())
         .setPages(page.getPages())

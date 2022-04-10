@@ -1,8 +1,13 @@
 package com.jyblog.system.datadict.service;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.jyblog.system.datadict.domain.SysDataDict;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jyblog.system.datadict.model.dto.SysDataDictQueryDTO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,5 +17,9 @@ import java.util.List;
 */
 public interface SysDataDictService extends IService<SysDataDict> {
 
+    boolean removeByIds(Collection<?> list);
 
+    List<SysDataDict> getChildById(String id);
+
+    Page<SysDataDict> getPage(SysDataDictQueryDTO copyProperties);
 }
