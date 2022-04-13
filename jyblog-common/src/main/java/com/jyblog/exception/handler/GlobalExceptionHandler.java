@@ -1,18 +1,16 @@
 package com.jyblog.exception.handler;
 
-import com.jyblog.consts.JyBusinessStatus;
+import com.jyblog.consts.JyResultStatus;
 import com.jyblog.domain.Result;
 import com.jyblog.exception.JyBusinessException;
 import com.jyblog.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +35,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        return Result.fail(JyBusinessStatus.FAIL, e.getMessage());
+        return Result.fail(JyResultStatus.FAIL, e.getMessage());
     }
 
     /**
@@ -50,7 +48,7 @@ public class GlobalExceptionHandler {
         log.error(ThrowableUtil.getStackTrace(e));
         List<FieldError> fieldErrors = ((MethodArgumentNotValidException) e).getBindingResult().getFieldErrors();
         List<String> msgList = fieldErrors.stream().map(FieldError :: getDefaultMessage).collect(Collectors.toList());
-        return Result.fail(JyBusinessStatus.FAIL, String.join(",", msgList));
+        return Result.fail(JyResultStatus.FAIL, String.join(",", msgList));
     }
 
     /**

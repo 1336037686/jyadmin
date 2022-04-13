@@ -1,6 +1,6 @@
 package com.jyblog.exception;
 
-import com.jyblog.consts.JyBusinessStatus;
+import com.jyblog.consts.JyResultStatus;
 import lombok.Data;
 
 /**
@@ -34,18 +34,18 @@ public class JyBusinessException extends RuntimeException {
         this.msg = msg;
     }
 
-    public JyBusinessException(JyBusinessStatus status) {
+    public JyBusinessException(JyResultStatus status) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
     }
 
-    public JyBusinessException(String message, JyBusinessStatus status) {
+    public JyBusinessException(String message, JyResultStatus status) {
         super(message);
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
     }
 
-    public JyBusinessException(Throwable cause, JyBusinessStatus status) {
+    public JyBusinessException(Throwable cause, JyResultStatus status) {
         super(status.getReasonPhrase(), cause);
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();

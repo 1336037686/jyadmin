@@ -15,6 +15,10 @@ import lombok.Data;
 @TableName(value ="tb_blog")
 @Data
 public class Blog implements Serializable {
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+
     /**
      * ID
      */
@@ -117,6 +121,4 @@ public class Blog implements Serializable {
     @TableLogic
     private Integer deleted;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

@@ -1,11 +1,9 @@
 package com.jyblog.domain;
 
-import com.jyblog.consts.JyBusinessStatus;
+import com.jyblog.consts.JyResultStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -17,7 +15,7 @@ import java.io.Serializable;
  * Create by 2022-04-05 16:09 <br>
  * @description: Result <br>
  */
-@ApiModel(description = "统一返回值")
+@ApiModel("统一返回值")
 @Data
 @Accessors(chain = true)
 public class Result<T> implements Serializable {
@@ -51,14 +49,14 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
-    public Result(JyBusinessStatus status, Boolean success, T data) {
+    public Result(JyResultStatus status, Boolean success, T data) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
         this.success = success;
         this.data = data;
     }
 
-    public Result(JyBusinessStatus status, String msg, Boolean success, T data) {
+    public Result(JyResultStatus status, String msg, Boolean success, T data) {
         this.code = status.getValue();
         this.msg = msg;
         this.success = success;
@@ -66,11 +64,11 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> ok() {
-        return new Result<>(JyBusinessStatus.SUCCESS, true, null);
+        return new Result<>(JyResultStatus.SUCCESS, true, null);
     }
 
     public static <T> Result<T> ok(T data) {
-        return new Result<>(JyBusinessStatus.SUCCESS, true, data);
+        return new Result<>(JyResultStatus.SUCCESS, true, data);
     }
 
     public static <T> Result<T> ok(Integer code, String msg) {
@@ -81,28 +79,28 @@ public class Result<T> implements Serializable {
         return new Result<>(code, true, msg, data);
     }
 
-    public static <T> Result<T> ok(JyBusinessStatus status) {
+    public static <T> Result<T> ok(JyResultStatus status) {
         return new Result<>(status, true, null);
     }
 
-    public static <T> Result<T> ok(JyBusinessStatus status, String msg) {
+    public static <T> Result<T> ok(JyResultStatus status, String msg) {
         return new Result<>(status, msg, true, null);
     }
 
-    public static <T> Result<T> ok(JyBusinessStatus status, T data) {
+    public static <T> Result<T> ok(JyResultStatus status, T data) {
         return new Result<>(status, true, data);
     }
 
-    public static <T> Result<T> ok(JyBusinessStatus status, String msg, T data) {
+    public static <T> Result<T> ok(JyResultStatus status, String msg, T data) {
         return new Result<>(status, msg, true, data);
     }
 
     public static <T> Result<T> fail() {
-        return new Result<>(JyBusinessStatus.FAIL, false, null);
+        return new Result<>(JyResultStatus.FAIL, false, null);
     }
 
     public static <T> Result<T> fail(T data) {
-        return new Result<>(JyBusinessStatus.FAIL, false, data);
+        return new Result<>(JyResultStatus.FAIL, false, data);
     }
 
     public static <T> Result<T> fail(Integer code, String msg) {
@@ -113,19 +111,19 @@ public class Result<T> implements Serializable {
         return new Result<>(code, false, msg, data);
     }
 
-    public static <T> Result<T> fail(JyBusinessStatus status) {
+    public static <T> Result<T> fail(JyResultStatus status) {
         return new Result<T>(status, false, null);
     }
 
-    public static <T> Result<T> fail(JyBusinessStatus status, String msg) {
+    public static <T> Result<T> fail(JyResultStatus status, String msg) {
         return new Result<T>(status, msg, false, null);
     }
 
-    public static <T> Result<T> fail(JyBusinessStatus status, T data) {
+    public static <T> Result<T> fail(JyResultStatus status, T data) {
         return new Result<>(status, false, data);
     }
 
-    public static <T> Result<T> fail(JyBusinessStatus status, String msg, T data) {
+    public static <T> Result<T> fail(JyResultStatus status, String msg, T data) {
         return new Result<>(status, msg, false, data);
     }
 
@@ -141,31 +139,31 @@ public class Result<T> implements Serializable {
         return new Result<>(code, success, msg, data);
     }
 
-    public static <T> Result<T> build(JyBusinessStatus status) {
+    public static <T> Result<T> build(JyResultStatus status) {
         return new Result<>(status, null, null);
     }
 
-    public static <T> Result<T> build(JyBusinessStatus status, String msg) {
+    public static <T> Result<T> build(JyResultStatus status, String msg) {
         return new Result<>(status, msg, null, null);
     }
 
-    public static <T> Result<T> build(JyBusinessStatus status, Boolean success, T data) {
+    public static <T> Result<T> build(JyResultStatus status, Boolean success, T data) {
         return new Result<>(status, success, data);
     }
 
-    public static <T> Result<T> build(JyBusinessStatus status, String msg, Boolean success, T data) {
+    public static <T> Result<T> build(JyResultStatus status, String msg, Boolean success, T data) {
         return new Result<>(status, msg, success, data);
     }
 
-    public static <T> Result<T> build(JyBusinessStatus status, Boolean success) {
+    public static <T> Result<T> build(JyResultStatus status, Boolean success) {
         return new Result<>(status, success, null);
     }
 
-    public static <T> Result<T> build(JyBusinessStatus status, String msg, Boolean success) {
+    public static <T> Result<T> build(JyResultStatus status, String msg, Boolean success) {
         return new Result<>(status, msg, success, null);
     }
 
-    public Result<T> status(JyBusinessStatus status) {
+    public Result<T> status(JyResultStatus status) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
         return this;

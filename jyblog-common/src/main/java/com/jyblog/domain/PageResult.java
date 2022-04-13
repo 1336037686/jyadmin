@@ -1,11 +1,9 @@
 package com.jyblog.domain;
 
-import com.jyblog.consts.JyBusinessStatus;
+import com.jyblog.consts.JyResultStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -16,10 +14,8 @@ import java.util.List;
  * Create by 2022-04-05 16:10 <br>
  * @description: PageResult <br>
  */
-@ApiModel(description = "统一分页返回值")
+@ApiModel("统一分页返回值")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Accessors(chain = true)
 public class PageResult<T> {
 
@@ -83,7 +79,7 @@ public class PageResult<T> {
     @ApiModelProperty(value = "是否存在下一页", name = "hasNext")
     private Boolean hasNext;
 
-    public PageResult<T> setStatus(JyBusinessStatus status) {
+    public PageResult<T> setStatus(JyResultStatus status) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
         return this;

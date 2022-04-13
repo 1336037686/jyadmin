@@ -47,6 +47,12 @@
             <artifactId>p6spy</artifactId>
         </dependency>
 
+        <!--安全-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
         <!--接口文档-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
@@ -67,6 +73,10 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 

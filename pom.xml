@@ -20,6 +20,7 @@
         <module>jyblog-module</module>
         <module>jyblog-starter</module>
         <module>jyblog-logging</module>
+        <module>jyblog-security</module>
     </modules>
 
     <properties>
@@ -45,9 +46,17 @@
                 <version>2.5.12</version>
             </dependency>
 
+            <!--jsr303校验-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-validation</artifactId>
+                <version>2.5.12</version>
+            </dependency>
+
+            <!--安全-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
                 <version>2.5.12</version>
             </dependency>
 
@@ -86,6 +95,11 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>5.7.22</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.8.1</version>
             </dependency>
 
             <!--fastjson-->
