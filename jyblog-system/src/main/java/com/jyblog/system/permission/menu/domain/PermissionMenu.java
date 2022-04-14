@@ -1,12 +1,11 @@
 package com.jyblog.system.permission.menu.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
 /**
  * 系统权限菜单表
@@ -54,7 +53,7 @@ public class PermissionMenu implements Serializable {
      * 父类ID
      */
     @TableField(value = "parent_id")
-    private String parent_id;
+    private String parentId;
 
     /**
      * 路由地址

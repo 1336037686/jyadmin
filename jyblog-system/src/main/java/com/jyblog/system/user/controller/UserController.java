@@ -2,7 +2,6 @@ package com.jyblog.system.user.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyblog.domain.PageResult;
 import com.jyblog.domain.Result;
@@ -16,14 +15,16 @@ import com.jyblog.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Set;
 
 /**
+ * 系统用户
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-12 23:20 <br>
@@ -66,12 +67,16 @@ public class UserController {
 
 
     @ApiOperation(value = "分页查询用户", notes = "")
-    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/query")
     public PageResult<User> doQueryPage(UserQueryVO vo) {
         return PageUtil.toPageResult(
                 this.userService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                         new LambdaQueryWrapper<User>()
+                        .like(StringUtils.isNotBlank(vo.getUsername()), User::getUsername, vo.getUsername())
+                        .like(StringUtils.isNotBlank(vo.getNickname()), User::getNickname, vo.getNickname())
+                        .like(StringUtils.isNotBlank(vo.getPhone()), User::getPhone, vo.getPhone())
+                        .eq(Objects.nonNull(vo.getType()), User::getType, vo.getType())
+                        .eq(Objects.nonNull(vo.getStatus()), User::getStatus, vo.getStatus())
                 )
         );
     }

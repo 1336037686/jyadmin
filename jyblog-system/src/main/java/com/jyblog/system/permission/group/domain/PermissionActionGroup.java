@@ -1,12 +1,11 @@
 package com.jyblog.system.permission.group.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
 /**
  * 系统权限动作组别表
@@ -47,7 +46,7 @@ public class PermissionActionGroup implements Serializable {
      * 父类ID
      */
     @TableField(value = "parent_id")
-    private String parent_id;
+    private String parentId;
 
     /**
      * 排序
