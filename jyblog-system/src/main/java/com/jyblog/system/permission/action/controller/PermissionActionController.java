@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyblog.domain.PageResult;
 import com.jyblog.domain.Result;
 import com.jyblog.system.permission.action.domain.PermissionAction;
+import com.jyblog.system.permission.action.domain.PermissionMenuAction;
 import com.jyblog.system.permission.action.model.vo.PermissionActionCreateVO;
 import com.jyblog.system.permission.action.model.vo.PermissionActionQueryVO;
 import com.jyblog.system.permission.action.model.vo.PermissionActionUpdateVO;
 import com.jyblog.system.permission.action.service.PermissionActionService;
+import com.jyblog.system.permission.action.service.PermissionMenuActionService;
 import com.jyblog.util.PageUtil;
 import com.jyblog.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -20,8 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT
@@ -35,6 +39,9 @@ public class PermissionActionController {
 
     @Resource
     private PermissionActionService permissionActionService;
+
+    @Resource
+    private PermissionMenuActionService permissionMenuActionService;
 
     @ApiOperation(value = "新增权限动作", notes = "")
     @PostMapping("/create")
@@ -62,6 +69,19 @@ public class PermissionActionController {
         return Result.ok(permissionActionService.getById(id));
     }
 
+    @ApiOperation(value = "列表查询权限动作信息", notes = "")
+    @GetMapping("/list")
+    public Result<List<PermissionAction>> doQueryList(PermissionActionQueryVO vo) {
+        return Result.ok(
+                this.permissionActionService.getBaseMapper().selectList(
+                        new LambdaQueryWrapper<PermissionAction>()
+                                .like(StringUtils.isNotBlank(vo.getName()), PermissionAction::getName, vo.getName())
+                                .like(StringUtils.isNotBlank(vo.getCode()), PermissionAction::getCode, vo.getCode())
+                                .eq(Objects.nonNull(vo.getGroupId()), PermissionAction::getGroupId, vo.getGroupId())
+                                .eq(Objects.nonNull(vo.getStatus()), PermissionAction::getStatus, vo.getStatus())
+                )
+        );
+    }
 
     @ApiOperation(value = "分页查询权限动作信息", notes = "")
     @GetMapping("/query")
@@ -75,6 +95,22 @@ public class PermissionActionController {
                                 .eq(Objects.nonNull(vo.getStatus()), PermissionAction::getStatus, vo.getStatus())
                 )
         );
+    }
+
+    @ApiOperation(value = "创建菜单权限", notes = "")
+    @PostMapping("/create/menu/{menuId}")
+    public Result<Object> doCreateFromMenu(@PathVariable("menuId") String menuId, @RequestBody Set<String> ids) {
+        return ResultUtil.toResult(permissionActionService.saveFromMenu(menuId, ids));
+    }
+
+    @ApiOperation(value = "获取菜单权限", notes = "")
+    @GetMapping("/query/menu/{menuId}")
+    public Result<List<String>> doQueryFromMenu(@PathVariable("menuId") String menuId) {
+        List<PermissionMenuAction> permissionMenuActions = permissionMenuActionService.getBaseMapper().selectList(
+                new LambdaQueryWrapper<PermissionMenuAction>().eq(PermissionMenuAction::getMenuId, menuId)
+        );
+        List<String> actionIds = permissionMenuActions.stream().map(PermissionMenuAction::getActionId).collect(Collectors.toList());
+        return Result.ok(actionIds);
     }
 
 }

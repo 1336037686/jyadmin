@@ -44,28 +44,24 @@ public class PermissionMenuCreateVO implements Serializable {
      * 描述
      */
     @ApiModelProperty(value = "描述", name = "description")
-    @NotBlank(message = "描述不能为空")
     private String description;
 
     /**
      * 父类ID
      */
     @ApiModelProperty(value = "父类ID", name = "parentId")
-    @NotBlank(message = "父类ID不能为空")
     private String parentId;
 
     /**
      * 路由地址
      */
     @ApiModelProperty(value = "路由地址", name = "url")
-    @NotBlank(message = "路由地址不能为空")
     private String url;
 
     /**
      * 组件路径
      */
     @ApiModelProperty(value = "组件路径", name = "path")
-    @NotBlank(message = "组件路径不能为空")
     private String path;
 
     /**
@@ -81,6 +77,7 @@ public class PermissionMenuCreateVO implements Serializable {
     @ApiModelProperty(value = "样式", name = "icon")
     private String style;
 
+
     /**
      * 排序
      */
@@ -92,21 +89,18 @@ public class PermissionMenuCreateVO implements Serializable {
      * 是否缓存
      */
     @ApiModelProperty(value = "是否缓存", name = "cache")
-    @NotNull(message = "是否缓存不能为空")
     private Integer cache;
 
     /**
      * 是否显示
      */
     @ApiModelProperty(value = "是否显示", name = "visiable")
-    @NotNull(message = "是否显示不能为空")
     private Integer visiable;
 
     /**
      * 是否外链
      */
     @ApiModelProperty(value = "是否外链", name = "link")
-    @NotNull(message = "是否外链不能为空")
     private Integer link;
 
     /**

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -60,6 +61,15 @@ public class PermissionGroupController {
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(permissionActionGroupService.getById(id));
+    }
+
+    @ApiOperation(value = "列表查询组别信息", notes = "")
+    @GetMapping("/list")
+    public Result<List<PermissionActionGroup>> doQueryList(PermissionGroupQueryVO vo) {
+        return Result.ok(this.permissionActionGroupService.getBaseMapper().selectList(
+                new LambdaQueryWrapper<PermissionActionGroup>()
+                .eq(Objects.nonNull(vo.getStatus()), PermissionActionGroup::getStatus, vo.getStatus())
+        ));
     }
 
     @ApiOperation(value = "分页查询组别信息", notes = "")

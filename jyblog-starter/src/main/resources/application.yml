@@ -8,6 +8,10 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  autoconfigure:
+    #跳过security自动配置
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 mybatis-plus:
   configuration:

@@ -42,7 +42,7 @@ public class PermissionActionCreateVO implements Serializable {
     /**
      * 所属权限组
      */
-    @ApiModelProperty(value = "所属权限组", name = "group_id")
+    @ApiModelProperty(value = "所属权限组", name = "groupId")
     @NotBlank(message = "所属权限组不能为空")
     private String groupId;
 

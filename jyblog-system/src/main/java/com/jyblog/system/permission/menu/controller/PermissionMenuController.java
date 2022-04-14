@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -60,6 +61,26 @@ public class PermissionMenuController {
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(permissionMenuService.getById(id));
+    }
+
+    @ApiOperation(value = "列表查询菜单信息", notes = "")
+    @GetMapping("/list")
+    public Result<List<PermissionMenu>> doQueryList(PermissionMenuQueryVO vo) {
+        return Result.ok(
+                this.permissionMenuService.getBaseMapper().selectList(
+                        new LambdaQueryWrapper<PermissionMenu>()
+                                .like(StringUtils.isNotBlank(vo.getName()), PermissionMenu::getName, vo.getName())
+                                .like(StringUtils.isNotBlank(vo.getCode()), PermissionMenu::getCode, vo.getCode())
+                                .eq(Objects.nonNull(vo.getType()), PermissionMenu::getType, vo.getType())
+                                .eq(Objects.nonNull(vo.getParentId()), PermissionMenu::getParentId, vo.getParentId())
+                                .like(StringUtils.isNotBlank(vo.getUrl()), PermissionMenu::getUrl, vo.getUrl())
+                                .like(StringUtils.isNotBlank(vo.getPath()), PermissionMenu::getPath, vo.getPath())
+                                .eq(Objects.nonNull(vo.getCache()), PermissionMenu::getCache, vo.getCache())
+                                .eq(Objects.nonNull(vo.getVisiable()), PermissionMenu::getVisiable, vo.getVisiable())
+                                .eq(Objects.nonNull(vo.getLink()), PermissionMenu::getLink, vo.getLink())
+                                .eq(Objects.nonNull(vo.getStatus()), PermissionMenu::getStatus, vo.getStatus())
+                )
+        );
     }
 
     @ApiOperation(value = "分页查询菜单信息", notes = "")
