@@ -3,6 +3,8 @@ package com.jyblog.system.role.service;
 import com.jyblog.system.role.domain.UserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Set;
+
 /**
 * @author 13360
 * @description 针对表【tr_user_role(系统用户角色中间表)】的数据库操作Service
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserRoleService extends IService<UserRole> {
 
+    boolean saveFromUser(String userId, Set<String> ids);
 }

@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMapper, PermissionAction> implements PermissionActionService{
 
     @Resource
+    private PermissionActionMapper permissionActionMapper;
+
+    @Resource
     private PermissionMenuActionService permissionMenuActionService;
 
     @Transactional
@@ -37,6 +40,11 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
                 .collect(Collectors.toList());
         permissionMenuActionService.saveBatch(permissionMenuActions);
         return true;
+    }
+
+    @Override
+    public List<PermissionAction> getFromUser(String userId) {
+        return permissionActionMapper.selectFromUser(userId);
     }
 }
 

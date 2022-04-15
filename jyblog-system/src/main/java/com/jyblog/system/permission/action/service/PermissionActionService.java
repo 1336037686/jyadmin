@@ -3,6 +3,7 @@ package com.jyblog.system.permission.action.service;
 import com.jyblog.system.permission.action.domain.PermissionAction;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,4 +15,5 @@ public interface PermissionActionService extends IService<PermissionAction> {
 
     boolean saveFromMenu(String menuId, Set<String> ids);
 
+    List<PermissionAction> getFromUser(String userId);
 }

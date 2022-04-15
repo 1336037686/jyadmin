@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyblog.domain.PageResult;
 import com.jyblog.domain.Result;
 import com.jyblog.system.permission.menu.domain.PermissionMenu;
+import com.jyblog.system.permission.menu.domain.PermissionRoleMenu;
 import com.jyblog.system.permission.menu.model.vo.PermissionMenuCreateVO;
 import com.jyblog.system.permission.menu.model.vo.PermissionMenuQueryVO;
 import com.jyblog.system.permission.menu.model.vo.PermissionMenuUpdateVO;
 import com.jyblog.system.permission.menu.service.PermissionMenuService;
+import com.jyblog.system.permission.menu.service.PermissionRoleMenuService;
 import com.jyblog.util.PageUtil;
 import com.jyblog.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT
@@ -36,6 +39,9 @@ public class PermissionMenuController {
 
     @Resource
     private PermissionMenuService permissionMenuService;
+
+    @Resource
+    private PermissionRoleMenuService permissionRoleMenuService;
 
     @ApiOperation(value = "新增菜单", notes = "")
     @PostMapping("/create")
@@ -102,6 +108,21 @@ public class PermissionMenuController {
                 )
         );
     }
-    
+
+    @ApiOperation(value = "创建角色菜单", notes = "")
+    @PostMapping("/create/role/{roleId}")
+    public Result<Object> doCreateFromRole(@PathVariable("roleId") String roleId, @RequestBody Set<String> ids) {
+        return ResultUtil.toResult(permissionRoleMenuService.saveFromRole(roleId, ids));
+    }
+
+    @ApiOperation(value = "获取角色菜单", notes = "")
+    @GetMapping("/query/role/{roleId}")
+    public Result<List<String>> doQueryFromRole(@PathVariable("roleId") String roleId) {
+        List<PermissionRoleMenu> permissionRoleMenus = permissionRoleMenuService.getBaseMapper().selectList(
+                new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId)
+        );
+        List<String> menuIds = permissionRoleMenus.stream().map(PermissionRoleMenu::getMenuId).collect(Collectors.toList());
+        return Result.ok(menuIds);
+    }
     
 }

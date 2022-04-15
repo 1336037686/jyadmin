@@ -25,4 +25,15 @@
         status,create_by,update_by,
         create_time,update_time,deleted
     </sql>
+
+    <select id="selectFromUser" resultType="com.jyblog.system.permission.action.domain.PermissionAction">
+        select
+            spa.id, spa.name, spa.code, spa.description, spa.group_id, spa.sort,
+            spa.status, spa.create_by, spa.update_by, spa.create_time, spa.update_time, spa.deleted
+        from tr_user_role tur
+        left join tr_permission_role_menu tprm on tur.role_id = tprm.role_id
+        left join tr_permission_menu_action tpma on tprm.menu_id = tpma.menu_id
+        left join sys_permission_action spa on tpma.action_id = spa.id
+        where tur.user_id = #{userId}
+    </select>
 </mapper>
