@@ -1,7 +1,9 @@
 package com.jyblog.system.permission.menu.mapper;
 
-import com.jyblog.system.permission.menu.domain.PermissionMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jyblog.system.permission.menu.domain.PermissionMenu;
+
+import java.util.List;
 
 /**
 * @author 13360
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface PermissionMenuMapper extends BaseMapper<PermissionMenu> {
 
+    List<PermissionMenu> selectFromUser(String userId);
 }
 
 

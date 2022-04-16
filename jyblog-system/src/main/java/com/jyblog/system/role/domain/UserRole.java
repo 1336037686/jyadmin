@@ -1,12 +1,15 @@
 package com.jyblog.system.role.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
 /**
  * 系统用户角色中间表
@@ -14,6 +17,7 @@ import lombok.Data;
  */
 @TableName(value ="tr_user_role")
 @Data
+@Accessors(chain = true)
 public class UserRole implements Serializable {
 
     @TableField(exist = false)
@@ -29,13 +33,13 @@ public class UserRole implements Serializable {
      * 用户ID
      */
     @TableField(value = "user_id")
-    private String user_id;
+    private String userId;
 
     /**
      * 角色ID
      */
     @TableField(value = "role_id")
-    private String role_id;
+    private String roleId;
 
     /**
      * 创建人

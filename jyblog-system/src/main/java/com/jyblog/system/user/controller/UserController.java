@@ -65,7 +65,6 @@ public class UserController {
         return Result.ok(userService.getById(id));
     }
 
-
     @ApiOperation(value = "分页查询用户", notes = "")
     @GetMapping("/query")
     public PageResult<User> doQueryPage(UserQueryVO vo) {

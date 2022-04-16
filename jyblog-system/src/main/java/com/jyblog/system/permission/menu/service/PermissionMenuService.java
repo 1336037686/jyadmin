@@ -3,6 +3,10 @@ package com.jyblog.system.permission.menu.service;
 import com.jyblog.system.permission.menu.domain.PermissionMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
 * @author 13360
 * @description 针对表【sys_permission_menu(系统权限菜单表)】的数据库操作Service
@@ -10,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface PermissionMenuService extends IService<PermissionMenu> {
 
+    boolean saveFromRole(String roleId, Set<String> ids);
+
+    List<Map<String, Object>> getFromUser(String userId);
 }

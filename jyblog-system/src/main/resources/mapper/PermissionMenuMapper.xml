@@ -36,4 +36,14 @@
         create_by,update_by,create_time,
         update_time,deleted
     </sql>
+    <select id="selectFromUser" resultType="com.jyblog.system.permission.menu.domain.PermissionMenu">
+        select
+            spm.id, spm.name, spm.code,spm.type, spm.description, spm.parent_id, spm.url, spm.path, spm.icon,
+            spm.style, spm.sort, spm.cache,spm.visiable, spm.link, spm.status,
+            spm.create_by, spm.update_by, spm.create_time,spm.update_time, spm.deleted
+        from tr_user_role tur
+                 left join tr_permission_role_menu tprm on tur.role_id  = tprm.role_id
+                 left join sys_permission_menu spm on spm.id = tprm.menu_id
+        where tur.user_id = #{userId} and spm.deleted = '0' and spm.status = '1'
+    </select>
 </mapper>

@@ -113,4 +113,12 @@ public class PermissionActionController {
         return Result.ok(actionIds);
     }
 
+    @ApiOperation(value = "获取用户权限", notes = "")
+    @GetMapping("/query/user/{userId}")
+    public Result<List<PermissionAction>> doQueryFromUser(@PathVariable("userId") String userId) {
+        List<PermissionAction> permissionActions = this.permissionActionService.getFromUser(userId);
+        return Result.ok(permissionActions);
+    }
+
+
 }

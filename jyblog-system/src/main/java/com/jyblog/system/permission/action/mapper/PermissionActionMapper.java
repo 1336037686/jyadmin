@@ -3,6 +3,8 @@ package com.jyblog.system.permission.action.mapper;
 import com.jyblog.system.permission.action.domain.PermissionAction;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
 * @author 13360
 * @description 针对表【sys_permission_action(系统权限动作表)】的数据库操作Mapper
@@ -11,6 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface PermissionActionMapper extends BaseMapper<PermissionAction> {
 
+
+    List<PermissionAction> selectFromUser(String userId);
 }
 
 

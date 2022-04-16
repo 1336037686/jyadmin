@@ -26,6 +26,9 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
     @Resource
     private PermissionMenuActionService permissionMenuActionService;
 
+    @Resource
+    private PermissionActionMapper permissionActionMapper;
+
     @Transactional
     @Override
     public boolean saveFromMenu(String menuId, Set<String> ids) {
@@ -37,6 +40,11 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
                 .collect(Collectors.toList());
         permissionMenuActionService.saveBatch(permissionMenuActions);
         return true;
+    }
+
+    @Override
+    public List<PermissionAction> getFromUser(String userId) {
+        return permissionActionMapper.selectFromUser(userId);
     }
 }
 

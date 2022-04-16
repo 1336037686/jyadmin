@@ -6,8 +6,8 @@
 
     <resultMap id="BaseResultMap" type="com.jyblog.system.permission.menu.domain.PermissionRoleMenu">
             <id property="id" column="id" jdbcType="VARCHAR"/>
-            <result property="role_id" column="role_id" jdbcType="VARCHAR"/>
-            <result property="menu_id" column="menu_id" jdbcType="VARCHAR"/>
+            <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
+            <result property="menuId" column="menu_id" jdbcType="VARCHAR"/>
             <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
