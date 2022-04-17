@@ -11,10 +11,6 @@ import com.jyblog.module.blog.model.vo.BlogCreateVO;
 import com.jyblog.module.blog.model.vo.BlogQueryVO;
 import com.jyblog.module.blog.model.vo.BlogUpdateVO;
 import com.jyblog.module.blog.service.BlogService;
-import com.jyblog.module.category.domain.Category;
-import com.jyblog.module.category.model.vo.CategoryCreateVO;
-import com.jyblog.module.category.model.vo.CategoryQueryVO;
-import com.jyblog.module.category.model.vo.CategoryUpdateVO;
 import com.jyblog.util.PageUtil;
 import com.jyblog.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -34,8 +30,8 @@ import java.util.Set;
  * @description: BlogController <br>
  */
 @Slf4j
-@Api(value = "博客文章", tags = {"博客文章接口"})
-@RequestMapping("blog")
+@Api(value = "博客文章", tags = {"博客：博客文章接口"})
+@RequestMapping("/api/blog")
 @RestController
 public class BlogController {
 

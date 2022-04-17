@@ -31,8 +31,8 @@ import java.util.Set;
  * @description: UserController <br>
  */
 @Slf4j
-@Api(value = "系统用户", tags = {"系统用户接口"})
-@RequestMapping("user")
+@Api(value = "系统用户", tags = "系统：系统用户接口")
+@RequestMapping("/api/user")
 @RestController
 public class UserController {
 

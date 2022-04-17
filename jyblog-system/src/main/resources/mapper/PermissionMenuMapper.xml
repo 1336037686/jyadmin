@@ -13,6 +13,8 @@
             <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
             <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="component" column="component" jdbcType="VARCHAR"/>
+            <result property="method" column="method" jdbcType="VARCHAR"/>
             <result property="icon" column="icon" jdbcType="VARCHAR"/>
             <result property="style" column="style" jdbcType="VARCHAR"/>
             <result property="sort" column="sort" jdbcType="INTEGER"/>
@@ -30,7 +32,7 @@
     <sql id="Base_Column_List">
         id,name,code,
         type,description,parent_id,
-        url,path,icon,
+        url,path, component, method,icon,
         style,sort,cache,
         visiable,link,status,
         create_by,update_by,create_time,
@@ -38,8 +40,8 @@
     </sql>
     <select id="selectFromUser" resultType="com.jyblog.system.permission.menu.domain.PermissionMenu">
         select
-            spm.id, spm.name, spm.code,spm.type, spm.description, spm.parent_id, spm.url, spm.path, spm.icon,
-            spm.style, spm.sort, spm.cache,spm.visiable, spm.link, spm.status,
+            spm.id, spm.name, spm.code,spm.type, spm.description, spm.parent_id, spm.url, spm.path, spm.method, spm.icon,
+            spm.style, spm.sort, spm.cache,spm.visiable, spm.link, spm.status, spm.component,
             spm.create_by, spm.update_by, spm.create_time,spm.update_time, spm.deleted
         from tr_user_role tur
                  left join tr_permission_role_menu tprm on tur.role_id  = tprm.role_id

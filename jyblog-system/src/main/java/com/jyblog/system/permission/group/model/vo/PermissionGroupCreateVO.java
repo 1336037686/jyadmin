@@ -57,7 +57,6 @@ public class PermissionGroupCreateVO implements Serializable {
      * 状态
      */
     @ApiModelProperty(value = "状态", name = "status")
-    @NotNull(message = "状态不能为空")
     private Integer status;
 
 }

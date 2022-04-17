@@ -29,8 +29,8 @@ import java.util.Set;
  * @date 2022-04-14 15:57
  */
 @Slf4j
-@Api(value = "系统权限组别", tags = {"系统权限组别接口"})
-@RequestMapping("permission/group")
+@Api(value = "系统权限组别", tags = {"系统：系统权限组别接口"})
+@RequestMapping("/api/permission/group")
 @RestController
 public class PermissionGroupController {
 

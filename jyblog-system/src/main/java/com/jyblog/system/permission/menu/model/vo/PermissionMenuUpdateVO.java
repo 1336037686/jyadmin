@@ -71,6 +71,18 @@ public class PermissionMenuUpdateVO implements Serializable {
     private String path;
 
     /**
+     * 组件名称
+     */
+    @ApiModelProperty(value = "组件名称", name = "component")
+    private String component;
+
+    /**
+     * 调用方法
+     */
+    @ApiModelProperty(value = "调用方法", name = "method")
+    private String method;
+
+    /**
      * 图标
      */
     @ApiModelProperty(value = "图标", name = "icon")

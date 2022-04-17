@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  * @date 2022-04-14 15:24
  */
 @Slf4j
-@Api(value = "系统角色", tags = {"系统角色接口"})
-@RequestMapping("role")
+@Api(value = "系统角色", tags = {"系统：系统角色接口"})
+@RequestMapping("/api/role")
 @RestController
 public class RoleController {
 

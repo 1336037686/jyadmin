@@ -39,7 +39,7 @@ public class JyBusinessException extends RuntimeException {
         this.msg = status.getReasonPhrase();
     }
 
-    public JyBusinessException(String message, JyResultStatus status) {
+    public JyBusinessException(JyResultStatus status, String message) {
         super(message);
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();

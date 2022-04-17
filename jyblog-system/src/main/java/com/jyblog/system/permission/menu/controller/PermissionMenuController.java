@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  * @date 2022-04-14 15:58
  */
 @Slf4j
-@Api(value = "系统权限菜单", tags = {"系统权限菜单接口"})
-@RequestMapping("permission/menu")
+@Api(value = "系统权限菜单", tags = {"系统：系统权限菜单接口"})
+@RequestMapping("/api/permission/menu")
 @RestController
 public class PermissionMenuController {
 
@@ -90,6 +90,12 @@ public class PermissionMenuController {
         );
     }
 
+    @ApiOperation(value = "层次列表查询菜单信息", notes = "")
+    @GetMapping("/layer")
+    public Result<List<Map<String, Object>>> doQueryLayer(PermissionMenuQueryVO vo) {
+        return Result.ok(this.permissionMenuService.getLayer(vo));
+    }
+
     @ApiOperation(value = "分页查询菜单信息", notes = "")
     @GetMapping("/query")
     public PageResult<PermissionMenu> doQueryPage(PermissionMenuQueryVO vo) {
@@ -125,7 +131,6 @@ public class PermissionMenuController {
         List<String> menuIds = roles.stream().map(PermissionRoleMenu::getMenuId).collect(Collectors.toList());
         return Result.ok(menuIds);
     }
-
 
     @ApiOperation(value = "获取用户菜单", notes = "")
     @GetMapping("/query/user/{userId}")

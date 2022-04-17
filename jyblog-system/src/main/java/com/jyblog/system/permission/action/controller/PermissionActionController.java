@@ -32,8 +32,8 @@ import java.util.stream.Collectors;
  * @date 2022-04-14 15:57
  */
 @Slf4j
-@Api(value = "系统权限动作", tags = {"系统权限动作接口"})
-@RequestMapping("permission/action")
+@Api(value = "系统权限动作", tags = {"系统：系统权限动作接口"})
+@RequestMapping("/api/permission/action")
 @RestController
 public class PermissionActionController {
 
