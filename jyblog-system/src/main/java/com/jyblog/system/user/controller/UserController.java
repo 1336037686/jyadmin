@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,6 +43,7 @@ public class UserController {
     @ApiOperation(value = "新增用户", notes = "")
     @PostMapping("/create")
     public Result<Object> doCreate(@RequestBody @Valid UserCreateVO vo) {
+        vo.setPassword(new BCryptPasswordEncoder().encode(vo.getPassword()));
         return ResultUtil.toResult(userService.save(BeanUtil.copyProperties(vo, User.class)));
     }
 

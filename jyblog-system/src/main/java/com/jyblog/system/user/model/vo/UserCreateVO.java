@@ -43,7 +43,6 @@ public class UserCreateVO implements Serializable {
      * 头像
      */
     @ApiModelProperty(value = "头像", name = "avatar")
-    @NotBlank(message = "头像不能为空")
     private String avatar;
 
     /**
