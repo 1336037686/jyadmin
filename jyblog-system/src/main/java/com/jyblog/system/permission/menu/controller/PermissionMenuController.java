@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,8 +33,8 @@ import java.util.stream.Collectors;
  * @date 2022-04-14 15:58
  */
 @Slf4j
-@Api(value = "系统权限菜单", tags = {"系统权限菜单接口"})
-@RequestMapping("permission/menu")
+@Api(value = "系统权限菜单", tags = {"系统：系统权限菜单接口"})
+@RequestMapping("/api/permission/menu")
 @RestController
 public class PermissionMenuController {
 
@@ -89,6 +90,12 @@ public class PermissionMenuController {
         );
     }
 
+    @ApiOperation(value = "层次列表查询菜单信息", notes = "")
+    @GetMapping("/layer")
+    public Result<List<Map<String, Object>>> doQueryLayer(PermissionMenuQueryVO vo) {
+        return Result.ok(this.permissionMenuService.getLayer(vo));
+    }
+
     @ApiOperation(value = "分页查询菜单信息", notes = "")
     @GetMapping("/query")
     public PageResult<PermissionMenu> doQueryPage(PermissionMenuQueryVO vo) {
@@ -112,17 +119,23 @@ public class PermissionMenuController {
     @ApiOperation(value = "创建角色菜单", notes = "")
     @PostMapping("/create/role/{roleId}")
     public Result<Object> doCreateFromRole(@PathVariable("roleId") String roleId, @RequestBody Set<String> ids) {
-        return ResultUtil.toResult(permissionRoleMenuService.saveFromRole(roleId, ids));
+        return ResultUtil.toResult(permissionMenuService.saveFromRole(roleId, ids));
     }
 
     @ApiOperation(value = "获取角色菜单", notes = "")
     @GetMapping("/query/role/{roleId}")
     public Result<List<String>> doQueryFromRole(@PathVariable("roleId") String roleId) {
-        List<PermissionRoleMenu> permissionRoleMenus = permissionRoleMenuService.getBaseMapper().selectList(
+        List<PermissionRoleMenu> roles = permissionRoleMenuService.getBaseMapper().selectList(
                 new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId)
         );
-        List<String> menuIds = permissionRoleMenus.stream().map(PermissionRoleMenu::getMenuId).collect(Collectors.toList());
+        List<String> menuIds = roles.stream().map(PermissionRoleMenu::getMenuId).collect(Collectors.toList());
         return Result.ok(menuIds);
     }
-    
+
+    @ApiOperation(value = "获取用户菜单", notes = "")
+    @GetMapping("/query/user/{userId}")
+    public Result<List<Map<String, Object>>> doQueryFromUser(@PathVariable("userId") String userId) {
+        List<Map<String, Object>> menus = this.permissionMenuService.getFromUser(userId);
+        return Result.ok(menus);
+    }
 }

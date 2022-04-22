@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  * @date 2022-04-14 15:24
  */
 @Slf4j
-@Api(value = "系统角色", tags = {"系统角色接口"})
-@RequestMapping("role")
+@Api(value = "系统角色", tags = {"系统：系统角色接口"})
+@RequestMapping("/api/role")
 @RestController
 public class RoleController {
 
@@ -73,8 +73,7 @@ public class RoleController {
     @ApiOperation(value = "列表查询角色信息", notes = "")
     @GetMapping("/list")
     public Result<List<Role>> doQueryList(RoleQueryVO vo) {
-        return Result.ok(
-                this.roleService.getBaseMapper().selectList(
+        return Result.ok(this.roleService.getBaseMapper().selectList(
                         new LambdaQueryWrapper<Role>()
                                 .like(StringUtils.isNotBlank(vo.getName()), Role::getName, vo.getName())
                                 .like(StringUtils.isNotBlank(vo.getCode()), Role::getCode, vo.getCode())
@@ -99,17 +98,16 @@ public class RoleController {
     @ApiOperation(value = "创建用户角色", notes = "")
     @PostMapping("/create/user/{userId}")
     public Result<Object> doCreateFromUser(@PathVariable("userId") String userId, @RequestBody Set<String> ids) {
-        return ResultUtil.toResult(userRoleService.saveFromUser(userId, ids));
+        return ResultUtil.toResult(roleService.saveFromUser(userId, ids));
     }
 
     @ApiOperation(value = "获取用户角色", notes = "")
     @GetMapping("/query/user/{userId}")
-    public Result<List<String>> doQueryFromRole(@PathVariable("userId") String userId) {
-        List<UserRole> userRoles = userRoleService.getBaseMapper().selectList(
+    public Result<List<String>> doQueryFromUser(@PathVariable("userId") String userId) {
+        List<UserRole> roles = userRoleService.getBaseMapper().selectList(
                 new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId)
         );
-        List<String> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        List<String> roleIds = roles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
         return Result.ok(roleIds);
     }
-    
 }

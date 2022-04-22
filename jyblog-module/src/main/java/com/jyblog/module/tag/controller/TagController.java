@@ -16,6 +16,7 @@ import com.jyblog.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,8 +30,8 @@ import java.util.Set;
  * @description: TagController <br>
  */
 @Slf4j
-@Api(value = "博客标签", tags = {"博客标签接口"})
-@RequestMapping("tag")
+@Api(value = "博客标签", tags = {"博客：博客标签接口"})
+@RequestMapping("/api/tag")
 @RestController
 public class TagController {
 
@@ -38,12 +39,14 @@ public class TagController {
     private TagService tagService;
 
     @ApiOperation(value = "新增标签", notes = "")
+    @PreAuthorize("@jy.check('tag:create')")
     @PostMapping("/create")
     public Result<Object> doCreate(@RequestBody @Valid TagCreateVO vo) {
         return ResultUtil.toResult(tagService.save(BeanUtil.copyProperties(vo, Tag.class)));
     }
 
     @ApiOperation(value = "更新标签", notes = "")
+    @PreAuthorize("@jy.check('tag:update')")
     @PutMapping("/update")
     public Result<Object> doUpdate(@RequestBody @Valid TagUpdateVO vo) {
         Tag tag = tagService.getById(vo.getId());
@@ -52,12 +55,14 @@ public class TagController {
     }
 
     @ApiOperation(value = "删除标签", notes = "")
+    @PreAuthorize("@jy.check('tag:remove')")
     @DeleteMapping("/remove")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(tagService.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID获取当前标签信息", notes = "")
+    @PreAuthorize("@jy.check('tag:queryById')")
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(tagService.getById(id));
@@ -65,6 +70,7 @@ public class TagController {
 
 
     @ApiOperation(value = "分页查询标签", notes = "")
+    @PreAuthorize("@jy.check('tag:queryPage')")
     @GetMapping("/query")
     public PageResult<Tag> doQueryPage(TagQueryVO vo) {
         return PageUtil.toPageResult(

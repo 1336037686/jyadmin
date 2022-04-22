@@ -29,6 +29,9 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
     @Resource
     private PermissionMenuActionService permissionMenuActionService;
 
+    @Resource
+    private PermissionActionMapper permissionActionMapper;
+
     @Transactional
     @Override
     public boolean saveFromMenu(String menuId, Set<String> ids) {

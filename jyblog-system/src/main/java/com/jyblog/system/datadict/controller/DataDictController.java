@@ -29,8 +29,8 @@ import java.util.Set;
  * @description: SysDataDictController <br>
  */
 @Slf4j
-@Api(value = "数据字典", tags = {"数据字典接口"})
-@RequestMapping("system/data-dict")
+@Api(value = "数据字典", tags = {"系统：数据字典接口"})
+@RequestMapping("/api/data-dict")
 @RestController
 public class DataDictController {
 

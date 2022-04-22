@@ -68,6 +68,18 @@ public class PermissionMenu implements Serializable {
     private String path;
 
     /**
+     * 组件名称
+     */
+    @TableField(value = "component")
+    private String component;
+
+    /**
+     * 调用方法
+     */
+    @TableField(value = "method")
+    private String method;
+
+    /**
      * 图标
      */
     @TableField(value = "icon")

@@ -1,10 +1,15 @@
 package com.jyblog.security.domain;
 
+import com.jyblog.system.user.domain.User;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT <br>
@@ -15,38 +20,70 @@ import java.util.Collection;
 @Data
 public class SecurityUser implements UserDetails {
 
+    //当前登录用户
+    private transient User currentUser;
+    //当前权限
+    private List<String> permissions;
+
+    public SecurityUser() {
+    }
+    public SecurityUser(User user) {
+        if (user != null) {
+            this.currentUser = user;
+        }
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.permissions.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return this.currentUser.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.currentUser.getUsername();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public List<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<String> permissions) {
+        this.permissions = permissions;
     }
 }

@@ -2,7 +2,6 @@ package com.jyblog.module.category.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyblog.domain.PageResult;
@@ -12,7 +11,6 @@ import com.jyblog.module.category.model.vo.CategoryCreateVO;
 import com.jyblog.module.category.model.vo.CategoryQueryVO;
 import com.jyblog.module.category.model.vo.CategoryUpdateVO;
 import com.jyblog.module.category.service.CategoryService;
-import com.jyblog.module.tag.domain.Tag;
 import com.jyblog.util.PageUtil;
 import com.jyblog.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -31,8 +29,8 @@ import java.util.Set;
  * @description: CategoryController <br>
  */
 @Slf4j
-@Api(value = "博客类别", tags = {"博客类别接口"})
-@RequestMapping("category")
+@Api(value = "博客类别", tags = {"博客：博客类别接口"})
+@RequestMapping("/api/category")
 @RestController
 public class CategoryController {
 
