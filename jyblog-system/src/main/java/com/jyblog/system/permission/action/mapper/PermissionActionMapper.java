@@ -4,6 +4,7 @@ import com.jyblog.system.permission.action.domain.PermissionAction;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author 13360
@@ -15,6 +16,8 @@ public interface PermissionActionMapper extends BaseMapper<PermissionAction> {
 
 
     List<PermissionAction> selectFromUser(String userId);
+
+    List<Map<String, Object>> selectTree();
 }
 
 
