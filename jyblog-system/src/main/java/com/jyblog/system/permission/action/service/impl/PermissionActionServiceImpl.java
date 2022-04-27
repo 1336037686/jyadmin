@@ -54,29 +54,29 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
         List<Map<String, Object>> groups = treeList.stream()
                 .map(x -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("groupId", x.get("groupId"));
-                    map.put("groupName", x.get("groupName"));
-                    map.put("groupCode", x.get("groupCode"));
+                    map.put("id", x.get("groupId"));
+                    map.put("name", x.get("groupName"));
+                    map.put("code", x.get("groupCode"));
                     map.put("type", "group");
                     return map;
                 })
                 .collect(Collectors.collectingAndThen(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing((o) -> o.get("groupId").toString()))),
+                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing((o) -> o.get("id").toString()))),
                         ArrayList::new));
         Map<String, Map<String, Object>> groupsMapping = new HashMap<>();
-        for (Map<String, Object> group : groups) groupsMapping.put(group.get("groupId").toString(), group);
+        for (Map<String, Object> group : groups) groupsMapping.put(group.get("id").toString(), group);
 
         // 归类下属接口
         treeList.stream().map(x -> {
             Map<String, Object> map = new HashMap<>();
             map.put("groupId", x.get("groupId"));
-            map.put("actionId", x.get("actionId"));
-            map.put("actionName", x.get("actionName"));
-            map.put("actionCode", x.get("actionCode"));
+            map.put("id", x.get("actionId"));
+            map.put("name", x.get("actionName"));
+            map.put("code", x.get("actionCode"));
             map.put("type", "action");
             return map;
         }).forEach(x -> {
-            if (Objects.isNull(x.get("actionId"))) return;
+            if (Objects.isNull(x.get("id"))) return;
             Map<String, Object> group = groupsMapping.get(x.get("groupId").toString());
             List<Map<String, Object>> children = (List<Map<String, Object>>) group.getOrDefault("children", new ArrayList<>());
             children.add(x);
