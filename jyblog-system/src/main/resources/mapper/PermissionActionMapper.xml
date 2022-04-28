@@ -36,4 +36,14 @@
              left join sys_permission_action spa on spa.id = tpma.action_id
         where tur.user_id = #{userId} and spa.deleted = '0' and spa.status = '1'
     </select>
+
+    <select id="selectTree" resultType="java.util.Map">
+        select
+               spag.id "groupId", spag.name "groupName", spag.code "groupCode",
+               spa.id "actionId", spa.name "actionName", spa.code "actionCode"
+        from sys_permission_action_group spag
+        left join sys_permission_action spa on spa.group_id = spag.id and spa.deleted = 0 and spa.status = 1
+        where spag.deleted = 0
+        order by spag.sort, spa.sort
+    </select>
 </mapper>

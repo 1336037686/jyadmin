@@ -1,12 +1,11 @@
 package com.jyblog.system.user.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
 /**
  * 用户表
@@ -34,6 +33,7 @@ public class User implements Serializable {
     /**
      * 密码
      */
+    @JsonIgnore
     @TableField(value = "password")
     private String password;
 

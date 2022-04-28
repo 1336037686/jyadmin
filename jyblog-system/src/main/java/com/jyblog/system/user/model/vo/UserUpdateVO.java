@@ -33,13 +33,6 @@ public class UserUpdateVO implements Serializable {
     private String username;
 
     /**
-     * 密码
-     */
-    @ApiModelProperty(value = "密码", name = "password")
-    @NotBlank(message = "密码不能为空")
-    private String password;
-
-    /**
      * 昵称
      */
     @ApiModelProperty(value = "昵称", name = "nickname")
@@ -50,7 +43,6 @@ public class UserUpdateVO implements Serializable {
      * 头像
      */
     @ApiModelProperty(value = "头像", name = "avatar")
-    @NotBlank(message = "头像不能为空")
     private String avatar;
 
     /**

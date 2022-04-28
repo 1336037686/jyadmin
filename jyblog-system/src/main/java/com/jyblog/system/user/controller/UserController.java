@@ -8,6 +8,7 @@ import com.jyblog.domain.Result;
 import com.jyblog.system.user.domain.User;
 import com.jyblog.system.user.model.vo.UserCreateVO;
 import com.jyblog.system.user.model.vo.UserQueryVO;
+import com.jyblog.system.user.model.vo.UserUpdatePasswordVO;
 import com.jyblog.system.user.model.vo.UserUpdateVO;
 import com.jyblog.system.user.service.UserService;
 import com.jyblog.util.PageUtil;
@@ -50,6 +51,15 @@ public class UserController {
     @ApiOperation(value = "更新用户", notes = "")
     @PutMapping("/update")
     public Result<Object> doUpdate(@RequestBody @Valid UserUpdateVO vo) {
+        User user = userService.getById(vo.getId());
+        BeanUtil.copyProperties(vo, user);
+        return ResultUtil.toResult(userService.updateById(user));
+    }
+
+    @ApiOperation(value = "更新密码", notes = "")
+    @PutMapping("/update/password")
+    public Result<Object> doUpdatePassword(@RequestBody @Valid UserUpdatePasswordVO vo) {
+        vo.setPassword(new BCryptPasswordEncoder().encode(vo.getPassword()));
         User user = userService.getById(vo.getId());
         BeanUtil.copyProperties(vo, user);
         return ResultUtil.toResult(userService.updateById(user));

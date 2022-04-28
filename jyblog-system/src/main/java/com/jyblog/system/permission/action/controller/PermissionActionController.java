@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,32 +70,36 @@ public class PermissionActionController {
         return Result.ok(permissionActionService.getById(id));
     }
 
+    @ApiOperation(value = "查询权限动作树形数据", notes = "")
+    @GetMapping("/tree")
+    public Result<List<Map<String, Object>>> doQueryTree() {
+        return Result.ok(this.permissionActionService.getTree());
+    }
+
     @ApiOperation(value = "列表查询权限动作信息", notes = "")
     @GetMapping("/list")
     public Result<List<PermissionAction>> doQueryList(PermissionActionQueryVO vo) {
-        return Result.ok(
-                this.permissionActionService.getBaseMapper().selectList(
-                        new LambdaQueryWrapper<PermissionAction>()
-                                .like(StringUtils.isNotBlank(vo.getName()), PermissionAction::getName, vo.getName())
-                                .like(StringUtils.isNotBlank(vo.getCode()), PermissionAction::getCode, vo.getCode())
-                                .eq(Objects.nonNull(vo.getGroupId()), PermissionAction::getGroupId, vo.getGroupId())
-                                .eq(Objects.nonNull(vo.getStatus()), PermissionAction::getStatus, vo.getStatus())
-                )
-        );
+        return Result.ok(this.permissionActionService.getBaseMapper().selectList(buildPermissionActionQueryWrapper(vo)));
     }
 
     @ApiOperation(value = "分页查询权限动作信息", notes = "")
     @GetMapping("/query")
     public PageResult<PermissionAction> doQueryPage(PermissionActionQueryVO vo) {
         return PageUtil.toPageResult(
-                this.permissionActionService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
-                        new LambdaQueryWrapper<PermissionAction>()
-                                .like(StringUtils.isNotBlank(vo.getName()), PermissionAction::getName, vo.getName())
-                                .like(StringUtils.isNotBlank(vo.getCode()), PermissionAction::getCode, vo.getCode())
-                                .eq(Objects.nonNull(vo.getGroupId()), PermissionAction::getGroupId, vo.getGroupId())
-                                .eq(Objects.nonNull(vo.getStatus()), PermissionAction::getStatus, vo.getStatus())
+                this.permissionActionService.page(
+                        new Page<>(vo.getPageNumber(), vo.getPageSize()),
+                        buildPermissionActionQueryWrapper(vo)
                 )
         );
+    }
+
+    private LambdaQueryWrapper<PermissionAction> buildPermissionActionQueryWrapper(PermissionActionQueryVO vo) {
+        return new LambdaQueryWrapper<PermissionAction>()
+                .like(StringUtils.isNotBlank(vo.getName()), PermissionAction::getName, vo.getName())
+                .like(StringUtils.isNotBlank(vo.getCode()), PermissionAction::getCode, vo.getCode())
+                .eq(Objects.nonNull(vo.getGroupId()), PermissionAction::getGroupId, vo.getGroupId())
+                .eq(Objects.nonNull(vo.getStatus()), PermissionAction::getStatus, vo.getStatus())
+                .orderByAsc(PermissionAction::getSort);
     }
 
     @ApiOperation(value = "创建菜单权限", notes = "")

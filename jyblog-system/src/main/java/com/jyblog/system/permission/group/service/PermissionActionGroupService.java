@@ -1,7 +1,7 @@
 package com.jyblog.system.permission.group.service;
 
-import com.jyblog.system.permission.group.domain.PermissionActionGroup;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jyblog.system.permission.group.domain.PermissionActionGroup;
 
 /**
 * @author 13360

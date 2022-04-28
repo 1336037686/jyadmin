@@ -69,6 +69,7 @@ public class PermissionGroupController {
         return Result.ok(this.permissionActionGroupService.getBaseMapper().selectList(
                 new LambdaQueryWrapper<PermissionActionGroup>()
                 .eq(Objects.nonNull(vo.getStatus()), PermissionActionGroup::getStatus, vo.getStatus())
+                .orderByAsc(PermissionActionGroup::getSort)
         ));
     }
 
@@ -82,6 +83,7 @@ public class PermissionGroupController {
                                 .like(StringUtils.isNotBlank(vo.getCode()), PermissionActionGroup::getCode, vo.getCode())
                                 .eq(Objects.nonNull(vo.getParentId()), PermissionActionGroup::getParentId, vo.getParentId())
                                 .eq(Objects.nonNull(vo.getStatus()), PermissionActionGroup::getStatus, vo.getStatus())
+                                .orderByAsc(PermissionActionGroup::getSort)
                 )
         );
     }
