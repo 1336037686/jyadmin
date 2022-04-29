@@ -34,14 +34,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("TokenFilter");
         String token = request.getHeader("x-token");
-        // 判断token是否存在
-        if (StringUtils.isNotBlank(token)) {
+        // 判断token是否存在 且 Token合法
+        if (StringUtils.isNotBlank(token) && JWTUtil.verify(token)) {
             String username = JWTUtil.parseToken(token);
             // SecurityContextHolder.getContext().getAuthentication() == null 未认证则为true
             if (StringUtils.isNotBlank(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                // 校验token合法性
-                if (JWTUtil.verify(token) && userDetails != null) {
+                if (userDetails != null) {
                     // 将用户信息存入 authentication，方便后续校验
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -1,8 +1,9 @@
 package com.jyblog.util;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.signers.JWTSigner;
-import org.springframework.stereotype.Component;
+import com.jyblog.config.JyJWTConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -15,33 +16,52 @@ import java.util.Date;
  */
 public class JWTUtil {
 
-    private static Long accessTokenExpiration = 1 * 60 * 60 * 1000l; // 1h
-    private static Long refreshTokenExpiration = 2 * 60 * 60 * 1000l; // 2h
-    private static final String tokenSignKey = "jyadmin";
-
+    /**
+     * 创建AccessToken
+     * @param username
+     * @return
+     */
     public static String createAccessToken(String username) {
+        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
         return JWT.create().setSubject(username)
-                                    .setExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpiration))
-                                    .setSigner("HS256", tokenSignKey.getBytes(StandardCharsets.UTF_8))
+                                    .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getAccessTokenExpiration()))
+                                    .setSigner("HS256", jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
                                     .sign();
     }
 
+    /**
+     * 创建RefreshToken
+     * @param username
+     * @return
+     */
     public static String createRefreshToken(String username) {
+        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
         return JWT.create()
                 .setSubject(username)
-                .setExpiresAt(new Date(System.currentTimeMillis() + refreshTokenExpiration))
-                .setSigner("HS256", tokenSignKey.getBytes(StandardCharsets.UTF_8))
+                .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getRefreshTokenExpiration()))
+                .setSigner("HS256", jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
                 .sign();
     }
 
+    /**
+     * 解析Token
+     * @param token
+     * @return
+     */
     public static String parseToken(String token) {
+        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
         return JWT.create()
-                .setKey(tokenSignKey.getBytes(StandardCharsets.UTF_8))
+                .setKey(jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
                 .parse(token).getPayload(JWT.SUBJECT).toString();
     }
 
+    /**
+     * 校验Token
+     * @param token
+     * @return
+     */
     public static boolean verify(String token) {
-        return JWT.of(token).setKey(tokenSignKey.getBytes(StandardCharsets.UTF_8)).verify();
+        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
+        return JWT.of(token).setKey(jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8)).validate(0);
     }
-
 }

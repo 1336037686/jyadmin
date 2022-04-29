@@ -1,5 +1,6 @@
 package com.jyblog.util;
 
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import com.jyblog.consts.JyResultStatus;
 import com.jyblog.exception.JyBusinessException;
@@ -21,7 +22,7 @@ public class SecurityUtil {
      * @return UserDetails
      */
     public static UserDetails getCurrentUser() {
-        UserDetailsService userDetailsService = SpringContextHolder.getBean(UserDetailsService.class);
+        UserDetailsService userDetailsService = SpringUtil.getBean(UserDetailsService.class);
         return userDetailsService.loadUserByUsername(getCurrentUsername());
     }
 
