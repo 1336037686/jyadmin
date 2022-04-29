@@ -1,5 +1,6 @@
 package com.jyblog.security.domain;
 
+import com.alibaba.fastjson.JSON;
 import com.jyblog.system.user.domain.User;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -85,5 +86,14 @@ public class SecurityUser implements UserDetails {
 
     public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
+    }
+
+    // 重要，解决Util工具类无法获取SecurityUser 问题
+    @Override
+    public String toString() {
+        return "{" +
+                "\"currentUser\": " + JSON.toJSONString(currentUser) +
+                ", \"permissions\": " + JSON.toJSONString(permissions) +
+                "}";
     }
 }

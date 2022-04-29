@@ -3,7 +3,7 @@ package com.jyblog.domain;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author LGX_TvT <br>
@@ -14,11 +14,30 @@ import java.util.Date;
 @Data
 public class BaseDTO implements Serializable {
 
-    private Date createTime;
+    private static final long serialVersionUID = 1;
 
-    private Date updateTime;
-
+    /**
+     * 创建人
+     */
     private String createBy;
 
+    /**
+     * 更新人
+     */
     private String updateBy;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 是否删除
+     */
+    private Integer deleted;
 }

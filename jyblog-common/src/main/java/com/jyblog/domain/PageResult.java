@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,9 @@ import java.util.List;
 @ApiModel("统一分页返回值")
 @Data
 @Accessors(chain = true)
-public class PageResult<T> {
+public class PageResult<T> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 状态码

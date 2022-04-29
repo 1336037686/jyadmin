@@ -1,42 +1,84 @@
 package com.jyblog.consts;
 
 /**
- * 业务状态码
- * 00 000 000
- * 前两位，表示业务类别
- * 3至5位，表示具体模块
- * 6至8位，表示具体状态
+ * 返回状态码
+ * 000 000
+ * 前三位，表示具体模块
+ * 后三位，表示具体状态
  *
- * 通用成功：00 000 001
- * 通用失败：00 000 000
+ * 通用成功：000 200
+ * 通用失败：000 400
  *
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-05 16:12 <br>
- * @description: BusinessStatus <br>
+ * @description: JyResultStatus <br>
  */
 public enum JyResultStatus {
 
-    // --- 00 xxx xxx 基础状态码 ---
+    // --- 0000 xxxx 基础状态码 ---
 
     /**
-     * 00 000 200 成功
+     * 0000 0200 成功
      */
-    SUCCESS(200, BusinessSeries.JYCOMMON, ModuleSeries.JYCOMMON_BASE, "成功"),
+    SUCCESS(200, ModuleSeries.BASE, "操作成功"),
 
     /**
-     * 00 000 400 失败
+     * 000 0400 失败
      */
-    FAIL(400, BusinessSeries.JYCOMMON, ModuleSeries.JYCOMMON_BASE, "失败"),
+    FAIL(400, ModuleSeries.BASE, "操作失败"),
 
+    // --- 0001 xxxx 权限相关状态码 ---
+
+    /**
+     * 0001 0001 权限不足
+     */
+    INSUFFICIENT_PERMISSIONS(10001, ModuleSeries.AUTH, "权限不足"),
+
+    /**
+     * 0001 0002 请求未授权
+     */
+    REQUEST_NOT_AUTHORIZED(10002, ModuleSeries.AUTH, "请求未授权"),
+
+    /**
+     * 0001 0003 账号被锁定
+     */
+    ACCOUNT_LOCKOUT(10003, ModuleSeries.AUTH, "账号被锁定，请联系管理员"),
+
+    /**
+     * 0001 0004 密码过期
+     */
+    PASSWORD_EXPIRATION(10004, ModuleSeries.AUTH, "密码过期，请联系管理员"),
+
+    /**
+     * 0001 0005 账户过期
+     */
+    ACCOUNT_EXPIRATION(10005, ModuleSeries.AUTH, "账户过期，请联系管理员"),
+
+    /**
+     * 0001 0006 账户被禁用
+     */
+    ACCOUNT_DISABLED(10006, ModuleSeries.AUTH, "账户被禁用，请联系管理员"),
+
+    /**
+     * 0001 0007 用户名或者密码输入错误
+     */
+    USERNAME_PASSWORD_ERROR(10007, ModuleSeries.AUTH, "用户名或者密码输入错误，请重新输入"),
+
+    /**
+     * 0001 0008 当前登录状态过期
+     */
+    LOGIN_STATUS_EXPIRED(10008, ModuleSeries.AUTH, "当前登录状态过期"),
+
+    /**
+     * 0001 0009 找不到当前登录的信息
+     */
+    NOT_FOUND_LOGIN_INFO(10009, ModuleSeries.AUTH, "找不到当前登录的信息")
 
     ;
 
     // 状态码
     private final int value;
-
-    // 业务类别
-    private final BusinessSeries businessSeries;
 
     // 模块类别
     private final ModuleSeries moduleSeries;
@@ -44,19 +86,14 @@ public enum JyResultStatus {
     // 提示
     private final String reasonPhrase;
 
-    JyResultStatus(int value, BusinessSeries businessSeries, ModuleSeries moduleSeries, String reasonPhrase) {
+    JyResultStatus(int value, ModuleSeries moduleSeries, String reasonPhrase) {
         this.value = value;
-        this.businessSeries = businessSeries;
         this.moduleSeries = moduleSeries;
         this.reasonPhrase = reasonPhrase;
     }
 
     public int getValue() {
         return value;
-    }
-
-    public BusinessSeries getBusinessSeries() {
-        return businessSeries;
     }
 
     public ModuleSeries getModuleSeries() {
@@ -68,72 +105,14 @@ public enum JyResultStatus {
     }
 
     /**
-     * 业务类别枚举
-     */
-    public enum BusinessSeries {
-
-        // 基础状态 00
-        JYCOMMON(0),
-        // 系统业务 01
-        JYSYSTEM(1),
-        // 博客业务 02
-        JYBLOG(2);
-
-        private final int value;
-
-        BusinessSeries(int value) {
-            this.value = value;
-        }
-
-        /**
-         * 获取业务类别
-         * @param status
-         * @return
-         */
-        public static BusinessSeries valueOf(JyResultStatus status) {
-            return status.businessSeries;
-        }
-
-        /**
-         * 通过状态码获取业务类别
-         * @param statusCode
-         * @return
-         */
-        public static BusinessSeries valueOf(int statusCode) {
-            BusinessSeries series = resolve(statusCode);
-            if (series == null) {
-                throw new IllegalArgumentException("No matching constant for [" + statusCode + "]");
-            }
-            return series;
-        }
-
-        /**
-         * 将给定的状态代码解析为BusinessSeries
-         * @param statusCode
-         * @return
-         */
-        public static BusinessSeries resolve(int statusCode) {
-            int seriesCode = statusCode / 1000000;
-            for (BusinessSeries series : values()) {
-                if (series.value == seriesCode) {
-                    return series;
-                }
-            }
-            return null;
-        }
-
-    }
-
-    /**
      * 模块类别枚举
      */
     public enum ModuleSeries {
 
-        // 00 000
-        JYCOMMON_BASE(0),
-
-        // 01 000
-        JYSYSTEM_AUTH(1000);
+        // 0 基础
+        BASE(0),
+        // 1 权限
+        AUTH(1);
 
         private final int value;
 

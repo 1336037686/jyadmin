@@ -1,5 +1,6 @@
 package com.jyblog.security.handler;
 
+import com.jyblog.consts.JyResultStatus;
 import com.jyblog.domain.Result;
 import com.jyblog.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,8 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.info("DefaultAccessDeniedHandler");
         log.info("处理器当认证成功的用户访问受保护的资源，但是权限不够");
-        ResponseUtil.out(response, Result.fail(400, "权限不足"));
+
+        // 权限不足
+        ResponseUtil.out(response, Result.fail(JyResultStatus.INSUFFICIENT_PERMISSIONS));
     }
 }

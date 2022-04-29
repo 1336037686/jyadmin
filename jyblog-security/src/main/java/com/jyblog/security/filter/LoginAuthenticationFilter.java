@@ -1,6 +1,7 @@
 package com.jyblog.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jyblog.consts.JyResultStatus;
 import com.jyblog.domain.Result;
 import com.jyblog.security.domain.UserLoginVO;
 import com.jyblog.util.JWTUtil;
@@ -60,7 +61,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("accessToken", accessToken);
         tokenMap.put("refreshToken", refreshToken);
-        ResponseUtil.out(response, Result.ok(200, "登陆成功", tokenMap));
+        ResponseUtil.out(response, Result.ok(tokenMap));
     }
 
     /**
@@ -70,28 +71,33 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.info("登录失败");
 
+        // 账号被锁定
         if (failed instanceof LockedException) {
-            ResponseUtil.out(response, Result.fail(40001, "账号被锁定，请联系管理员"));
+            ResponseUtil.out(response, Result.fail(JyResultStatus.ACCOUNT_LOCKOUT));
             return;
         }
 
+        // 密码过期
         if (failed instanceof CredentialsExpiredException) {
-            ResponseUtil.out(response, Result.fail(40002, "密码过期，请联系管理员"));
+            ResponseUtil.out(response, Result.fail(JyResultStatus.PASSWORD_EXPIRATION));
             return;
         }
 
+        // 账户过期
         if (failed instanceof AccountExpiredException) {
-            ResponseUtil.out(response, Result.fail(40003, "账户过期，请联系管理员"));
+            ResponseUtil.out(response, Result.fail(JyResultStatus.ACCOUNT_EXPIRATION));
             return;
         }
 
+        // 账户被禁用
         if (failed instanceof DisabledException) {
-            ResponseUtil.out(response, Result.fail(40004, "账户被禁用，请联系管理员"));
+            ResponseUtil.out(response, Result.fail(JyResultStatus.ACCOUNT_DISABLED));
             return;
         }
 
+        // 用户名或者密码输入错误
         if (failed instanceof BadCredentialsException) {
-            ResponseUtil.out(response, Result.fail(40005, "用户名或者密码输入错误，请重新输入"));
+            ResponseUtil.out(response, Result.fail(JyResultStatus.USERNAME_PASSWORD_ERROR));
         }
 
     }

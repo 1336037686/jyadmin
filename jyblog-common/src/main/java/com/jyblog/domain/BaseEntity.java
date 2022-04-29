@@ -2,32 +2,58 @@ package com.jyblog.domain;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModelProperty;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
+ * 业务表基础字段
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-05 02:19 <br>
  * @description: BaseEntity <br>
  */
 @Data
-public class BaseEntity {
+public class BaseEntity implements Serializable {
 
-    @ApiModelProperty(value = "创建人", hidden = true)
+    private static final long serialVersionUID = 1;
+
+    /**
+     * 创建人
+     */
+    @JsonIgnore
+    @TableField(value = "create_by", fill = FieldFill.INSERT)
     private String createBy;
 
-    @ApiModelProperty(value = "更新人", hidden = true)
+    /**
+     * 更新人
+     */
+    @JsonIgnore
+    @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
 
-    @ApiModelProperty(value = "创建时间", hidden = true)
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    /**
+     * 创建时间
+     */
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 
-    @ApiModelProperty(value = "更新时间", hidden = true)
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    /**
+     * 更新时间
+     */
+    @JsonIgnore
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
+    /**
+     * 是否删除
+     */
+    @JsonIgnore
+    @TableField(value = "deleted")
+    @TableLogic
+    private Integer deleted;
 
 }

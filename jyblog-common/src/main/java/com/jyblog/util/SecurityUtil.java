@@ -33,22 +33,25 @@ public class SecurityUtil {
     public static String getCurrentUsername() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new JyBusinessException(JyResultStatus.FAIL, "当前登录状态过期");
+            // 当前登录状态过期
+            throw new JyBusinessException(JyResultStatus.LOGIN_STATUS_EXPIRED);
         }
         if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return userDetails.getUsername();
         }
-        throw new JyBusinessException(JyResultStatus.FAIL, "找不到当前登录的信息");
+        // 找不到当前登录的信息
+        throw new JyBusinessException(JyResultStatus.NOT_FOUND_LOGIN_INFO);
     }
 
     /**
      * 获取系统用户ID
      * @return 系统用户ID
      */
-    public static Long getCurrentUserId() {
+    public static String getCurrentUserId() {
         UserDetails userDetails = getCurrentUser();
-        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
+        final JSONObject currentUser = new JSONObject(new JSONObject(userDetails.toString()).get("currentUser"));
+        return currentUser.get("id", String.class);
     }
 
 }

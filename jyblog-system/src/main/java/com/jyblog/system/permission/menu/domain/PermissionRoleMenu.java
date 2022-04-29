@@ -1,15 +1,13 @@
 package com.jyblog.system.permission.menu.domain;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jyblog.domain.BaseTrEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 系统角色权限中间表
@@ -18,7 +16,7 @@ import java.time.LocalDateTime;
 @TableName(value ="tr_permission_role_menu")
 @Data
 @Accessors(chain = true)
-public class PermissionRoleMenu implements Serializable {
+public class PermissionRoleMenu extends BaseTrEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -40,19 +38,5 @@ public class PermissionRoleMenu implements Serializable {
      */
     @TableField(value = "menu_id")
     private String menuId;
-
-    /**
-     * 创建人
-     */
-    @JsonIgnore
-    @TableField(value = "create_by")
-    private String createBy;
-
-    /**
-     * 创建时间
-     */
-    @JsonIgnore
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
 
 }

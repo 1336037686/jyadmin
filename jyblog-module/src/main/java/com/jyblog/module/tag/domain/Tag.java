@@ -1,12 +1,13 @@
 package com.jyblog.module.tag.domain;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.jyblog.domain.BaseEntity;
+import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 
 /**
  * 博客标签表
@@ -14,7 +15,7 @@ import lombok.Data;
  */
 @TableName(value ="tb_tag")
 @Data
-public class Tag implements Serializable {
+public class Tag extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
@@ -42,41 +43,5 @@ public class Tag implements Serializable {
      */
     @TableField(value = "intro")
     private String intro;
-
-    /**
-     * 创建人
-     */
-    @JsonIgnore
-    @TableField(value = "create_by")
-    private String createBy;
-
-    /**
-     * 更新人
-     */
-    @JsonIgnore
-    @TableField(value = "update_by")
-    private String updateBy;
-
-    /**
-     * 创建时间
-     */
-    @JsonIgnore
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @JsonIgnore
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
-
-    /**
-     * 是否删除
-     */
-    @JsonIgnore
-    @TableField(value = "deleted")
-    @TableLogic
-    private Integer deleted;
 
 }

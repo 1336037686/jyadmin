@@ -19,7 +19,7 @@ import java.util.List;
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;
-    private static final List<CallBack> CALL_BACKS = new ArrayList<>();
+    private static final List<CallBack> CALLBACKS = new ArrayList<>();
     private static boolean addCallback = true;
 
     /**
@@ -30,7 +30,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     public synchronized static void addCallBacks(CallBack callBack) {
         if (addCallback) {
-            SpringContextHolder.CALL_BACKS.add(callBack);
+            SpringContextHolder.CALLBACKS.add(callBack);
         } else {
             log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
             callBack.executor();
@@ -122,10 +122,10 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         }
         SpringContextHolder.applicationContext = applicationContext;
         if (addCallback) {
-            for (CallBack callBack : SpringContextHolder.CALL_BACKS) {
+            for (CallBack callBack : SpringContextHolder.CALLBACKS) {
                 callBack.executor();
             }
-            CALL_BACKS.clear();
+            CALLBACKS.clear();
         }
         SpringContextHolder.addCallback = false;
     }
