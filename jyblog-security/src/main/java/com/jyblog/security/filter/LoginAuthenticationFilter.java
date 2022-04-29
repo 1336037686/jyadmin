@@ -2,7 +2,7 @@ package com.jyblog.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jyblog.domain.Result;
-import com.jyblog.system.user.domain.User;
+import com.jyblog.security.domain.UserLoginVO;
 import com.jyblog.util.JWTUtil;
 import com.jyblog.util.ResponseUtil;
 import lombok.SneakyThrows;
@@ -41,7 +41,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+        UserLoginVO user = new ObjectMapper().readValue(request.getInputStream(), UserLoginVO.class);
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
         return getAuthenticationManager().authenticate(authRequest);
     }

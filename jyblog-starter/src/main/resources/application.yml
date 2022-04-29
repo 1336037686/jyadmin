@@ -1,17 +1,39 @@
 server:
-  port:8080
+  port: 8088
 
 #数据库配置
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/jyblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/jyblog?serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-  autoconfigure:
-    #跳过security自动配置
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    druid:
+      initialSize: 10
+      maxActive: 20
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+      validationQuery: SELECT 1
+      validation-query-timeout: 500
+      filters: stat
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: admin
+
+#  autoconfigure:
+#    #跳过security自动配置
+#    exclude:
+#      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 mybatis-plus:
   configuration:
