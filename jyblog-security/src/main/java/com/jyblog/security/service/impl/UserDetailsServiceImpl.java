@@ -1,10 +1,9 @@
 package com.jyblog.security.service.impl;
 
+import com.jyblog.security.domain.PermissionAction;
 import com.jyblog.security.domain.SecurityUser;
-import com.jyblog.system.permission.action.domain.PermissionAction;
-import com.jyblog.system.permission.action.service.PermissionActionService;
-import com.jyblog.system.user.domain.User;
-import com.jyblog.system.user.service.UserService;
+import com.jyblog.security.domain.User;
+import com.jyblog.security.service.AuthService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,18 +23,15 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private UserService userService;
-    
-    @Resource
-    private PermissionActionService permissionService;
+    private AuthService authService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.getByUserName(username);
+        User user = authService.getByUserName(username);
         if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        List<PermissionAction> permissions = permissionService.getFromUser(user.getId());
+        List<PermissionAction> permissions = authService.getPermissions(user.getId());
         List<String> permissionCodes = permissions.stream().map(PermissionAction::getCode).collect(Collectors.toList());
         SecurityUser securityUser = new SecurityUser();
         securityUser.setCurrentUser(user);

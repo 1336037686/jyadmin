@@ -82,7 +82,6 @@ public class UserController {
     @ApiOperation(value = "分页查询用户", notes = "")
     @GetMapping("/query")
     public PageResult<User> doQueryPage(UserQueryVO vo) {
-        int i = 1 / 0;
         return PageUtil.toPageResult(
                 this.userService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                         new LambdaQueryWrapper<User>()

@@ -1,7 +1,6 @@
 package com.jyblog.security.domain;
 
 import com.alibaba.fastjson.JSON;
-import com.jyblog.system.user.domain.User;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
