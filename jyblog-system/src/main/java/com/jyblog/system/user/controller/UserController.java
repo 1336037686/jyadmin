@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyblog.domain.PageResult;
 import com.jyblog.domain.Result;
+import com.jyblog.log.annotation.Log;
 import com.jyblog.system.user.domain.User;
 import com.jyblog.system.user.model.vo.UserCreateVO;
 import com.jyblog.system.user.model.vo.UserQueryVO;
@@ -77,9 +78,11 @@ public class UserController {
         return Result.ok(userService.getById(id));
     }
 
+    @Log(title = "系统管理：用户管理", desc = "分页查询用户")
     @ApiOperation(value = "分页查询用户", notes = "")
     @GetMapping("/query")
     public PageResult<User> doQueryPage(UserQueryVO vo) {
+        int i = 1 / 0;
         return PageUtil.toPageResult(
                 this.userService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                         new LambdaQueryWrapper<User>()
