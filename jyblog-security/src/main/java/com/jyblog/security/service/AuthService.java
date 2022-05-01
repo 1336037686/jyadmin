@@ -5,6 +5,7 @@ import com.jyblog.security.domain.PermissionAction;
 import com.jyblog.security.domain.User;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -16,5 +17,9 @@ public interface AuthService extends IService<User> {
 
     User getByUserName(String userName);
 
-    List<PermissionAction> getPermissions(String id);
+    List<PermissionAction> getPermissions(String userId);
+
+    List<Map<String, Object>> getMenus(String userId);
+
+    Map<String, Object> getUserInfo(String userId);
 }

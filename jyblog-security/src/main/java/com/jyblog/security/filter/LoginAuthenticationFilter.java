@@ -36,7 +36,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     public LoginAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher( "/login", "POST"));
+        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher( "/api/auth/login", "POST"));
     }
 
     @SneakyThrows

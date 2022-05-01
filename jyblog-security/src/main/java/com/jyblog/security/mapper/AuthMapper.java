@@ -6,6 +6,7 @@ import com.jyblog.security.domain.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -18,6 +19,9 @@ public interface AuthMapper extends BaseMapper<User> {
 
     List<PermissionAction> selectPermissions(@Param("userId") String userId);
 
+    List<Map<String, Object>> selectMenus(@Param("userId") String userId);
+
+    List<Map<String, Object>> selectRoles(@Param("userId") String userId);
 }
 
 
