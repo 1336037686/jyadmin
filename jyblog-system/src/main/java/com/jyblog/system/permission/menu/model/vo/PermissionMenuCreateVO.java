@@ -80,7 +80,6 @@ public class PermissionMenuCreateVO implements Serializable {
      * 图标
      */
     @ApiModelProperty(value = "图标", name = "icon")
-    @NotBlank(message = "图标不能为空")
     private String icon;
 
     /**
