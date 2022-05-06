@@ -1,13 +1,17 @@
 package com.jyblog.security.filter;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jyblog.config.JyJWTConfig;
 import com.jyblog.consts.JyResultStatus;
 import com.jyblog.domain.Result;
+import com.jyblog.security.domain.SecurityUser;
 import com.jyblog.security.domain.UserLoginVO;
 import com.jyblog.util.JWTUtil;
 import com.jyblog.util.ResponseUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户登录认证过滤器
@@ -33,6 +39,9 @@ import java.util.Map;
  */
 @Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     public LoginAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -54,14 +63,25 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
         SecurityContextHolder.getContext().setAuthentication(authResult);
+
         // 返回两个token
         String accessToken = JWTUtil.createAccessToken(userDetails.getUsername());
         String refreshToken = JWTUtil.createRefreshToken(userDetails.getUsername());
 
+        // 保存用户信息到redis
+        saveToCache((SecurityUser) userDetails);
+
+        // 返回token
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("accessToken", accessToken);
         tokenMap.put("refreshToken", refreshToken);
         ResponseUtil.out(response, Result.ok(tokenMap));
+    }
+
+    private void saveToCache(SecurityUser userDetails) {
+        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
+        String key = jwtConfig.getLoginUserKey() + ":" + userDetails.getUsername() + ":userDetails";
+        redisTemplate.opsForValue().set(key, userDetails, jwtConfig.getAccessTokenExpiration(), TimeUnit.SECONDS);
     }
 
     /**

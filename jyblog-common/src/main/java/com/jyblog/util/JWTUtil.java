@@ -24,7 +24,7 @@ public class JWTUtil {
     public static String createAccessToken(String username) {
         JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
         return JWT.create().setSubject(username)
-                                    .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getAccessTokenExpiration()))
+                                    .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getAccessTokenExpiration() * 1000))
                                     .setSigner("HS256", jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
                                     .sign();
     }
@@ -38,7 +38,7 @@ public class JWTUtil {
         JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
         return JWT.create()
                 .setSubject(username)
-                .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getRefreshTokenExpiration()))
+                .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getRefreshTokenExpiration() * 1000))
                 .setSigner("HS256", jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
                 .sign();
     }

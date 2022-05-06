@@ -1,14 +1,19 @@
 package com.jyblog.security.filter;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.jyblog.config.JyJWTConfig;
+import com.jyblog.security.domain.SecurityUser;
 import com.jyblog.util.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -30,6 +35,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Resource
     private UserDetailsService userDetailsService;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("TokenFilter");
@@ -39,7 +47,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             String username = JWTUtil.parseToken(token);
             // SecurityContextHolder.getContext().getAuthentication() == null 未认证则为true
             if (StringUtils.isNotBlank(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // 从缓存中获取登录信息
+                UserDetails userDetails = getFromCache(username);
                 if (userDetails != null) {
                     // 将用户信息存入 authentication，方便后续校验
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -51,5 +61,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
         // 继续执行下一个过滤器
         filterChain.doFilter(request, response);
+    }
+
+    private UserDetails getFromCache(String username) {
+        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
+        String key = jwtConfig.getLoginUserKey() + ":" + username + ":userDetails";
+        Object value = redisTemplate.opsForValue().get(key);
+        if (value == null) return null;
+        return (SecurityUser) value;
     }
 }

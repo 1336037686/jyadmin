@@ -17,14 +17,20 @@ public class JyJWTConfig {
 
     // accessToken过期时间
     @Value("${jwt.accessTokenExpiration}")
-    private Long accessTokenExpiration; // 1 * 60 * 60 * 1000l; // 1h
+    private Long accessTokenExpiration; // 1 * 60 * 60l; // 1h
 
     // refreshToken过期时间
     @Value("${jwt.refreshTokenExpiration}")
-    private Long refreshTokenExpiration;// 2 * 60 * 60 * 1000l; // 2h
+    private Long refreshTokenExpiration;// 2 * 60 * 60l; // 2h
 
     // key
     @Value("${jwt.tokenSignKey}")
     private String tokenSignKey;
+
+    @Value("${jwt.loginUserKey}")
+    private String loginUserKey;
+
+    @Value("${jwt.verificationCodeKey}")
+    private String verificationCodeKey;
 
 }
