@@ -2,6 +2,7 @@ package com.jyblog.security.domain;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * @description: SecurityUser <br>
  */
 @Data
+@Accessors(chain = true)
 public class SecurityUser implements UserDetails {
 
     //当前登录用户
@@ -69,22 +71,6 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
-    }
-
-    public List<String> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<String> permissions) {
-        this.permissions = permissions;
     }
 
     // 重要，解决Util工具类无法获取SecurityUser 问题

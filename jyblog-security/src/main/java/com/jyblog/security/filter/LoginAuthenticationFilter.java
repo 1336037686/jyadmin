@@ -2,11 +2,13 @@ package com.jyblog.security.filter;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jyblog.config.JyJWTConfig;
 import com.jyblog.consts.JyResultStatus;
 import com.jyblog.domain.Result;
 import com.jyblog.security.domain.SecurityUser;
+import com.jyblog.security.domain.UserCacheInfo;
 import com.jyblog.security.domain.UserLoginVO;
+import com.jyblog.security.service.CacheService;
+import com.jyblog.security.service.impl.RedisCacheServiceImpl;
 import com.jyblog.util.JWTUtil;
 import com.jyblog.util.ResponseUtil;
 import lombok.SneakyThrows;
@@ -16,7 +18,6 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -28,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用户登录认证过滤器
@@ -61,7 +61,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
+        SecurityUser userDetails = (SecurityUser) authResult.getPrincipal();
         SecurityContextHolder.getContext().setAuthentication(authResult);
 
         // 返回两个token
@@ -69,19 +69,16 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String refreshToken = JWTUtil.createRefreshToken(userDetails.getUsername());
 
         // 保存用户信息到redis
-        saveToCache((SecurityUser) userDetails);
+        CacheService cacheService = SpringUtil.getBean("redisCacheService", RedisCacheServiceImpl.class);
+        cacheService.save(new UserCacheInfo()
+                .setCurrentUser(userDetails.getCurrentUser())
+                .setPermissions(userDetails.getPermissions()));
 
         // 返回token
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("accessToken", accessToken);
         tokenMap.put("refreshToken", refreshToken);
         ResponseUtil.out(response, Result.ok(tokenMap));
-    }
-
-    private void saveToCache(SecurityUser userDetails) {
-        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
-        String key = jwtConfig.getLoginUserKey() + ":" + userDetails.getUsername() + ":userDetails";
-        redisTemplate.opsForValue().set(key, userDetails, jwtConfig.getAccessTokenExpiration(), TimeUnit.SECONDS);
     }
 
     /**
