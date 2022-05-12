@@ -1,10 +1,11 @@
 package com.jyblog.security.config;
 
-import com.jyblog.security.filter.LoginAuthenticationFilter;
 import com.jyblog.security.filter.TokenAuthenticationFilter;
-import com.jyblog.security.handler.*;
+import com.jyblog.security.handler.DefaultAccessDeniedHandler;
+import com.jyblog.security.handler.DefaultUnAuthHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
 
@@ -29,9 +31,6 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;
-
-    @Resource
-    private DefaultLogoutHandler defaultLogoutHandler;
 
     @Resource
     private DefaultUnAuthHandler defaultUnAuthHandler;
@@ -62,16 +61,19 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 设置登录请求地址，token刷新地址，并设置不拦截
         http.authorizeRequests()
-            .antMatchers(   "/login", "/refreshToken")
+            .antMatchers(JyIgnoreUrlConfig.getIgnoreUrls())
             .permitAll();
 
-        // 设置退出地址
-        http.logout()
-            .logoutUrl( "/logout")
-            .addLogoutHandler(defaultLogoutHandler);
+        // 跨域请求会先进行一次options请求
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS)
+                .permitAll();
 
         // 其他所有请求都需要校验
         http.authorizeRequests().anyRequest().authenticated();
+
+        // 禁用缓存
+        http.headers().cacheControl();
 
         // 处理异常情况
         http.exceptionHandling()
@@ -81,11 +83,8 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
             .accessDeniedHandler(defaultAccessDeniedHandler);
 
         //将Token校验过滤器配置到过滤器链中，否则不生效，放到UsernamePasswordAuthenticationFilter之前
-        http.addFilterBefore(tokenFilterBean(), LoginAuthenticationFilter.class);
-        // 添加登录过滤器
-        http.addFilter(loginFilterBean());
+        http.addFilterBefore(tokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
-
 
     /**
      * Token校验过滤器
@@ -94,15 +93,6 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
     public TokenAuthenticationFilter tokenFilterBean()  {
         return new TokenAuthenticationFilter();
     }
-
-    /**
-     * 登录校验过滤器
-     */
-    @Bean
-    public LoginAuthenticationFilter loginFilterBean() throws Exception {
-        return new LoginAuthenticationFilter(authenticationManager());
-    }
-
 
     /**
      * 解决Security访问Swagger2被拦截的问题；

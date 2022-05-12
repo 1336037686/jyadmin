@@ -1,17 +1,17 @@
 package com.jyblog.security.controller;
 
 import com.jyblog.domain.Result;
+import com.jyblog.log.annotation.Log;
+import com.jyblog.security.domain.UserLoginVO;
 import com.jyblog.security.service.AuthService;
 import com.jyblog.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +30,27 @@ public class AuthController {
     @Resource
     private AuthService authService;
 
-    // 用户注册
+    /**
+     * 登录
+     */
+    @Log(title = "系统认证：用户登录", desc = "")
+    @ApiOperation(value = "用户登录", notes = "")
+    @PostMapping(value = "/login")
+    public Result<Map<String, Object>> doLogin(@RequestBody UserLoginVO vo, HttpServletRequest request) {
+        Map<String, Object> token = authService.login(request, vo.getUsername(), vo.getPassword());
+        return Result.ok(token);
+    }
+
+    /**
+     * 退出登录
+     */
+    @ApiOperation(value = "退出登录", notes = "")
+    @PostMapping(value = "/logout")
+    public Result<Object> doLogout() {
+        String username = SecurityUtil.getCurrentUsername();
+        authService.logout(username);
+        return Result.ok();
+    }
 
     // 获取用户信息
     @ApiOperation(value = "获取用户信息", notes = "")
@@ -49,9 +69,10 @@ public class AuthController {
         return Result.ok(menus);
     }
 
-    @ApiOperation(value = "退出登录", notes = "")
-    @PostMapping("/logout")
-    public Result<Object> doLogout() {
-        return Result.ok();
-    }
+    // TODO: 获取登录用户列表
+
+    // TODO: 强制下线
+
+
+
 }

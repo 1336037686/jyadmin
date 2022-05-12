@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,18 +32,18 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Resource
     private CacheService cacheService;
 
+    @Resource
+    private UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("TokenFilter");
         String token = request.getHeader("x-token");
         // 判断token是否存在 且 Token合法
         if (StringUtils.isNotBlank(token) && JWTUtil.verify(token)) {
             String username = JWTUtil.parseToken(token);
             // 如果当前用户登录信息在缓存中存在，且 当前状态为未认证状态。 SecurityContextHolder.getContext().getAuthentication() == null 未认证则为true
             if (StringUtils.isNotBlank(username) && cacheService.isExist(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                // 从缓存中获取登录信息
-                UserDetails userDetails = cacheService.get(username);
+                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (userDetails != null) {
                     // 将用户信息存入 authentication，方便后续校验
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

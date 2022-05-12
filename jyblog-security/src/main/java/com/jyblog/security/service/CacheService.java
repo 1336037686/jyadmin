@@ -1,7 +1,6 @@
 package com.jyblog.security.service;
 
 import com.jyblog.security.domain.UserCacheInfo;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author LGX_TvT <br>
@@ -15,8 +14,8 @@ public interface CacheService {
 
     boolean isExist(String username);
 
-    UserCacheInfo getUserInfo(String username);
+    UserCacheInfo get(String username);
 
-    UserDetails get(String username);
+    boolean remove(String username);
 
 }

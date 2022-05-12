@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jyblog.security.domain.PermissionAction;
 import com.jyblog.security.domain.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,8 @@ import java.util.Map;
 */
 public interface AuthService extends IService<User> {
 
+    Map<String, Object> login(HttpServletRequest request, String username, String password);
+
     User getByUserName(String userName);
 
     List<PermissionAction> getPermissions(String userId);
@@ -22,4 +25,6 @@ public interface AuthService extends IService<User> {
     List<Map<String, Object>> getMenus(String userId);
 
     Map<String, Object> getUserInfo(String userId);
+
+    void logout(String username);
 }

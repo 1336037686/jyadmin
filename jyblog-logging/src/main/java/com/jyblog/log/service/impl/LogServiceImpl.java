@@ -16,7 +16,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
 * @author 13360
@@ -57,7 +60,9 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         // 请求类型
         String requestMethod = request.getMethod();
         // 请求参数
-        Object[] requestParam = joinPoint.getArgs();
+        List<Object> requestParam = Arrays.stream(joinPoint.getArgs())
+                .filter(x -> !(x instanceof HttpServletRequest))
+                .collect(Collectors.toList());
         // 请求时间
         LocalDateTime requestTime = LocalDateTime.now();
         // 请求类方法

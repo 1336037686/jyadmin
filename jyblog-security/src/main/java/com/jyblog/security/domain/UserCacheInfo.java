@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,10 +17,34 @@ import java.util.List;
 @Accessors(chain = true)
 public class UserCacheInfo implements Serializable {
 
-    //当前登录用户
-    private User currentUser;
+    /**
+     * 登录用户
+     */
+    private String username;
 
-    //当前权限
+    /**
+     * 用户权限
+     */
     private List<String> permissions;
+
+    /**
+     * ip 地址
+     */
+    private String ipAddress;
+
+    /**
+     * 所属地区
+     */
+    private String ipArea;
+
+    /**
+     * 浏览器
+     */
+    private String browser;
+
+    /**
+     * 登陆时间
+     */
+    private LocalDateTime createTime;
 
 }

@@ -4,13 +4,25 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyblog.security.domain.PermissionAction;
+import com.jyblog.security.domain.SecurityUser;
 import com.jyblog.security.domain.User;
+import com.jyblog.security.domain.UserCacheInfo;
 import com.jyblog.security.mapper.AuthMapper;
 import com.jyblog.security.service.AuthService;
+import com.jyblog.security.service.CacheService;
+import com.jyblog.util.IpUtil;
+import com.jyblog.util.JWTUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +36,50 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
     @Resource
     private AuthMapper authMapper;
+
+    @Resource
+    private UserDetailsService userDetailsService;
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private CacheService cacheService;
+
+    @Override
+    public Map<String, Object> login(HttpServletRequest request, String username, String password) {
+        SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(username);
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("密码不正确");
+        }
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 返回两个token
+        String accessToken = JWTUtil.createAccessToken(userDetails.getUsername());
+        String refreshToken = JWTUtil.createRefreshToken(userDetails.getUsername());
+
+        // 保存用户信息到redis
+        cacheService.save(buildUserCacheInfo(userDetails, request));
+
+        // 返回token
+        Map<String, Object> tokenMap = new HashMap<>();
+        tokenMap.put("accessToken", accessToken);
+        tokenMap.put("refreshToken", refreshToken);
+
+        return tokenMap;
+    }
+
+    private UserCacheInfo buildUserCacheInfo(SecurityUser userDetails, HttpServletRequest request) {
+        String ip = IpUtil.getIp(request);
+        return new UserCacheInfo()
+                .setUsername(userDetails.getCurrentUser().getUsername())
+                .setPermissions(userDetails.getPermissions())
+                .setIpAddress(ip)
+                .setIpArea(IpUtil.getAddressAndIsp(ip))
+                .setBrowser(IpUtil.getBrowser(request))
+                .setCreateTime(LocalDateTime.now());
+    }
 
     @Override
     public User getByUserName(String userName) {
@@ -71,6 +127,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         userInfo.put("roles", roles);
         userInfo.put("permissions", permissions);
         return userInfo;
+    }
+
+    @Override
+    public void logout(String username) {
+        cacheService.remove(username);
+        SecurityContextHolder.clearContext();
     }
 }
 
