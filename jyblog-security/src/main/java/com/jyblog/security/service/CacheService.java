@@ -1,6 +1,6 @@
 package com.jyblog.security.service;
 
-import com.jyblog.security.domain.UserCacheInfo;
+import com.jyblog.domain.UserCacheInfo;
 
 /**
  * @author LGX_TvT <br>

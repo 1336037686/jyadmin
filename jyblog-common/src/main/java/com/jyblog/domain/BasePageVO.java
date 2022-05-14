@@ -3,6 +3,7 @@ package com.jyblog.domain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -29,6 +30,7 @@ public class BasePageVO implements Serializable {
      */
     @ApiModelProperty(value = "每页结果数", name = "pageSize")
     @NotNull(message = "每页结果数不能为空")
+    @Min(value = 1, message = "最小值不能小于1")
     private int pageSize = 10;
 
 }

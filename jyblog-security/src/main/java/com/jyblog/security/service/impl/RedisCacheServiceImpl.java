@@ -1,7 +1,7 @@
 package com.jyblog.security.service.impl;
 
 import com.jyblog.config.JyJWTConfig;
-import com.jyblog.security.domain.UserCacheInfo;
+import com.jyblog.domain.UserCacheInfo;
 import com.jyblog.security.service.CacheService;
 import com.jyblog.util.RedisUtil;
 import org.springframework.stereotype.Service;

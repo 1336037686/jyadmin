@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyblog.security.domain.PermissionAction;
 import com.jyblog.security.domain.SecurityUser;
 import com.jyblog.security.domain.User;
-import com.jyblog.security.domain.UserCacheInfo;
+import com.jyblog.domain.UserCacheInfo;
 import com.jyblog.security.mapper.AuthMapper;
 import com.jyblog.security.service.AuthService;
 import com.jyblog.security.service.CacheService;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,7 +77,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
                 .setIpAddress(ip)
                 .setIpArea(IpUtil.getAddressAndIsp(ip))
                 .setBrowser(IpUtil.getBrowser(request))
-                .setCreateTime(LocalDateTime.now());
+                .setCreateTime(new Date());
     }
 
     @Override
