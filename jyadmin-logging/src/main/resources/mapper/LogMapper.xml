@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jyadmin.log.mapper.LogMapper">
+
+    <resultMap id="BaseResultMap" type="com.jyadmin.log.domain.Log">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="handleName" column="handle_name" jdbcType="VARCHAR"/>
+            <result property="handleDesc" column="handle_desc" jdbcType="VARCHAR"/>
+            <result property="ipAddress" column="ip_address" jdbcType="VARCHAR"/>
+            <result property="ipArea" column="ip_area" jdbcType="VARCHAR"/>
+            <result property="browser" column="browser" jdbcType="VARCHAR"/>
+            <result property="application" column="application" jdbcType="VARCHAR"/>
+            <result property="requestPath" column="request_path" jdbcType="VARCHAR"/>
+            <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+            <result property="requestParam" column="request_param" jdbcType="VARCHAR"/>
+            <result property="requestTime" column="request_time" jdbcType="TIMESTAMP"/>
+            <result property="method" column="method" jdbcType="VARCHAR"/>
+            <result property="executeStatus" column="execute_status" jdbcType="INTEGER"/>
+            <result property="executeTime" column="execute_time" jdbcType="INTEGER"/>
+            <result property="responseData" column="response_data" jdbcType="VARCHAR"/>
+            <result property="errorDesc" column="error_desc" jdbcType="VARCHAR"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,handle_name,handle_desc,
+        ip_address,ip_area,browser,
+        application,request_path,request_method,
+        request_param,request_time,method,
+        execute_status,execute_time,response_data,
+        error_desc,username,create_by,
+        update_by,create_time,update_time,
+        deleted
+    </sql>
+</mapper>

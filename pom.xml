@@ -10,17 +10,17 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.jyblog</groupId>
-    <artifactId>jyblog</artifactId>
+    <groupId>com.jyadmin</groupId>
+    <artifactId>jyadmin</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>jyblog-common</module>
-        <module>jyblog-system</module>
-        <module>jyblog-module</module>
-        <module>jyblog-starter</module>
-        <module>jyblog-logging</module>
-        <module>jyblog-security</module>
+        <module>jyadmin-common</module>
+        <module>jyadmin-system</module>
+        <module>jyadmin-module</module>
+        <module>jyadmin-starter</module>
+        <module>jyadmin-logging</module>
+        <module>jyadmin-security</module>
     </modules>
 
     <properties>
