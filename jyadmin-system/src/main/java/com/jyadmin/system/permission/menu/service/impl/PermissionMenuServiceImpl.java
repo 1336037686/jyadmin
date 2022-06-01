@@ -68,6 +68,7 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
                         .eq(Objects.nonNull(vo.getVisiable()), PermissionMenu::getVisiable, vo.getVisiable())
                         .eq(Objects.nonNull(vo.getLink()), PermissionMenu::getLink, vo.getLink())
                         .eq(Objects.nonNull(vo.getStatus()), PermissionMenu::getStatus, vo.getStatus())
+                        .orderByAsc(PermissionMenu::getSort)
         );
 
         List<Map<String, Object>> menuMaps = permissionMenus.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
