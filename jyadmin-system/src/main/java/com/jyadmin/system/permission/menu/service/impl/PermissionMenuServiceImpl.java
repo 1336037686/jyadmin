@@ -1,6 +1,7 @@
 package com.jyadmin.system.permission.menu.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.system.permission.menu.domain.PermissionMenu;
@@ -11,6 +12,7 @@ import com.jyadmin.system.permission.menu.service.PermissionMenuService;
 import com.jyadmin.system.permission.menu.service.PermissionRoleMenuService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -31,11 +33,38 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
     private PermissionMenuMapper permissionMenuMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveFromRole(String roleId, Set<String> ids) {
         this.permissionRoleMenuService.remove(new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId));
         List<PermissionRoleMenu> roleMenus = ids.stream().map(x -> new PermissionRoleMenu().setRoleId(roleId).setMenuId(x)).collect(Collectors.toList());
         permissionRoleMenuService.saveBatch(roleMenus);
         return true;
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean removeByIds(Collection<?> list) {
+        Set<String> removeIds = new HashSet<>();
+        removeIds.addAll(list.stream().map(Object::toString).collect(Collectors.toSet()));
+        LinkedList<String> idQueue = new LinkedList<>();
+        idQueue.addAll(list.stream().map(Object::toString).collect(Collectors.toList()));
+        // 层序遍历递归查询所有可能的子项
+        while (!idQueue.isEmpty()) {
+            // 获取当前层所有节点
+            List<String> parentIds = new ArrayList<>();
+            for (int i = 0; i < idQueue.size(); i++) parentIds.add(idQueue.pollFirst());
+            if (CollUtil.isNotEmpty(parentIds)) {
+                // 查询当前层所有下级节点
+                List<PermissionMenu> childMenus = this.permissionMenuMapper.selectList(new LambdaQueryWrapper<PermissionMenu>().in(PermissionMenu::getParentId, parentIds));
+                Set<String> childIds = childMenus.stream().map(PermissionMenu::getId).collect(Collectors.toSet());
+                // 添加到结果
+                removeIds.addAll(childIds);
+                // 设施下级节点为当前层
+                idQueue.addAll(childIds);
+            }
+        }
+        return super.removeByIds(removeIds);
     }
 
     @Override
