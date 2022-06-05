@@ -46,7 +46,7 @@ public class BaseEntity implements Serializable {
     /**
      * 更新时间
      */
-    @JsonIgnore
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 

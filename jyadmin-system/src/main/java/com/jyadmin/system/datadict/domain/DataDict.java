@@ -62,6 +62,8 @@ public class DataDict extends BaseEntity implements Serializable {
     @TableField(value = "parent_id")
     private String parentId;
 
+//    private String parentName;
+
     /**
      * 是否根结点
      */

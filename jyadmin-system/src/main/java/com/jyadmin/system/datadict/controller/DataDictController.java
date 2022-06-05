@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -77,6 +79,12 @@ public class DataDictController {
     @GetMapping("/query")
     public PageResult<DataDict> doQueryPage(DataDictQueryVO vo) {
         return PageUtil.toPageResult(this.sysDataDictService.getPage(BeanUtil.copyProperties(vo, DataDictQueryDTO.class)));
+    }
+
+    @ApiOperation(value = "层次列表查询字典信息", notes = "")
+    @GetMapping("/layer")
+    public Result<List<Map<String, Object>>> doQueryLayer(DataDictQueryVO vo) {
+        return Result.ok(this.sysDataDictService.getLayer(vo));
     }
 
     @ApiOperation(value = "根据ID查询下属节点", notes = "")

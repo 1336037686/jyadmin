@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.system.datadict.domain.DataDict;
 import com.jyadmin.system.datadict.model.dto.DataDictQueryDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jyadmin.system.datadict.model.vo.DataDictQueryVO;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author 13360
@@ -20,4 +22,6 @@ public interface DataDictService extends IService<DataDict> {
     List<DataDict> getChildById(String id);
 
     Page<DataDict> getPage(DataDictQueryDTO copyProperties);
+
+    List<Map<String, Object>> getLayer(DataDictQueryVO vo);
 }
