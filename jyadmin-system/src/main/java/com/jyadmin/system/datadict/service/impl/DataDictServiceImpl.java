@@ -13,6 +13,8 @@ import com.jyadmin.system.datadict.model.vo.DataDictQueryVO;
 import com.jyadmin.system.datadict.service.DataDictService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,6 +69,7 @@ public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> i
         );
 
         List<Map<String, Object>> dataDictMaps = dataDictList.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
+        for (Map<String, Object> dataDictMap : dataDictMaps) dataDictMap.put("createTime", ((LocalDateTime) dataDictMap.get("updateTime")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         Set<String> childrenMenus = new HashSet<>();
         Map<String, Map<String, Object>> table = new HashMap<>();
         for (Map<String, Object> menu : dataDictMaps) table.put(menu.get("id").toString(), menu);
