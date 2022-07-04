@@ -3,7 +3,7 @@ package com.jyadmin.util;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
-import com.jyadmin.config.JyJWTConfig;
+import com.jyadmin.config.properties.JyJwtProperties;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -22,10 +22,10 @@ public class JWTUtil {
      * @return
      */
     public static String createAccessToken(String username) {
-        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
+        JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
         return JWT.create().setSubject(username)
                                     .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getAccessTokenExpiration() * 1000))
-                                    .setSigner("HS256", jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
+                                    .setSigner("HS256", jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8))
                                     .sign();
     }
 
@@ -35,11 +35,11 @@ public class JWTUtil {
      * @return
      */
     public static String createRefreshToken(String username) {
-        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
+        JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
         return JWT.create()
                 .setSubject(username)
                 .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getRefreshTokenExpiration() * 1000))
-                .setSigner("HS256", jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
+                .setSigner("HS256", jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8))
                 .sign();
     }
 
@@ -49,9 +49,9 @@ public class JWTUtil {
      * @return
      */
     public static String parseToken(String token) {
-        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
+        JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
         return JWT.create()
-                .setKey(jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8))
+                .setKey(jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8))
                 .parse(token).getPayload(JWT.SUBJECT).toString();
     }
 
@@ -61,7 +61,7 @@ public class JWTUtil {
      * @return
      */
     public static boolean verify(String token) {
-        JyJWTConfig jwtConfig = SpringUtil.getBean(JyJWTConfig.class);
-        return JWT.of(token).setKey(jwtConfig.getTokenSignKey().getBytes(StandardCharsets.UTF_8)).validate(0);
+        JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
+        return JWT.of(token).setKey(jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8)).validate(0);
     }
 }

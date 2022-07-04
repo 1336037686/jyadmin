@@ -1,6 +1,6 @@
 package com.jyadmin.monitor.offline.service.impl;
 
-import com.jyadmin.config.JyJWTConfig;
+import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.monitor.offline.model.vo.UserQueryVO;
 import com.jyadmin.monitor.offline.service.OfflineService;
@@ -31,11 +31,11 @@ public class OfflineServiceImpl implements OfflineService {
     private RedisTemplate redisTemplate;
 
     @Resource
-    private JyJWTConfig jyJWTConfig;
+    private JyAuthProperties jyAuthProperties;
 
     @Override
     public List<UserCacheInfo> getList(UserQueryVO vo) {
-        Set<String> keys = redisTemplate.keys(jyJWTConfig.getLoginUserKey() + ":*");
+        Set<String> keys = redisTemplate.keys(jyAuthProperties.getAuthUserPrefix() + ":*");
         List<UserCacheInfo> record = new ArrayList<>();
         keys.stream().map(x -> (UserCacheInfo) redisUtil.getValue(x)).forEach(x -> record.add(x));
         return record.stream().filter(x ->
@@ -45,7 +45,7 @@ public class OfflineServiceImpl implements OfflineService {
 
     @Override
     public void forcedOffline(String username) {
-        String key = jyJWTConfig.getLoginUserKey() + ":" + username;
+        String key = jyAuthProperties.getAuthUserPrefix() + ":" + username;
         if (redisUtil.exists(key)) {
             redisUtil.delete(key);
         }

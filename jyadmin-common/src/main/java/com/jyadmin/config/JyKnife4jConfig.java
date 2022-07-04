@@ -1,5 +1,8 @@
 package com.jyadmin.config;
 
+import com.jyadmin.config.properties.JyApiDocumentProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -11,6 +14,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
+import javax.annotation.Resource;
+
 /**
  * Knife4j API文档配置类
  * @author LGX_TvT <br>
@@ -20,19 +25,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  */
 @Configuration
 @EnableSwagger2WebMvc
-@Import(BeanValidatorPluginsConfiguration.class) // 开启使用JSR303注解 https://doc.xiaominfo.com/knife4j/documentation/jsr303.html
 public class JyKnife4jConfig {
+
+    @Resource
+    private JyApiDocumentProperties jyApiDocumentProperties;
 
     @Bean(value = "defaultApi2")
     public Docket defaultApi2() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
-                        .description("# jyadmin API文档")
-                        .version("v0.1.0")
+                        .description(jyApiDocumentProperties.getDescription())
+                        .version(jyApiDocumentProperties.getVersion())
                         .build())
                 .select()
                 //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("com.jyadmin"))
+                .apis(RequestHandlerSelectors.basePackage(jyApiDocumentProperties.getBasePackage()))
                 .paths(PathSelectors.any())
                 .build();
     }

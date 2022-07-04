@@ -1,7 +1,7 @@
 package com.jyadmin.security.service.impl;
 
+import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.security.service.CacheService;
-import com.jyadmin.config.JyJWTConfig;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.util.RedisUtil;
 import org.springframework.stereotype.Service;
@@ -22,30 +22,30 @@ public class RedisCacheServiceImpl implements CacheService {
     private RedisUtil redisUtil;
 
     @Resource
-    private JyJWTConfig jwtConfig;
+    private JyAuthProperties jyAuthProperties;
 
     @Override
     public boolean save(UserCacheInfo userCacheInfo) {
-        String key = jwtConfig.getLoginUserKey() + ":" + userCacheInfo.getUsername();
-        return redisUtil.setValue(key, userCacheInfo, jwtConfig.getAccessTokenExpiration(), TimeUnit.SECONDS);
+        String key = jyAuthProperties.getAuthUserPrefix() + ":" + userCacheInfo.getUsername();
+        return redisUtil.setValue(key, userCacheInfo, jyAuthProperties.getAuthUserExpiration(), TimeUnit.SECONDS);
     }
 
     @Override
     public boolean isExist(String username) {
-        String key = jwtConfig.getLoginUserKey() + ":" + username;
+        String key = jyAuthProperties.getAuthUserPrefix() + ":" + username;
         return redisUtil.exists(key);
     }
 
     @Override
     public UserCacheInfo get(String username) {
-        String key = jwtConfig.getLoginUserKey() + ":" + username;
+        String key = jyAuthProperties.getAuthUserPrefix() + ":" + username;
         if (!this.isExist(username)) return null;
         return (UserCacheInfo) redisUtil.getValue(key);
     }
 
     @Override
     public boolean remove(String username) {
-        String key = jwtConfig.getLoginUserKey() + ":" + username;
+        String key = jyAuthProperties.getAuthUserPrefix() + ":" + username;
         redisUtil.delete(key);
         return true;
     }
