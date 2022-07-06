@@ -73,7 +73,12 @@ public enum JyResultStatus {
     /**
      * 0001 0009 找不到当前登录的信息
      */
-    NOT_FOUND_LOGIN_INFO(10009, ModuleSeries.AUTH, "找不到当前登录的信息")
+    NOT_FOUND_LOGIN_INFO(10009, ModuleSeries.AUTH, "找不到当前登录的信息"),
+
+    /**
+     * 0001 0010 访问次数超出限制
+     */
+    LIMIT_EXCEEDED(10010, ModuleSeries.AUTH, "访问次数超出限制")
 
     ;
 

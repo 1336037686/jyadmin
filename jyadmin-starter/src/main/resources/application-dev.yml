@@ -1,9 +1,9 @@
 spring:
   #数据库配置
   datasource:
-    url: jdbc:mysql://localhost:3306/jyadmin?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
+    url: jdbc:mysql://gz-cynosdbmysql-grp-04ibiuoj.sql.tencentcdb.com:28876/jyadmin?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: xxxx
+    password: xxxx
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       initialSize: 10
@@ -71,3 +71,24 @@ jwt:
   tokenSignKey: jyadmin # Token Key
   loginUserKey: login-user
   verificationCodeKey: verification-code
+
+jyadmin:
+  auth:
+    auth-user-prefix: login-user
+    auth-user-expiration: 7200
+    verification-code-prefix: verification-code
+    verification-code-expiration: 300
+    jwt:
+      secret-key: jyadmin
+      access-token-expiration: 3600 # accessToken过期时间 1h
+      refresh-token-expiration: 7200 # refreshToken过期时间 2h
+  limit:
+    enabled: true
+    prefix: jyadmin-limit
+    defaultPeriod: 1
+    defaultCount: 1
+    limitType: CUSTOMER
+  document:
+    description: "jyadmin API文档"
+    version: v1.0
+    base-package: com.jyadmin

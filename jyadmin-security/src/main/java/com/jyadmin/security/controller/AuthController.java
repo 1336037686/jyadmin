@@ -1,5 +1,6 @@
 package com.jyadmin.security.controller;
 
+import com.jyadmin.annotation.Limit;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.security.domain.UserLoginVO;
@@ -33,6 +34,7 @@ public class AuthController {
     /**
      * 登录
      */
+    @Limit
     @Log(title = "系统认证：用户登录", desc = "")
     @ApiOperation(value = "用户登录", notes = "")
     @PostMapping(value = "/login")
