@@ -1,14 +1,12 @@
 package com.jyadmin.aspect;
 
-import cn.hutool.core.collection.CollectionUtil;
-import com.jyadmin.annotation.Limit;
-import com.jyadmin.config.properties.JyLimitProperties;
+import com.jyadmin.annotation.RateLimit;
+import com.jyadmin.config.properties.JyRateLimitProperties;
 import com.jyadmin.consts.JyResultStatus;
 import com.jyadmin.exception.JyBusinessException;
 import com.jyadmin.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.reflection.ArrayUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,7 +24,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,16 +37,16 @@ import java.util.stream.Stream;
 @Slf4j
 @Aspect
 @Component
-@ConditionalOnProperty(name = "jyadmin.limit.enabled", matchIfMissing = true)
-public class LimitAspect {
+@ConditionalOnProperty(name = "jyadmin.rate-limit.enabled", matchIfMissing = true)
+public class RateLimitAspect {
 
     @Resource
     private RedisTemplate<Object,Object> redisTemplate;
 
     @Resource
-    private JyLimitProperties limitProperties;
+    private JyRateLimitProperties limitProperties;
 
-    @Pointcut("@annotation(com.jyadmin.annotation.Limit)")
+    @Pointcut("@annotation(com.jyadmin.annotation.RateLimit)")
     public void pointcut() {
     }
 
@@ -59,7 +56,7 @@ public class LimitAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method signatureMethod = signature.getMethod();
         String fullMethodName = signatureMethod.getDeclaringClass().getName() + "." + signatureMethod.getName();
-        Limit limit = signatureMethod.getAnnotation(Limit.class);
+        RateLimit limit = signatureMethod.getAnnotation(RateLimit.class);
 
 
         String prefix = StringUtils.isNotBlank(limit.prefix()) ? limit.prefix() : limitProperties.getPrefix();
@@ -69,8 +66,8 @@ public class LimitAspect {
         String key = limit.key();
         if (StringUtils.isBlank(key)) {
             // 默认为方法全类名
-            if(JyLimitProperties.LIMIT_TYPE_CUSTOMER.equals(limitType)) {
-                key = fullMethodName;
+            if(JyRateLimitProperties.LIMIT_TYPE_CUSTOMER.equals(limitType)) {
+                key = fullMethodName.replace(".", "_");
             }
             else {
                 key = IpUtil.getIp(request);
@@ -83,7 +80,7 @@ public class LimitAspect {
         RedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);
         Long total = redisTemplate.execute(redisScript, keys, count, period);
         if (null != total && total.intValue() <= count) {
-            log.info("第{}次访问key为 {}，方法为 [{}] 的接口, 请求路径为[{}]", total, keys, fullMethodName, request.getRequestURI());
+            log.info("限流控制： 第{}次访问key为 {}，方法为 [{}] 的接口, 请求路径为[{}]", total, keys, fullMethodName, request.getRequestURI());
             return joinPoint.proceed();
         } else {
             throw new JyBusinessException(JyResultStatus.LIMIT_EXCEEDED);

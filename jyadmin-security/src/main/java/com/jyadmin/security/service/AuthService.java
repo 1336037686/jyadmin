@@ -27,4 +27,6 @@ public interface AuthService extends IService<User> {
     Map<String, Object> getUserInfo(String userId);
 
     void logout(String username);
+
+    String getIdempotentToken();
 }

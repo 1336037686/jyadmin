@@ -1,8 +1,11 @@
 package com.jyadmin.security.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jyadmin.config.properties.JyIdempotentProperties;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
 import com.jyadmin.security.domain.User;
@@ -12,7 +15,9 @@ import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
+import com.jyadmin.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +27,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +51,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
     @Resource
     private CacheService cacheService;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private JyIdempotentProperties jyIdempotentProperties;
 
     @Override
     public Map<String, Object> login(HttpServletRequest request, String username, String password) {
@@ -132,6 +145,14 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     public void logout(String username) {
         cacheService.remove(username);
         SecurityContextHolder.clearContext();
+    }
+
+    @Override
+    public String getIdempotentToken() {
+        String token = StringUtils.join(DateUtil.format(LocalDateTime.now(), "yyyy-MM-dd-HH-mm-ss-SSS"), "-", new Snowflake().nextIdStr());
+        String key = StringUtils.join(jyIdempotentProperties.getPrefix(), ":", token);
+        redisUtil.setValue(key, "1", jyIdempotentProperties.getDefaultPeriod(), TimeUnit.SECONDS);
+        return token;
     }
 }
 

@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties("jyadmin.limit")
-public class JyLimitProperties {
+@ConfigurationProperties("jyadmin.rate-limit")
+public class JyRateLimitProperties {
 
     /**
      * 自定义限制类型
@@ -35,7 +35,7 @@ public class JyLimitProperties {
     /**
      * 缓存前缀
      */
-    private String prefix = "jyadmin_limit";
+    private String prefix = "jyadmin_ratelimit";
 
     /**
      * 默认限制间隔时间

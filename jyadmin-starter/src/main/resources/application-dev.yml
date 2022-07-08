@@ -64,14 +64,6 @@ mybatis-plus:
       logic-delete-value: 1           # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0       # 逻辑未删除值(默认为 0)
 
-# JWT配置
-jwt:
-  accessTokenExpiration: 3600 # accessToken过期时间 1h
-  refreshTokenExpiration: 7200 # refreshToken过期时间 2h
-  tokenSignKey: jyadmin # Token Key
-  loginUserKey: login-user
-  verificationCodeKey: verification-code
-
 jyadmin:
   auth:
     auth-user-prefix: login-user
@@ -82,12 +74,12 @@ jyadmin:
       secret-key: jyadmin
       access-token-expiration: 3600 # accessToken过期时间 1h
       refresh-token-expiration: 7200 # refreshToken过期时间 2h
-  limit:
+  rate-limit:
     enabled: true
     prefix: jyadmin-limit
-    defaultPeriod: 1
-    defaultCount: 1
-    limitType: CUSTOMER
+    default-period: 30
+    default-count: 1
+    limit-type: CUSTOMER
   document:
     description: "jyadmin API文档"
     version: v1.0

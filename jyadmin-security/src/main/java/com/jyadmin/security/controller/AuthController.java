@@ -1,6 +1,7 @@
 package com.jyadmin.security.controller;
 
-import com.jyadmin.annotation.Limit;
+import com.jyadmin.annotation.Idempotent;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.security.domain.UserLoginVO;
@@ -34,7 +35,7 @@ public class AuthController {
     /**
      * 登录
      */
-    @Limit
+    @RateLimit
     @Log(title = "系统认证：用户登录", desc = "")
     @ApiOperation(value = "用户登录", notes = "")
     @PostMapping(value = "/login")
@@ -55,6 +56,7 @@ public class AuthController {
     }
 
     // 获取用户信息
+    @Idempotent(name = "获取用户信息")
     @ApiOperation(value = "获取用户信息", notes = "")
     @GetMapping("/info")
     public Result<Map<String, Object>> doQueryUserInfo() {
@@ -71,10 +73,13 @@ public class AuthController {
         return Result.ok(menus);
     }
 
-    // TODO: 获取登录用户列表
 
-    // TODO: 强制下线
-
+    @ApiOperation(value = "获取幂等Token", notes = "")
+    @GetMapping("/idempotent-token")
+    public Result<String> doQueryIdempotentToken() {
+        String idempotentToken = this.authService.getIdempotentToken();
+        return Result.ok(idempotentToken);
+    }
 
 
 }

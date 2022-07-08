@@ -78,7 +78,12 @@ public enum JyResultStatus {
     /**
      * 0001 0010 访问次数超出限制
      */
-    LIMIT_EXCEEDED(10010, ModuleSeries.AUTH, "访问次数超出限制")
+    LIMIT_EXCEEDED(10010, ModuleSeries.AUTH, "访问次数超出限制"),
+
+    /**
+     * 0001 0011 重复操作
+     */
+    REPEAT_OPERATION(10011, ModuleSeries.AUTH, "请勿重复操作")
 
     ;
 
