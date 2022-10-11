@@ -1,6 +1,6 @@
 package com.jyadmin.exception;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import lombok.Data;
 
 /**
@@ -11,41 +11,41 @@ import lombok.Data;
  * @description: BusinessException <br>
  */
 @Data
-public class JyBusinessException extends RuntimeException {
+public class ApiException extends RuntimeException {
 
     private Integer code;
 
     private String msg;
 
-    public JyBusinessException(Integer code, String msg) {
+    public ApiException(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    public JyBusinessException(String message, Integer code, String msg) {
+    public ApiException(String message, Integer code, String msg) {
         super(message);
         this.code = code;
         this.msg = msg;
     }
 
-    public JyBusinessException(Throwable cause, Integer code, String msg) {
+    public ApiException(Throwable cause, Integer code, String msg) {
         super(msg, cause);
         this.code = code;
         this.msg = msg;
     }
 
-    public JyBusinessException(JyResultStatus status) {
+    public ApiException(ResultStatus status) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
     }
 
-    public JyBusinessException(JyResultStatus status, String message) {
+    public ApiException(ResultStatus status, String message) {
         super(message);
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
     }
 
-    public JyBusinessException(Throwable cause, JyResultStatus status) {
+    public ApiException(Throwable cause, ResultStatus status) {
         super(status.getReasonPhrase(), cause);
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();

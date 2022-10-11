@@ -1,8 +1,8 @@
 package com.jyadmin.exception.handler;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
-import com.jyadmin.exception.JyBusinessException;
+import com.jyadmin.exception.ApiException;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        return Result.fail(JyResultStatus.FAIL, e.getMessage());
+        return Result.fail(ResultStatus.FAIL, e.getMessage());
     }
 
     /**
@@ -48,14 +48,14 @@ public class GlobalExceptionHandler {
         log.error(ThrowableUtil.getStackTrace(e));
         List<FieldError> fieldErrors = ((MethodArgumentNotValidException) e).getBindingResult().getFieldErrors();
         List<String> msgList = fieldErrors.stream().map(FieldError :: getDefaultMessage).collect(Collectors.toList());
-        return Result.fail(JyResultStatus.FAIL, String.join(",", msgList));
+        return Result.fail(ResultStatus.FAIL, String.join(",", msgList));
     }
 
     /**
      * 处理所有接口业务异常
      */
-    @ExceptionHandler(JyBusinessException.class)
-    public Result<Object> handleJyBusinessException(JyBusinessException e){
+    @ExceptionHandler(ApiException.class)
+    public Result<Object> handleJyBusinessException(ApiException e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return Result.fail(e.getCode(), e.getMsg());

@@ -3,7 +3,7 @@ package com.jyadmin.util;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.BasePageVO;
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class PageUtil {
      */
     public static <T> PageResult<T> toPageResult (Page<T> page) {
         return new PageResult<T>()
-        .setStatus(JyResultStatus.SUCCESS)
+        .setStatus(ResultStatus.SUCCESS)
         .setSuccess(true)
         .setPageNumber(page.getCurrent())
         .setPageSize(page.getSize())
@@ -51,7 +51,7 @@ public class PageUtil {
                 && vo.getPageNumber() * vo.getPageSize() > records.size();
 
         return new PageResult<T>()
-                .setStatus(JyResultStatus.SUCCESS)
+                .setStatus(ResultStatus.SUCCESS)
                 .setSuccess(true)
                 .setPageNumber((long) vo.getPageNumber())
                 .setPageSize((long) vo.getPageSize())

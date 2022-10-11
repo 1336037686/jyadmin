@@ -1,6 +1,6 @@
 package com.jyadmin.security.handler;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,6 @@ public class DefaultUnAuthHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         // 请求未授权
-        ResponseUtil.out(response, Result.fail(JyResultStatus.REQUEST_NOT_AUTHORIZED));
+        ResponseUtil.out(response, Result.fail(ResultStatus.REQUEST_NOT_AUTHORIZED));
     }
 }

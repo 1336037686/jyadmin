@@ -14,7 +14,7 @@ package com.jyadmin.consts;
  * Create by 2022-04-05 16:12 <br>
  * @description: JyResultStatus <br>
  */
-public enum JyResultStatus {
+public enum ResultStatus {
 
     // --- 0000 xxxx 基础状态码 ---
 
@@ -96,7 +96,7 @@ public enum JyResultStatus {
     // 提示
     private final String reasonPhrase;
 
-    JyResultStatus(int value, ModuleSeries moduleSeries, String reasonPhrase) {
+    ResultStatus(int value, ModuleSeries moduleSeries, String reasonPhrase) {
         this.value = value;
         this.moduleSeries = moduleSeries;
         this.reasonPhrase = reasonPhrase;
@@ -135,7 +135,7 @@ public enum JyResultStatus {
          * @param status
          * @return
          */
-        public static ModuleSeries valueOf(JyResultStatus status) {
+        public static ModuleSeries valueOf(ResultStatus status) {
             return status.moduleSeries;
         }
 

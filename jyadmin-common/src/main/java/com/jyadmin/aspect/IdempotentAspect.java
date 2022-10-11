@@ -1,11 +1,9 @@
 package com.jyadmin.aspect;
 
 import com.jyadmin.annotation.Idempotent;
-import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.config.properties.JyIdempotentProperties;
-import com.jyadmin.config.properties.JyRateLimitProperties;
-import com.jyadmin.consts.JyResultStatus;
-import com.jyadmin.exception.JyBusinessException;
+import com.jyadmin.consts.ResultStatus;
+import com.jyadmin.exception.ApiException;
 import com.jyadmin.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +13,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -34,7 +31,7 @@ import java.lang.reflect.Method;
 @Slf4j
 @Aspect
 @Component
-@ConditionalOnProperty(name = "jyadmin.idempotent.enabled", matchIfMissing = true)
+@ConditionalOnProperty(name = "jyadmin.idempotent.enabled", matchIfMissing = false)
 public class IdempotentAspect {
 
     @Resource
@@ -51,7 +48,7 @@ public class IdempotentAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getParameter("idempotent-token");
-        if (StringUtils.isBlank(token)) throw new JyBusinessException(JyResultStatus.REPEAT_OPERATION);
+        if (StringUtils.isBlank(token)) throw new ApiException(ResultStatus.REPEAT_OPERATION);
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method signatureMethod = signature.getMethod();
@@ -65,7 +62,7 @@ public class IdempotentAspect {
             return joinPoint.proceed();
         }
         else {
-            throw new JyBusinessException(JyResultStatus.REPEAT_OPERATION);
+            throw new ApiException(ResultStatus.REPEAT_OPERATION);
         }
     }
 

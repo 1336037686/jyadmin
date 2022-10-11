@@ -19,7 +19,7 @@ public class JyAuthProperties {
     /**
      * 登录用户缓存前缀
      */
-    private String authUserPrefix = "auth-user";
+    private String authUserPrefix = "auth_user";
 
     /**
      * 认证用户缓存过期时间
@@ -30,7 +30,7 @@ public class JyAuthProperties {
     /**
      * 验证码缓存前缀
      */
-    private String verificationCodePrefix = "verification-code";
+    private String verificationCodePrefix = "verification_code";
 
     /**
      * 验证码缓存过期时间

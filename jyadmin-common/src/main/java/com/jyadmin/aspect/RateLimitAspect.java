@@ -2,8 +2,8 @@ package com.jyadmin.aspect;
 
 import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.config.properties.JyRateLimitProperties;
-import com.jyadmin.consts.JyResultStatus;
-import com.jyadmin.exception.JyBusinessException;
+import com.jyadmin.consts.ResultStatus;
+import com.jyadmin.exception.ApiException;
 import com.jyadmin.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 @Slf4j
 @Aspect
 @Component
-@ConditionalOnProperty(name = "jyadmin.rate-limit.enabled", matchIfMissing = true)
+@ConditionalOnProperty(name = "jyadmin.rate-limit.enabled", matchIfMissing = false)
 public class RateLimitAspect {
 
     @Resource
@@ -83,7 +83,7 @@ public class RateLimitAspect {
             log.info("限流控制： 第{}次访问key为 {}，方法为 [{}] 的接口, 请求路径为[{}]", total, keys, fullMethodName, request.getRequestURI());
             return joinPoint.proceed();
         } else {
-            throw new JyBusinessException(JyResultStatus.LIMIT_EXCEEDED);
+            throw new ApiException(ResultStatus.LIMIT_EXCEEDED);
         }
     }
 

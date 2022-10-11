@@ -1,6 +1,6 @@
 package com.jyadmin.security.filter;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -32,31 +32,31 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
         // 账号被锁定
         if (failed instanceof LockedException) {
-            ResponseUtil.out(response, Result.fail(JyResultStatus.ACCOUNT_LOCKOUT));
+            ResponseUtil.out(response, Result.fail(ResultStatus.ACCOUNT_LOCKOUT));
             return;
         }
 
         // 密码过期
         if (failed instanceof CredentialsExpiredException) {
-            ResponseUtil.out(response, Result.fail(JyResultStatus.PASSWORD_EXPIRATION));
+            ResponseUtil.out(response, Result.fail(ResultStatus.PASSWORD_EXPIRATION));
             return;
         }
 
         // 账户过期
         if (failed instanceof AccountExpiredException) {
-            ResponseUtil.out(response, Result.fail(JyResultStatus.ACCOUNT_EXPIRATION));
+            ResponseUtil.out(response, Result.fail(ResultStatus.ACCOUNT_EXPIRATION));
             return;
         }
 
         // 账户被禁用
         if (failed instanceof DisabledException) {
-            ResponseUtil.out(response, Result.fail(JyResultStatus.ACCOUNT_DISABLED));
+            ResponseUtil.out(response, Result.fail(ResultStatus.ACCOUNT_DISABLED));
             return;
         }
 
         // 用户名或者密码输入错误
         if (failed instanceof BadCredentialsException) {
-            ResponseUtil.out(response, Result.fail(JyResultStatus.USERNAME_PASSWORD_ERROR));
+            ResponseUtil.out(response, Result.fail(ResultStatus.USERNAME_PASSWORD_ERROR));
         }
     }
 }

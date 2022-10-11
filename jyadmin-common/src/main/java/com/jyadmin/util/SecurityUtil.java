@@ -2,8 +2,8 @@ package com.jyadmin.util;
 
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
-import com.jyadmin.consts.JyResultStatus;
-import com.jyadmin.exception.JyBusinessException;
+import com.jyadmin.consts.ResultStatus;
+import com.jyadmin.exception.ApiException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,14 +35,14 @@ public class SecurityUtil {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             // 当前登录状态过期
-            throw new JyBusinessException(JyResultStatus.LOGIN_STATUS_EXPIRED);
+            throw new ApiException(ResultStatus.LOGIN_STATUS_EXPIRED);
         }
         if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return userDetails.getUsername();
         }
         // 找不到当前登录的信息
-        throw new JyBusinessException(JyResultStatus.NOT_FOUND_LOGIN_INFO);
+        throw new ApiException(ResultStatus.NOT_FOUND_LOGIN_INFO);
     }
 
     /**

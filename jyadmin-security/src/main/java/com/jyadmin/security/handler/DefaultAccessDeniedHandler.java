@@ -1,6 +1,6 @@
 package com.jyadmin.security.handler;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,6 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler {
         log.info("处理器当认证成功的用户访问受保护的资源，但是权限不够");
 
         // 权限不足
-        ResponseUtil.out(response, Result.fail(JyResultStatus.INSUFFICIENT_PERMISSIONS));
+        ResponseUtil.out(response, Result.fail(ResultStatus.INSUFFICIENT_PERMISSIONS));
     }
 }

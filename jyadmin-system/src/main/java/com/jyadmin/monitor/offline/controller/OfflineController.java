@@ -1,10 +1,10 @@
 package com.jyadmin.monitor.offline.controller;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.domain.UserCacheInfo;
-import com.jyadmin.exception.JyBusinessException;
+import com.jyadmin.exception.ApiException;
 import com.jyadmin.monitor.offline.model.vo.UserQueryVO;
 import com.jyadmin.monitor.offline.service.OfflineService;
 import com.jyadmin.util.PageUtil;
@@ -41,7 +41,7 @@ public class OfflineController {
     @DeleteMapping("/forcedOffline")
     public Result<Object> doForcedOffline(@RequestBody String username) {
         if (StringUtils.isEmpty(username)) {
-            throw new JyBusinessException(JyResultStatus.FAIL, "强制下线时用户名不能为空");
+            throw new ApiException(ResultStatus.FAIL, "强制下线时用户名不能为空");
         }
         offlineService.forcedOffline(username);
         return Result.ok();

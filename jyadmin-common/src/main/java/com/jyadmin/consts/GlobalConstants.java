@@ -7,6 +7,6 @@ package com.jyadmin.consts;
  * Create by 2022-04-05 21:00 <br>
  * @description: JyGlobalConstants <br>
  */
-public class JyGlobalConstants {
+public class GlobalConstants {
 
 }

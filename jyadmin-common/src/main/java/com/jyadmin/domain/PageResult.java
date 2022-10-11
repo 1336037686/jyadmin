@@ -1,6 +1,6 @@
 package com.jyadmin.domain;
 
-import com.jyadmin.consts.JyResultStatus;
+import com.jyadmin.consts.ResultStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -82,7 +82,7 @@ public class PageResult<T> implements Serializable {
     @ApiModelProperty(value = "是否存在下一页", name = "hasNext")
     private Boolean hasNext;
 
-    public PageResult<T> setStatus(JyResultStatus status) {
+    public PageResult<T> setStatus(ResultStatus status) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
         return this;

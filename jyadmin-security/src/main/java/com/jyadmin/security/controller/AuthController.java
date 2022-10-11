@@ -35,7 +35,7 @@ public class AuthController {
     /**
      * 登录
      */
-    @RateLimit
+    // @RateLimit
     @Log(title = "系统认证：用户登录", desc = "")
     @ApiOperation(value = "用户登录", notes = "")
     @PostMapping(value = "/login")
@@ -56,7 +56,7 @@ public class AuthController {
     }
 
     // 获取用户信息
-    @Idempotent(name = "获取用户信息")
+    // @Idempotent(name = "获取用户信息")
     @ApiOperation(value = "获取用户信息", notes = "")
     @GetMapping("/info")
     public Result<Map<String, Object>> doQueryUserInfo() {
