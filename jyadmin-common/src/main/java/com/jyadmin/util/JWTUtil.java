@@ -32,7 +32,7 @@ public class JWTUtil {
         DateTime now = DateTime.now();
         DateTime newTime = now.offsetNew(DateField.SECOND, jwtConfig.getAccessTokenExpiration().intValue());
 
-        Map<String,Object> payload = new HashMap<String,Object>();
+        Map<String,Object> payload = new HashMap<>();
         //签发时间
         payload.put(JWTPayload.ISSUED_AT, now);
         //过期时间
@@ -75,7 +75,7 @@ public class JWTUtil {
     public static String parseToken(String token) {
         JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
         JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(token);
-        Object username = jwt.setKey(jwtConfig.getSecretKey().getBytes()).getPayload(JWT.SUBJECT);
+        Object username = jwt.setKey(jwtConfig.getSecretKey().getBytes()).getPayload("username");
         return username.toString();
     }
 
