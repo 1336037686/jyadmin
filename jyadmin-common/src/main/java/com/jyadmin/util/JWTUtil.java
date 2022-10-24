@@ -1,12 +1,17 @@
 package com.jyadmin.util;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTPayload;
 import com.jyadmin.config.properties.JyJwtProperties;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author LGX_TvT <br>
@@ -23,10 +28,20 @@ public class JWTUtil {
      */
     public static String createAccessToken(String username) {
         JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
-        return JWT.create().setSubject(username)
-                                    .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getAccessTokenExpiration() * 1000))
-                                    .setSigner("HS256", jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8))
-                                    .sign();
+
+        DateTime now = DateTime.now();
+        DateTime newTime = now.offsetNew(DateField.SECOND, jwtConfig.getAccessTokenExpiration().intValue());
+
+        Map<String,Object> payload = new HashMap<String,Object>();
+        //签发时间
+        payload.put(JWTPayload.ISSUED_AT, now);
+        //过期时间
+        payload.put(JWTPayload.EXPIRES_AT, newTime);
+        //生效时间
+        payload.put(JWTPayload.NOT_BEFORE, now);
+        //载荷
+        payload.put("username", username);
+        return cn.hutool.jwt.JWTUtil.createToken(payload, jwtConfig.getSecretKey().getBytes());
     }
 
     /**
@@ -36,11 +51,20 @@ public class JWTUtil {
      */
     public static String createRefreshToken(String username) {
         JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
-        return JWT.create()
-                .setSubject(username)
-                .setExpiresAt(new Date(DateUtil.date().getTime() + jwtConfig.getRefreshTokenExpiration() * 1000))
-                .setSigner("HS256", jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8))
-                .sign();
+
+        DateTime now = DateTime.now();
+        DateTime newTime = now.offsetNew(DateField.SECOND, jwtConfig.getRefreshTokenExpiration().intValue());
+
+        Map<String,Object> payload = new HashMap<String,Object>();
+        //签发时间
+        payload.put(JWTPayload.ISSUED_AT, now);
+        //过期时间
+        payload.put(JWTPayload.EXPIRES_AT, newTime);
+        //生效时间
+        payload.put(JWTPayload.NOT_BEFORE, now);
+        //载荷
+        payload.put("username", username);
+        return cn.hutool.jwt.JWTUtil.createToken(payload, jwtConfig.getSecretKey().getBytes());
     }
 
     /**
@@ -50,9 +74,9 @@ public class JWTUtil {
      */
     public static String parseToken(String token) {
         JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
-        return JWT.create()
-                .setKey(jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8))
-                .parse(token).getPayload(JWT.SUBJECT).toString();
+        JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(token);
+        Object username = jwt.setKey(jwtConfig.getSecretKey().getBytes()).getPayload(JWT.SUBJECT);
+        return username.toString();
     }
 
     /**
@@ -62,6 +86,7 @@ public class JWTUtil {
      */
     public static boolean verify(String token) {
         JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
-        return JWT.of(token).setKey(jwtConfig.getSecretKey().getBytes(StandardCharsets.UTF_8)).validate(0);
+        JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(token);
+        return jwt.setKey(jwtConfig.getSecretKey().getBytes()).verify();
     }
 }
