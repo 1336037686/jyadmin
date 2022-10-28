@@ -2,6 +2,7 @@ package com.jyadmin.config;
 
 import com.jyadmin.util.SecurityUtil;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -25,11 +26,12 @@ public class JySecurityPermissionHandler {
      */
     public Boolean check(String ...permissions){
         // 获取当前用户的所有权限
-        List<String> jyPermissions = SecurityUtil.getCurrentUser().getAuthorities().stream()
+        UserDetails currentUser = SecurityUtil.getCurrentUser();
+        List<String> jyPermissions = currentUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        // 判断当前用户的所有权限是否包含接口上定义的权限
-        return jyPermissions.contains("admin") || Arrays.stream(permissions).anyMatch(jyPermissions::contains);
+        // 判断当前用户的所有权限是否包含接口上定义的权限, 如果账号是管理员账号则全部放行
+        return currentUser.getUsername().equals("admin") || Arrays.stream(permissions).anyMatch(jyPermissions::contains);
     }
 
 }

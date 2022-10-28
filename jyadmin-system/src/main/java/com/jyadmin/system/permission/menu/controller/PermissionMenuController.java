@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import com.jyadmin.system.permission.menu.domain.PermissionMenu;
@@ -18,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -44,34 +46,42 @@ public class PermissionMenuController {
     @Resource
     private PermissionRoleMenuService permissionRoleMenuService;
 
+    @Log(title = "系统管理：新增菜单", desc = "新增菜单")
     @ApiOperation(value = "新增菜单", notes = "")
     @PostMapping("/create")
+    @PreAuthorize("@jy.check('menu:create')")
     public Result<Object> doCreate(@RequestBody @Valid PermissionMenuCreateVO vo) {
         return ResultUtil.toResult(permissionMenuService.save(BeanUtil.copyProperties(vo, PermissionMenu.class)));
     }
 
+    @Log(title = "系统管理：更新菜单", desc = "更新菜单")
     @ApiOperation(value = "更新菜单", notes = "")
     @PutMapping("/update")
+    @PreAuthorize("@jy.check('menu:update')")
     public Result<Object> doUpdate(@RequestBody @Valid PermissionMenuUpdateVO vo) {
         PermissionMenu permissionMenu = permissionMenuService.getById(vo.getId());
         BeanUtil.copyProperties(vo, permissionMenu);
         return ResultUtil.toResult(permissionMenuService.updateById(permissionMenu));
     }
 
+    @Log(title = "系统管理：删除菜单", desc = "删除菜单")
     @ApiOperation(value = "删除菜单", notes = "")
     @DeleteMapping("/remove")
+    @PreAuthorize("@jy.check('menu:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(permissionMenuService.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID查找菜单信息", notes = "")
     @GetMapping("/query/{id}")
+    @PreAuthorize("@jy.check('menu:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(permissionMenuService.getById(id));
     }
 
     @ApiOperation(value = "列表查询菜单信息", notes = "")
     @GetMapping("/list")
+    @PreAuthorize("@jy.check('menu:list')")
     public Result<List<PermissionMenu>> doQueryList(PermissionMenuQueryVO vo) {
         return Result.ok(
                 this.permissionMenuService.getBaseMapper().selectList(
@@ -92,12 +102,14 @@ public class PermissionMenuController {
 
     @ApiOperation(value = "层次列表查询菜单信息", notes = "")
     @GetMapping("/layer")
+    @PreAuthorize("@jy.check('menu:layer')")
     public Result<List<Map<String, Object>>> doQueryLayer(PermissionMenuQueryVO vo) {
         return Result.ok(this.permissionMenuService.getLayer(vo));
     }
 
     @ApiOperation(value = "分页查询菜单信息", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('menu:query')")
     public PageResult<PermissionMenu> doQueryPage(PermissionMenuQueryVO vo) {
         return PageUtil.toPageResult(
                 this.permissionMenuService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
@@ -116,14 +128,17 @@ public class PermissionMenuController {
         );
     }
 
+    @Log(title = "系统管理：创建角色菜单", desc = "创建角色菜单")
     @ApiOperation(value = "创建角色菜单", notes = "")
     @PostMapping("/create/role/{roleId}")
+    @PreAuthorize("@jy.check('menu:createFromRole')")
     public Result<Object> doCreateFromRole(@PathVariable("roleId") String roleId, @RequestBody Set<String> ids) {
         return ResultUtil.toResult(permissionMenuService.saveFromRole(roleId, ids));
     }
 
     @ApiOperation(value = "获取角色菜单", notes = "")
     @GetMapping("/query/role/{roleId}")
+    @PreAuthorize("@jy.check('menu:queryFromRole')")
     public Result<List<String>> doQueryFromRole(@PathVariable("roleId") String roleId) {
         List<PermissionRoleMenu> roles = permissionRoleMenuService.getBaseMapper().selectList(
                 new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId)
@@ -134,6 +149,7 @@ public class PermissionMenuController {
 
     @ApiOperation(value = "获取用户菜单", notes = "")
     @GetMapping("/query/user/{userId}")
+    @PreAuthorize("@jy.check('menu:queryFromUser')")
     public Result<List<Map<String, Object>>> doQueryFromUser(@PathVariable("userId") String userId) {
         List<Map<String, Object>> menus = this.permissionMenuService.getFromUser(userId);
         return Result.ok(menus);

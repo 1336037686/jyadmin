@@ -56,6 +56,7 @@ public class LogController {
                                 .eq(StringUtils.isNotBlank(vo.getRequestMethod()), Log::getRequestMethod, vo.getRequestMethod())
                                 .eq(Objects.nonNull(vo.getExecuteStatus()), Log::getExecuteStatus, vo.getExecuteStatus())
                                 .like(StringUtils.isNotBlank(vo.getUsername()), Log::getUsername, vo.getUsername())
+                                .orderByDesc(Log::getCreateTime)
                 )
         );
     }
