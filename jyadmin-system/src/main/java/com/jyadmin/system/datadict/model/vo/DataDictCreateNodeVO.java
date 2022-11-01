@@ -44,14 +44,6 @@ public class DataDictCreateNodeVO {
     private String code;
 
     /**
-     * 字典值
-     */
-    @ApiModelProperty(value = "字典值", name = "value")
-    @NotBlank(message = "字典值不能为空")
-    @Length(min = 1, max = 100, message = "字典值长度须在1-100字符之间")
-    private String value;
-
-    /**
      * 排序
      */
     @ApiModelProperty(value = "排序", name = "sort")

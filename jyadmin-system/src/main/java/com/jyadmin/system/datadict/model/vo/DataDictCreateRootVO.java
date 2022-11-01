@@ -42,13 +42,6 @@ public class DataDictCreateRootVO {
     @Length(min = 1, max = 50, message = "字典编码长度须在1-50字符之间")
     private String code;
 
-    /**
-     * 字典值
-     */
-    @ApiModelProperty(value = "字典值", name = "value")
-    @NotBlank(message = "字典值不能为空")
-    @Length(min = 1, max = 100, message = "字典值长度须在1-100字符之间")
-    private String value;
 
     /**
      * 排序

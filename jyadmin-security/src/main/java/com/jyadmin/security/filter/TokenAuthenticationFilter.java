@@ -37,7 +37,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader("x-token");
+        String token = request.getHeader("X-Token");
         // 判断token是否存在 且 Token合法
         if (StringUtils.isNotBlank(token) && JWTUtil.verify(token)) {
             String username = JWTUtil.parseToken(token);

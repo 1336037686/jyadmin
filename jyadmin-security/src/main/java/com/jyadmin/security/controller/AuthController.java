@@ -35,7 +35,6 @@ public class AuthController {
     /**
      * 登录
      */
-    @RateLimit
     @Log(title = "系统认证：用户登录", desc = "")
     @ApiOperation(value = "用户登录", notes = "")
     @PostMapping(value = "/login")

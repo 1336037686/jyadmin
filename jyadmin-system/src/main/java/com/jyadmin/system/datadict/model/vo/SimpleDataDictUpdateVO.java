@@ -7,17 +7,18 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
+ * 通用数据字典-修改-普通节点-数据模型
  * @author LGX_TvT <br>
  * @version 1.0 <br>
- * Create by 2022-04-07 22:06 <br>
- * @description: SysDataDictVO <br>
+ * Create by 2022-10-30 16:15 <br>
+ * @description: SimpleDataDictCreateVO <br>
  */
-@ApiModel("数据字典-修改-普通节点-数据模型")
+@ApiModel("通用数据字典-修改-普通节点-数据模型")
 @Data
-public class DataDictUpdateVO {
+public class SimpleDataDictUpdateVO implements Serializable {
 
     /**
      * 节点ID
@@ -25,7 +26,6 @@ public class DataDictUpdateVO {
     @ApiModelProperty(value = "节点ID", name = "id")
     @NotEmpty(message = "id不能为空")
     private String id;
-
 
     /**
      * 字典名称
@@ -44,11 +44,9 @@ public class DataDictUpdateVO {
     private String code;
 
     /**
-     * 排序
+     * 备注
      */
-    @ApiModelProperty(value = "排序", name = "sort")
-    @NotNull(message = "排序不能为空")
-    private Integer sort;
-
+    @ApiModelProperty(value = "备注", name = "remark")
+    private String remark;
 
 }

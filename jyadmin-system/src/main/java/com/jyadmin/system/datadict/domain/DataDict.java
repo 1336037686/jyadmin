@@ -45,12 +45,6 @@ public class DataDict extends BaseEntity implements Serializable {
     private String code;
 
     /**
-     * 字典值
-     */
-    @TableField(value = "value")
-    private String value;
-
-    /**
      * 排序
      */
     @TableField(value = "sort")
