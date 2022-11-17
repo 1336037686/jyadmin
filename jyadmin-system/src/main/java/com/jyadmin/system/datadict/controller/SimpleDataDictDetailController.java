@@ -2,15 +2,13 @@ package com.jyadmin.system.datadict.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.datadict.domain.SimpleDataDict;
 import com.jyadmin.system.datadict.domain.SimpleDataDictDetail;
 import com.jyadmin.system.datadict.model.vo.*;
 import com.jyadmin.system.datadict.service.SimpleDataDictDetailService;
-import com.jyadmin.util.PageUtil;
+import com.jyadmin.system.datadict.service.SimpleDataDictService;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +36,8 @@ public class SimpleDataDictDetailController {
 
     @Resource
     private SimpleDataDictDetailService simpleDataDictDetailService;
+    @Resource
+    private SimpleDataDictService simpleDataDictService;
 
     @Log(title = "系统管理：新增通用数据字典详情", desc = "新增通用数据字典详情")
     @ApiOperation(value = "新增通用数据字典详情", notes = "")
@@ -83,5 +83,20 @@ public class SimpleDataDictDetailController {
                 .orderByDesc(SimpleDataDictDetail::getCreateTime)
         ));
     }
+
+    @ApiOperation(value = "根据Code查询通用数据字典列表", notes = "根据Code查询通用数据字典列表")
+    @GetMapping("/queryByCode/{code}")
+    @PreAuthorize("@jy.check('simple-datadict-detail:queryByCode')")
+    public Result<List<SimpleDataDictDetail>> doQueryByCode(@PathVariable("code") String code) {
+        SimpleDataDict dataDict = simpleDataDictService.getOne(new LambdaQueryWrapper<SimpleDataDict>()
+                .eq(StringUtils.isNotBlank(code), SimpleDataDict::getCode, code));
+        return Result.ok(simpleDataDictDetailService.list(new LambdaQueryWrapper<SimpleDataDictDetail>()
+                .eq(StringUtils.isNotBlank(dataDict.getId()), SimpleDataDictDetail::getDataDictId, dataDict.getId())
+                .orderByDesc(SimpleDataDictDetail::getCreateTime)
+        ));
+    }
+
+
+
     
 }
