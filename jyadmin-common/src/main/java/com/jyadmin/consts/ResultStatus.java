@@ -24,7 +24,7 @@ public enum ResultStatus {
     SUCCESS(200, ModuleSeries.BASE, "操作成功"),
 
     /**
-     * 000 0400 失败
+     * 0000 0400 失败
      */
     FAIL(400, ModuleSeries.BASE, "操作失败"),
 
@@ -83,8 +83,23 @@ public enum ResultStatus {
     /**
      * 0001 0011 重复操作
      */
-    REPEAT_OPERATION(10011, ModuleSeries.AUTH, "请勿重复操作")
+    REPEAT_OPERATION(10011, ModuleSeries.AUTH, "请勿重复操作"),
 
+    // --- 0005 xxxx 附件相关状态码 ---
+    /**
+     * 0005 0001
+     */
+    FILE_UPLOAD_FAIL(50001, ModuleSeries.FILE, "文件上传失败"),
+
+    /**
+     * 0005 0002
+     */
+    FILE_DOWNLOAD_FAIL(50002, ModuleSeries.FILE, "文件下载失败"),
+
+    /**
+     * 0005 0003
+     */
+    FILE_REMOVE_FAIL(50003, ModuleSeries.FILE, "文件删除失败")
     ;
 
     // 状态码
@@ -122,7 +137,9 @@ public enum ResultStatus {
         // 0 基础
         BASE(0),
         // 1 权限
-        AUTH(1);
+        AUTH(1),
+        // 5 附件
+        FILE(5);
 
         private final int value;
 
@@ -158,7 +175,7 @@ public enum ResultStatus {
          * @return
          */
         public static ModuleSeries resolve(int statusCode) {
-            int seriesCode = statusCode / 1000;
+            int seriesCode = statusCode / 10000;
             for (ModuleSeries series : values()) {
                 if (series.value == seriesCode) {
                     return series;

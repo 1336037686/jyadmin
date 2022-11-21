@@ -9,4 +9,6 @@ package com.jyadmin.consts;
  */
 public class GlobalConstants {
 
+    public static final String SYS_FILE_CONFIG_ID = "1";
+
 }

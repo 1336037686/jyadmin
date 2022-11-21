@@ -1,6 +1,7 @@
 package com.jyadmin.system.file.config.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.config.detail.domain.ConfigDetail;
@@ -33,8 +34,6 @@ import java.util.List;
 @RestController
 public class FileConfigController {
 
-    private static final String FILE_CONFIG_ID = "1";
-
     @Resource
     private FileConfigService fileConfigService;
 
@@ -43,7 +42,7 @@ public class FileConfigController {
     @PutMapping("/update")
     @PreAuthorize("@jy.check('file-config:update')")
     public Result<Object> doUpdate(@RequestBody @Valid FileConfigUpdateVO vo) {
-        FileConfig fileConfig = fileConfigService.getById(FILE_CONFIG_ID);
+        FileConfig fileConfig = fileConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID);
         BeanUtil.copyProperties(vo, fileConfig);
         return ResultUtil.toResult(fileConfigService.updateById(fileConfig));
     }
@@ -52,7 +51,7 @@ public class FileConfigController {
     @GetMapping("/query")
     @PreAuthorize("@jy.check('file-config:query')")
     public Result<Object> doQueryById() {
-        return Result.ok(fileConfigService.getById(FILE_CONFIG_ID));
+        return Result.ok(fileConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID));
     }
 
     @ApiOperation(value = "查找系统模板配置列表", notes = "")
