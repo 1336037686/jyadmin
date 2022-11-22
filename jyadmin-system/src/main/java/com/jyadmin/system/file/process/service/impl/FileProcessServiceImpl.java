@@ -1,18 +1,13 @@
 package com.jyadmin.system.file.process.service.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
-import com.jyadmin.system.config.detail.domain.ConfigDetail;
 import com.jyadmin.system.config.detail.domain.ConfigDetailJsonModel;
-import com.jyadmin.system.config.detail.service.ConfigDetailService;
-import com.jyadmin.system.file.config.domain.FileConfig;
-import com.jyadmin.system.file.config.service.FileConfigService;
+import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
+import com.jyadmin.system.config.module.service.ModuleConfigService;
 import com.jyadmin.system.file.manage.domain.FileRecord;
-import com.jyadmin.system.file.process.domain.FileConfigWrapper;
 import com.jyadmin.system.file.process.domain.FileProcess;
 import com.jyadmin.system.file.process.model.dto.FileProcessDownloadDTO;
 import com.jyadmin.system.file.process.model.dto.FileProcessUploadDTO;
@@ -20,7 +15,6 @@ import com.jyadmin.system.file.process.service.FileProcessHandler;
 import com.jyadmin.system.file.process.service.FileProcessService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -32,9 +26,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT <br>
@@ -47,27 +38,20 @@ import java.util.stream.Collectors;
 public class FileProcessServiceImpl implements FileProcessService {
 
     @Resource
-    private FileConfigService fileConfigService;
-    @Resource
-    private ConfigDetailService configDetailService;
+    private ModuleConfigService moduleConfigService;
 
     /**
      * 获取当前的附件配置
      * @return ConfigDetail 配置详情
      */
-    private FileConfigWrapper getEnableFileConfigDetail() {
-        FileConfig fileConfig = this.fileConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID);
-        ConfigDetail enabledConfig = this.configDetailService.getOne(new LambdaQueryWrapper<ConfigDetail>().eq(true, ConfigDetail::getCode, fileConfig.getConfig()));
-        enabledConfig.setJsonObjs(StringUtils.isBlank(enabledConfig.getData()) ? new ArrayList<>() :
-                JSON.parseArray(enabledConfig.getData(), ConfigDetailJsonModel.class).stream()
-                        .sorted(Comparator.comparing(ConfigDetailJsonModel::getSort)).collect(Collectors.toList()));
-        return new FileConfigWrapper().setConfig(fileConfig).setConfigDetail(enabledConfig);
+    private ModuleConfigWrapper getEnableFileConfigDetail() {
+        return moduleConfigService.getEnableConfigDetail(GlobalConstants.SYS_FILE_CONFIG_ID);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO) {
-        FileConfigWrapper fileConfigWrapper = getEnableFileConfigDetail();
+        ModuleConfigWrapper fileConfigWrapper = getEnableFileConfigDetail();
         String storageType = fileConfigWrapper.getConfig().getStorageType();
         ConfigDetailJsonModel beanInfo = fileConfigWrapper.getConfigDetail().getJsonObjs().stream()
                 .filter(x -> "bean".equals(x.getCode())).findFirst().orElse(null);

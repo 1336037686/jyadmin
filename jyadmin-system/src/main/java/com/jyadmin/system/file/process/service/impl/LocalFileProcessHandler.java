@@ -7,9 +7,9 @@ import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.system.config.detail.domain.ConfigDetail;
 import com.jyadmin.system.config.detail.service.ConfigDetailService;
+import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
 import com.jyadmin.system.file.manage.domain.FileRecord;
 import com.jyadmin.system.file.manage.service.FileRecordService;
-import com.jyadmin.system.file.process.domain.FileConfigWrapper;
 import com.jyadmin.system.file.process.domain.FileProcess;
 import com.jyadmin.system.file.process.model.dto.FileProcessUploadDTO;
 import com.jyadmin.system.file.process.service.FileProcessHandler;
@@ -17,7 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 /**
@@ -57,7 +60,7 @@ public class LocalFileProcessHandler implements FileProcessHandler {
     private ConfigDetailService configDetailService;
 
     @Override
-    public FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO, FileConfigWrapper fileConfigWrapper) {
+    public FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO, ModuleConfigWrapper fileConfigWrapper) {
         ConfigDetail configDetail = fileConfigWrapper.getConfigDetail();
         String basePath = configDetailService.getValueByCode(configDetail, BASE_PATH);
         String date = DateUtil.format(new Date(), "yyyy-mm-dd");

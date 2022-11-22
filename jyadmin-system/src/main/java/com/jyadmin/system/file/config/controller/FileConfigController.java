@@ -5,10 +5,8 @@ import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.config.detail.domain.ConfigDetail;
-import com.jyadmin.system.datadict.domain.SimpleDataDict;
-import com.jyadmin.system.datadict.model.vo.SimpleDataDictCreateVO;
-import com.jyadmin.system.datadict.model.vo.SimpleDataDictUpdateVO;
-import com.jyadmin.system.file.config.domain.FileConfig;
+import com.jyadmin.system.config.module.domain.ModuleConfig;
+import com.jyadmin.system.config.module.service.ModuleConfigService;
 import com.jyadmin.system.file.config.model.vo.FileConfigUpdateVO;
 import com.jyadmin.system.file.config.service.FileConfigService;
 import com.jyadmin.util.ResultUtil;
@@ -36,22 +34,25 @@ public class FileConfigController {
 
     @Resource
     private FileConfigService fileConfigService;
+    @Resource
+    private ModuleConfigService moduleConfigService;
+
 
     @Log(title = "系统附件配置：更新通用数据字典", desc = "更新通用数据字典")
     @ApiOperation(value = "更新通用数据字典", notes = "")
     @PutMapping("/update")
     @PreAuthorize("@jy.check('file-config:update')")
     public Result<Object> doUpdate(@RequestBody @Valid FileConfigUpdateVO vo) {
-        FileConfig fileConfig = fileConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID);
+        ModuleConfig fileConfig = moduleConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID);
         BeanUtil.copyProperties(vo, fileConfig);
-        return ResultUtil.toResult(fileConfigService.updateById(fileConfig));
+        return ResultUtil.toResult(moduleConfigService.updateById(fileConfig));
     }
 
     @ApiOperation(value = "查找系统附件配置", notes = "")
     @GetMapping("/query")
     @PreAuthorize("@jy.check('file-config:query')")
     public Result<Object> doQueryById() {
-        return Result.ok(fileConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID));
+        return Result.ok(moduleConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID));
     }
 
     @ApiOperation(value = "查找系统模板配置列表", notes = "")

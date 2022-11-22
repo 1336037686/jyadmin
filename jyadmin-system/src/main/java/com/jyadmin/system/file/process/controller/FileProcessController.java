@@ -39,7 +39,7 @@ public class FileProcessController {
 
     @ApiOperation(value = "文件上传", notes = "")
     @PostMapping("upload/{relevance}")
-    public Result<FileProcess> upload(MultipartFile multipartFile, @PathVariable("relevance") String relevance) throws Exception {
+    public Result<FileProcess> doUpload(MultipartFile multipartFile, @PathVariable("relevance") String relevance) throws Exception {
         // 文件原名称
         String originalFilename = multipartFile.getOriginalFilename();
         // 文件后缀
@@ -65,7 +65,7 @@ public class FileProcessController {
 
     @ApiOperation(value = "文件下载", notes = "")
     @GetMapping("download/{id}")
-    public Result<Object> download(@PathVariable("id") String id, HttpServletResponse response) {
+    public Result<Object> doDownload(@PathVariable("id") String id, HttpServletResponse response) {
         FileRecord fileRecord = fileRecordService.getById(id);
         Assert.notNull(fileRecord, "当前文件不存在！");
         FileProcessDownloadDTO fileProcessDownloadDTO = new FileProcessDownloadDTO().setFileRecord(fileRecord).setResponse(response);

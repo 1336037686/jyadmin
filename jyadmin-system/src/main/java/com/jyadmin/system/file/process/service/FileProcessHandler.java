@@ -1,6 +1,6 @@
 package com.jyadmin.system.file.process.service;
 
-import com.jyadmin.system.file.process.domain.FileConfigWrapper;
+import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
 import com.jyadmin.system.file.process.domain.FileProcess;
 import com.jyadmin.system.file.process.model.dto.FileProcessUploadDTO;
 
@@ -18,5 +18,5 @@ public interface FileProcessHandler {
      * @param fileConfigWrapper 所需配置
      * @return FileProcess
      */
-    FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO, FileConfigWrapper fileConfigWrapper);
+    FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO, ModuleConfigWrapper fileConfigWrapper);
 }

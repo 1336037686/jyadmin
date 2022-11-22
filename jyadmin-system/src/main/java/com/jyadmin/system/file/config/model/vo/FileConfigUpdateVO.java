@@ -1,9 +1,6 @@
 package com.jyadmin.system.file.config.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.jyadmin.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,10 +17,10 @@ import java.io.Serializable;
 public class FileConfigUpdateVO implements Serializable {
 
     /**
-     * 存储类型 （本地存储、阿里OSS、七牛云OSS、腾讯云OSS）
+     * 托管平台 （本地存储、阿里OSS、七牛云OSS、腾讯云OSS）
      */
-    @ApiModelProperty(value = "存储类型", name = "storageType")
-    @NotBlank(message = "存储类型不能为空")
+    @ApiModelProperty(value = "托管平台", name = "storageType")
+    @NotBlank(message = "托管平台不能为空")
     private String storageType;
 
     /**

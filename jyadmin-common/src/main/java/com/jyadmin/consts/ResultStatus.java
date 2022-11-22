@@ -99,7 +99,14 @@ public enum ResultStatus {
     /**
      * 0005 0003
      */
-    FILE_REMOVE_FAIL(50003, ModuleSeries.FILE, "文件删除失败")
+    FILE_REMOVE_FAIL(50003, ModuleSeries.FILE, "文件删除失败"),
+
+
+    // --- 0007 xxxx 邮件相关状态码 ---
+    /**
+     * 0007 0001
+     */
+    EMAIL_SEND_FAIL(70001, ModuleSeries.EMAIL, "邮件发送失败")
     ;
 
     // 状态码
@@ -139,7 +146,9 @@ public enum ResultStatus {
         // 1 权限
         AUTH(1),
         // 5 附件
-        FILE(5);
+        FILE(5),
+        // 7 邮件
+        EMAIL(7);
 
         private final int value;
 
