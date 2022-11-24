@@ -43,7 +43,7 @@ public class EmailConfigController {
     @PutMapping("/update")
     @PreAuthorize("@jy.check('email-config:update')")
     public Result<Object> doUpdate(@RequestBody @Valid EmailConfigUpdateVO vo) {
-        ModuleConfig fileConfig = moduleConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID);
+        ModuleConfig fileConfig = moduleConfigService.getById(GlobalConstants.SYS_EMAIL_CONFIG_ID);
         BeanUtil.copyProperties(vo, fileConfig);
         return ResultUtil.toResult(moduleConfigService.updateById(fileConfig));
     }
@@ -52,7 +52,7 @@ public class EmailConfigController {
     @GetMapping("/query")
     @PreAuthorize("@jy.check('email-config:query')")
     public Result<Object> doQueryById() {
-        return Result.ok(moduleConfigService.getById(GlobalConstants.SYS_FILE_CONFIG_ID));
+        return Result.ok(moduleConfigService.getById(GlobalConstants.SYS_EMAIL_CONFIG_ID));
     }
 
     @ApiOperation(value = "查找系统模板配置列表", notes = "")

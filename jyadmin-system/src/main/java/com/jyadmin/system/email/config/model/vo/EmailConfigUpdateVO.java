@@ -1,7 +1,10 @@
 package com.jyadmin.system.email.config.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,6 +14,9 @@ import javax.validation.constraints.NotBlank;
  * Create by 2022-11-23 23:10 <br>
  * @description: EmailConfigUpdateVO <br>
  */
+@ApiModel("系统邮件配置-修改-数据模型")
+@Data
+@Accessors(chain = true)
 public class EmailConfigUpdateVO {
 
     /**

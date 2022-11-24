@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * @description: EmailProcessController <br>
  */
 @Slf4j
-@Api(value = "邮件处理", tags = {"系统：邮件处理接口"})
+@Api(value = "系统邮件处理", tags = {"系统：系统邮件处理接口"})
 @RequestMapping("/api/email-process")
 @RestController
 public class EmailProcessController {
