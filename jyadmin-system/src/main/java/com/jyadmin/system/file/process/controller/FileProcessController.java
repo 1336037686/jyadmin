@@ -39,22 +39,22 @@ public class FileProcessController {
 
     @ApiOperation(value = "文件上传", notes = "")
     @PostMapping("upload/{relevance}")
-    public Result<FileProcess> doUpload(MultipartFile multipartFile, @PathVariable("relevance") String relevance) throws Exception {
+    public Result<FileProcess> doUpload(MultipartFile file, @PathVariable("relevance") String relevance) throws Exception {
         // 文件原名称
-        String originalFilename = multipartFile.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
         // 文件后缀
         String suffix = FileNameUtil.getSuffix(originalFilename);
         // 新文件名
         String newFileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
         // 文件大小
-        long fileSize = multipartFile.getSize();
+        long fileSize = file.getSize();
         // 文件类型
-        String contentType = multipartFile.getContentType();
+        String contentType = file.getContentType();
 
         FileProcessUploadDTO fileProcessUploadDTO = new FileProcessUploadDTO()
                 .setRealName(originalFilename).setName(newFileName)
                 .setSuffix(suffix).setType(contentType).setSize(fileSize)
-                .setRelevance(relevance).setInputStream(multipartFile.getInputStream());
+                .setRelevance(relevance).setInputStream(file.getInputStream());
 
         log.debug("upload file params: {}, {}", relevance, fileProcessUploadDTO);
 
