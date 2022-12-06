@@ -1,11 +1,9 @@
 package com.jyadmin.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
  * 全局配置 统一管理

@@ -25,6 +25,12 @@ public class QuartzLog implements Serializable {
     private String id;
 
     /**
+     * jobId 任务ID sys_quartz_job id
+     */
+    @TableField(value = "job_id")
+    private String jobId;
+
+    /**
      * 任务编号
      */
     @TableField(value = "code")
@@ -70,7 +76,7 @@ public class QuartzLog implements Serializable {
      * 执行耗时
      */
     @TableField(value = "exec_time")
-    private Integer execTime;
+    private Long execTime;
 
     /**
      * 异常内容

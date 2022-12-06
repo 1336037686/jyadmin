@@ -2,6 +2,7 @@ package com.jyadmin.system.job.manage.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jyadmin.domain.BaseEntity;
 import lombok.Data;
 
@@ -14,6 +15,10 @@ import java.io.Serializable;
 @TableName(value ="sys_quartz_job")
 @Data
 public class QuartzJob extends BaseEntity implements Serializable {
+
+    @JsonIgnore
+    public static final String JOB_KEY = "sys_job";
+
     /**
      * id
      */

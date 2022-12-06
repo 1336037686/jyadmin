@@ -1,7 +1,9 @@
 package com.jyadmin.system.job.manage.service;
 
-import com.jyadmin.system.job.manage.domain.QuartzJob;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jyadmin.system.job.manage.domain.QuartzJob;
+
+import java.util.Collection;
 
 /**
 * @author 13360
@@ -9,5 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2022-11-29 23:20:14
 */
 public interface QuartzJobService extends IService<QuartzJob> {
+
+    boolean saveJob(QuartzJob entity);
+
+    boolean removeJobs(Collection<?> list);
+
+    boolean updateJob(QuartzJob entity);
+
+    boolean updateJobStatus(QuartzJob quartzJob);
 
 }
