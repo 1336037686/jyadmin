@@ -6,18 +6,17 @@ import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.config.properties.JyIdempotentProperties;
+import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
 import com.jyadmin.security.domain.User;
 import com.jyadmin.security.mapper.AuthMapper;
 import com.jyadmin.security.service.AuthService;
-import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -136,6 +135,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
                 .collect(Collectors.toList());
 
         Map<String, Object> userInfo = BeanUtil.beanToMap(user);
+        // 删除密码字段
+        userInfo.remove("password");
         userInfo.put("roles", roles);
         userInfo.put("permissions", permissions);
         return userInfo;
