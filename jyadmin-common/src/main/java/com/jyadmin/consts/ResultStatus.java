@@ -76,6 +76,16 @@ public enum ResultStatus {
     NOT_FOUND_LOGIN_INFO(10009, ModuleSeries.AUTH, "找不到当前登录的信息"),
 
     /**
+     * 0001 0010 验证码过期
+     */
+    CAPTCHA_EXPIRED(10010, ModuleSeries.AUTH, "验证码过期"),
+
+    /**
+     * 0001 0011 验证码输入错误
+     */
+    CAPTCHA_INPUT_ERROR(10011, ModuleSeries.AUTH, "验证码输入错误"),
+
+    /**
      * 0001 0010 访问次数超出限制
      */
     LIMIT_EXCEEDED(10010, ModuleSeries.AUTH, "访问次数超出限制"),

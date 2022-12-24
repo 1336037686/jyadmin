@@ -3,14 +3,13 @@ package com.jyadmin.system.user.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.exception.ApiException;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.user.domain.User;
-import com.jyadmin.system.user.model.vo.UserCreateVO;
-import com.jyadmin.system.user.model.vo.UserQueryVO;
-import com.jyadmin.system.user.model.vo.UserUpdatePasswordVO;
-import com.jyadmin.system.user.model.vo.UserUpdateVO;
+import com.jyadmin.system.user.model.vo.*;
 import com.jyadmin.system.user.service.UserService;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
@@ -70,6 +69,19 @@ public class UserController {
         vo.setPassword(new BCryptPasswordEncoder().encode(vo.getPassword()));
         User user = userService.getById(vo.getId());
         BeanUtil.copyProperties(vo, user);
+        return ResultUtil.toResult(userService.updateById(user));
+    }
+
+    @Log(title = "系统管理：更新用户自身密码", desc = "更新用户自身密码")
+    @ApiOperation(value = "更新用户自身密码", notes = "")
+    @PutMapping("/update/user-password")
+    public Result<Object> doUpdateUserPassword(@RequestBody @Valid UserUpdateOwnPasswordVO vo) {
+        User user = userService.getById(vo.getId());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(vo.getOldPassword(), user.getPassword())) {
+            throw new ApiException(ResultStatus.FAIL, "输入的旧密码错误");
+        }
+        user.setPassword(new BCryptPasswordEncoder().encode(vo.getNewPassword()));
         return ResultUtil.toResult(userService.updateById(user));
     }
 

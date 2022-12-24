@@ -20,7 +20,7 @@ public class JyIgnoreUrlConfig {
         // 注册
         IGNORE_URL.add("/api/auth/register");
         // 验证码
-        IGNORE_URL.add("/api/auth/captcha");
+        IGNORE_URL.add("/api/auth/captcha/{uniqueId}");
     }
 
     public static String[] getIgnoreUrls() {

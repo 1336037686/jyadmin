@@ -8,6 +8,7 @@ import nl.basjes.parse.useragent.UserAgentAnalyzer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 
 /**
  * @author LGX_TvT <br>
@@ -91,5 +92,24 @@ public class IpUtil {
     public static String getMachine(HttpServletRequest request) {
         UserAgent.ImmutableUserAgent userAgent = USER_AGENT_ANALYZER.parse(request.getHeader("User-Agent"));
         return userAgent.get(UserAgent.DEVICE_CLASS).getValue();
+    }
+
+    /**
+     * 获取mac地址
+     */
+    public static String getMacAddress() throws Exception {
+        // 取mac地址
+        byte[] macAddressBytes = NetworkInterface.getByInetAddress(InetAddress.getLocalHost()).getHardwareAddress();
+        // 下面代码是把mac地址拼装成String
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < macAddressBytes.length; i++) {
+            if (i != 0) {
+                sb.append("-");
+            }
+            // mac[i] & 0xFF 是为了把byte转化为正整数
+            String s = Integer.toHexString(macAddressBytes[i] & 0xFF);
+            sb.append(s.length() == 1 ? 0 + s : s);
+        }
+        return sb.toString().trim().toUpperCase();
     }
 }

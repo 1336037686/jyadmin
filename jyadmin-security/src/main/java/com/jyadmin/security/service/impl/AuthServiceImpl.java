@@ -1,11 +1,15 @@
 package com.jyadmin.security.service.impl;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.GifCaptcha;
+import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.config.properties.JyIdempotentProperties;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
@@ -26,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -154,6 +160,17 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         String key = StringUtils.join(jyIdempotentProperties.getPrefix(), ":", token);
         redisUtil.setValue(key, "1", jyIdempotentProperties.getDefaultPeriod(), TimeUnit.SECONDS);
         return token;
+    }
+
+    @Override
+    public void getCaptcha(String uniqueId, HttpServletResponse response) throws IOException {
+        String key = StringUtils.join(GlobalConstants.SYS_CAPTCHA_PREFIX + uniqueId);
+        GifCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 45);
+        captcha.setGenerator(new MathGenerator()); // 自定义验证码内容为四则运算方式
+        captcha.createCode(); // 重新生成code
+        String code = captcha.getCode(); // 获取验证码
+        redisUtil.setValue(key, code, GlobalConstants.SYS_CAPTCHA_TIMELIMIT);
+        captcha.write(response.getOutputStream());
     }
 }
 

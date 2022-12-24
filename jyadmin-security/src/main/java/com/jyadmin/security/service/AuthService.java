@@ -5,6 +5,8 @@ import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +31,6 @@ public interface AuthService extends IService<User> {
     void logout(String username);
 
     String getIdempotentToken();
+
+    void getCaptcha(String uniqueId, HttpServletResponse response) throws IOException;
 }

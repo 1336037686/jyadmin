@@ -42,7 +42,7 @@ public class ApiException extends RuntimeException {
     public ApiException(ResultStatus status, String message) {
         super(message);
         this.code = status.getValue();
-        this.msg = status.getReasonPhrase();
+        this.msg = message;
     }
 
     public ApiException(Throwable cause, ResultStatus status) {

@@ -68,7 +68,11 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         // 请求类方法
         String methodName = joinPoint.getTarget().getClass().getName() + "." + method.getName();
         // 操作用户
-        String username = SecurityUtil.getCurrentUsername();
+        String username = "";
+        try {
+            username = SecurityUtil.getCurrentUsername();
+        } catch (Exception ignored) {}
+
         // 返回结果
         String resultStr = Objects.isNull(result) ? "" : JSON.toJSONString(result);
 

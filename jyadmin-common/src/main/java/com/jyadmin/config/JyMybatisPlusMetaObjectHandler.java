@@ -21,7 +21,11 @@ public class JyMybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        final String currentUserId = SecurityUtil.getCurrentUserId();
+        String currentUserId = null;
+        try {
+            currentUserId = SecurityUtil.getCurrentUserId();
+        } catch (Exception ignored) {}
+
         this.strictInsertFill(metaObject, "createBy", String.class, currentUserId); // 起始版本 3.3.0(推荐使用)
         this.strictInsertFill(metaObject, "updateBy", String.class, currentUserId); // 起始版本 3.3.0(推荐使用)
 
@@ -31,7 +35,11 @@ public class JyMybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        final String currentUserId = SecurityUtil.getCurrentUserId();
+        String currentUserId = null;
+        try {
+            currentUserId = SecurityUtil.getCurrentUserId();
+        } catch (Exception ignored) {}
+
         this.strictUpdateFill(metaObject, "updateBy", String.class, currentUserId); // 起始版本 3.3.0(推荐使用)
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class,  LocalDateTime.now()); // 起始版本 3.3.0(推荐)
     }
