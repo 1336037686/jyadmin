@@ -9,11 +9,6 @@ package com.jyadmin.consts;
  */
 public class GlobalConstants {
 
-    // 系统验证码前缀
-    public static final String SYS_CAPTCHA_PREFIX = "sys_captcha_code:";
-    // 系统验证码过期时间 5 min
-    public static final Integer SYS_CAPTCHA_TIMELIMIT = 5 * 60;
-
     // SECURITY_CONTEXT
     public static final String SYS_SECURITY_CONTEXT = "SECURITY_CONTEXT";
     // 系统附件配置ID

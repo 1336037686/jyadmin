@@ -8,8 +8,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.config.properties.JyIdempotentProperties;
-import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
@@ -50,18 +50,17 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
     @Resource
     private UserDetailsService userDetailsService;
-
     @Resource
     private PasswordEncoder passwordEncoder;
-
     @Resource
     private CacheService cacheService;
 
     @Resource
     private RedisUtil redisUtil;
-
     @Resource
     private JyIdempotentProperties jyIdempotentProperties;
+    @Resource
+    private JyAuthProperties jyAuthProperties;
 
     @Override
     public Map<String, Object> login(HttpServletRequest request, String username, String password) {
@@ -164,12 +163,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
     @Override
     public void getCaptcha(String uniqueId, HttpServletResponse response) throws IOException {
-        String key = StringUtils.join(GlobalConstants.SYS_CAPTCHA_PREFIX + uniqueId);
+        String key = StringUtils.join(jyAuthProperties.getVerificationCodePrefix() + ":" + uniqueId);
         GifCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 45);
         captcha.setGenerator(new MathGenerator()); // 自定义验证码内容为四则运算方式
         captcha.createCode(); // 重新生成code
         String code = captcha.getCode(); // 获取验证码
-        redisUtil.setValue(key, code, GlobalConstants.SYS_CAPTCHA_TIMELIMIT);
+        redisUtil.setValue(key, code, jyAuthProperties.getVerificationCodeExpiration());
         captcha.write(response.getOutputStream());
     }
 }

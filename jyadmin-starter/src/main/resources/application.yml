@@ -1,5 +1,7 @@
-server:
-  port:8080
 spring:
   profiles:
     active: dev
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator

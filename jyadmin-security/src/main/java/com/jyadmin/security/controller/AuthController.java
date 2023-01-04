@@ -2,7 +2,7 @@ package com.jyadmin.security.controller;
 
 import cn.hutool.captcha.generator.MathGenerator;
 import com.jyadmin.annotation.RateLimit;
-import com.jyadmin.consts.GlobalConstants;
+import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
@@ -41,6 +41,8 @@ public class AuthController {
     private RedisUtil redisUtil;
     @Resource
     private AuthService authService;
+    @Resource
+    private JyAuthProperties jyAuthProperties;
 
     /**
      * 登录
@@ -52,7 +54,7 @@ public class AuthController {
     @PostMapping(value = "/login")
     public Result<Map<String, Object>> doLogin(@RequestBody @Valid UserLoginVO vo, HttpServletRequest request) {
         // 验证验证码是否正确
-        Object value = redisUtil.getValue(GlobalConstants.SYS_CAPTCHA_PREFIX + vo.getUniqueId());
+        Object value = redisUtil.getValue(jyAuthProperties.getVerificationCodePrefix() + ":" + vo.getUniqueId());
         if (Objects.isNull(value)) {
             throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
         }
