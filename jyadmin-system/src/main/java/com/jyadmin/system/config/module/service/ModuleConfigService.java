@@ -3,6 +3,7 @@ package com.jyadmin.system.config.module.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jyadmin.system.config.module.domain.ModuleConfig;
 import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
+import com.jyadmin.system.config.module.domain.MultiModuleConfigWrapper;
 
 /**
 * @author 13360
@@ -12,9 +13,15 @@ import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
 public interface ModuleConfigService extends IService<ModuleConfig> {
 
     /**
-     * 获取当前的附件配置
+     * 获取当前的配置
      * @return ModuleConfigWrapper 配置包装类
      */
     ModuleConfigWrapper getEnableConfigDetail(String moduleId);
+
+    /**
+     * 获取当前的配置
+     * @return MultiModuleConfigWrapper 配置包装类
+     */
+    MultiModuleConfigWrapper getEnableMultiConfigDetail(String moduleId);
 
 }

@@ -111,6 +111,11 @@ public enum ResultStatus {
      */
     FILE_REMOVE_FAIL(50003, ModuleSeries.FILE, "文件删除失败"),
 
+    // --- 0006 xxxx 短信相关状态码 ---
+    /**
+     * 0006 0001
+     */
+    SMS_SEND_FAIL(60001, ModuleSeries.SMS, "短信发送失败"),
 
     // --- 0007 xxxx 邮件相关状态码 ---
     /**
@@ -118,6 +123,8 @@ public enum ResultStatus {
      */
     EMAIL_SEND_FAIL(70001, ModuleSeries.EMAIL, "邮件发送失败")
     ;
+
+
 
     // 状态码
     private final int value;
@@ -157,6 +164,8 @@ public enum ResultStatus {
         AUTH(1),
         // 5 附件
         FILE(5),
+        // 6 短信
+        SMS(6),
         // 7 邮件
         EMAIL(7);
 
