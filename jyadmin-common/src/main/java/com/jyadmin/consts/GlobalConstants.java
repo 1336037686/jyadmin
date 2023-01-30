@@ -24,7 +24,7 @@ public class GlobalConstants {
     // 系统短信验证码默认长度
     public static final Integer SYS_SMS_VERIFICATION_CODE_LENGTH = 4;
     // 系统短信验证码默认保存时限(秒s)
-    public static final Integer SYS_SMS_VERIFICATION_CODE_TIME_LIMIT = 5 * 60 * 60;
+    public static final Integer SYS_SMS_VERIFICATION_CODE_TIME_LIMIT = 5 * 60;
 
 
 
