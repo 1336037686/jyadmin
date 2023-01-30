@@ -19,6 +19,13 @@ public class GlobalConstants {
     public static final String SYS_EMAIL_CONFIG_ID = "3";
     // 系统国家电话默认前缀
     public static final String SYS_PHONE_NUMBER_PREFIX = "+86";
+    // 系统短信验证码默认前缀
+    public static final String SYS_SMS_VERIFICATION_CODE_PREFIX = "sms_verification_code";
+    // 系统短信验证码默认长度
+    public static final Integer SYS_SMS_VERIFICATION_CODE_LENGTH = 4;
+    // 系统短信验证码默认保存时限(秒s)
+    public static final Integer SYS_SMS_VERIFICATION_CODE_TIME_LIMIT = 5 * 60 * 60;
+
 
 
 

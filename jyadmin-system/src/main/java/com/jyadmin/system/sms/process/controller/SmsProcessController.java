@@ -33,6 +33,7 @@ public class SmsProcessController {
     @Resource
     private SmsProcessService smsProcessService;
 
+
     @Log(title = "验证码发送", desc = "验证码发送")
     @ApiOperation(value = "验证码发送", notes = "")
     @PostMapping("/send/verificationCode")
@@ -42,20 +43,6 @@ public class SmsProcessController {
         SmsProcess smsProcess = smsProcessService.sendVerificationCode(smsSendDTO);
         return Result.ok(smsProcess);
     }
-
-
-    @Log(title = "注册成功发送", desc = "注册成功发送")
-    @ApiOperation(value = "注册成功发送", notes = "")
-    @PostMapping("/send/SignInSuccess")
-    public Result<Object> doSendSignInSuccess(@RequestBody @Valid SmsSendVO vo) {
-        SmsSendDTO smsSendDTO = new SmsSendDTO();
-        BeanUtil.copyProperties(vo, smsSendDTO);
-        SmsProcess smsProcess = smsProcessService.sendSignInSuccess(smsSendDTO);
-        return Result.ok(smsProcess);
-    }
-
-
-
 
 
 }

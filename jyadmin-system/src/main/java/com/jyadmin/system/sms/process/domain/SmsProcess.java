@@ -13,5 +13,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class SmsProcess {
 
+    private String id;
 
 }

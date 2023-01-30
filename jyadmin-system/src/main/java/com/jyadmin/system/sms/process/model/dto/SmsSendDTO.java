@@ -25,7 +25,7 @@ public class SmsSendDTO implements Serializable {
     /**
      * 接收者
      */
-    private String[] receiver;
+    private String receiver;
 
     /**
      * 内容

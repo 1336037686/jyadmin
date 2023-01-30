@@ -1,14 +1,16 @@
 package com.jyadmin.system.sms.process.service.impl;
 
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.system.config.detail.domain.ConfigDetail;
 import com.jyadmin.system.config.detail.service.ConfigDetailService;
 import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
-import com.jyadmin.system.email.record.service.EmailRecordService;
 import com.jyadmin.system.sms.process.domain.SmsProcess;
 import com.jyadmin.system.sms.process.model.dto.SmsSendDTO;
 import com.jyadmin.system.sms.process.service.SmsProcessHandler;
+import com.jyadmin.system.sms.record.domain.SmsRecord;
+import com.jyadmin.system.sms.record.service.SmsRecordService;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -17,13 +19,11 @@ import com.tencentcloudapi.sms.v20210111.SmsClient;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Properties;
+import java.text.MessageFormat;
 
 /**
  * @author LGX_TvT <br>
@@ -36,42 +36,10 @@ import java.util.Properties;
 public class TencentSmsProcessHandlerImpl implements SmsProcessHandler {
 
     @Resource
-    private EmailRecordService emailRecordService;
+    private SmsRecordService smsRecordService;
 
     @Resource
     private ConfigDetailService configDetailService;
-
-    /**
-     * 构建JavaMailSender
-     * @param emailConfigWrapper 配置包装类
-     * @return JavaMailSender
-     */
-    private JavaMailSender buildJavaMailSender (ModuleConfigWrapper emailConfigWrapper) {
-        ConfigDetail configDetail = emailConfigWrapper.getConfigDetail();
-        String host = configDetailService.getValueByCode(configDetail, "host");
-        String port = configDetailService.getValueByCode(configDetail, "port");
-        String username = configDetailService.getValueByCode(configDetail, "username");
-        String password = configDetailService.getValueByCode(configDetail, "password");
-        String timeout = configDetailService.getValueByCode(configDetail, "timeout");
-        String auth = configDetailService.getValueByCode(configDetail, "auth");
-        String socketFactory = configDetailService.getValueByCode(configDetail, "socketFactory");
-
-        JavaMailSenderImpl javaMailSender =new JavaMailSenderImpl();
-        javaMailSender.setDefaultEncoding("UTF-8");
-        javaMailSender.setHost(host);
-        javaMailSender.setPort(Integer.parseInt(port));
-        javaMailSender.setProtocol(JavaMailSenderImpl.DEFAULT_PROTOCOL);
-        javaMailSender.setUsername(username);
-        javaMailSender.setPassword(password);
-        Properties p = new Properties();
-        p.setProperty("mail.smtp.timeout", timeout);
-        p.setProperty("mail.smtp.auth", auth);
-        p.setProperty("mail.smtp.socketFactory.class", socketFactory);
-        javaMailSender.setJavaMailProperties(p);
-
-        log.debug("build javaMailSender success!");
-        return javaMailSender;
-    }
 
     @Transactional
     @Override
@@ -82,8 +50,10 @@ public class TencentSmsProcessHandlerImpl implements SmsProcessHandler {
         String sdkAppId = configDetailService.getValueByCode(configDetail, "sdkAppId");
         String signName = configDetailService.getValueByCode(configDetail, "signName");
         String templateId = configDetailService.getValueByCode(configDetail, "templateId");
+        String templateContent = configDetailService.getValueByCode(configDetail, "templateContent");
+        String content = MessageFormat.format(templateContent, smsSendDTO.getBody());
         String[] templateParamSet = smsSendDTO.getBody();
-        String[] phoneNumberSet = smsSendDTO.getReceiver();
+        String[] phoneNumberSet = new String[] { GlobalConstants.SYS_PHONE_NUMBER_PREFIX + smsSendDTO.getReceiver() };
 
         try {
             /* 必要步骤：
@@ -154,20 +124,22 @@ public class TencentSmsProcessHandlerImpl implements SmsProcessHandler {
              * 返回的 res 是一个 SendSmsResponse 类的实例，与请求对象对应 */
             SendSmsResponse res = client.SendSms(req);
             // 输出json格式的字符串回包
-            System.out.println(SendSmsResponse.toJsonString(res));
-        } catch (TencentCloudSDKException e) {
-            throw new ApiException(ResultStatus.SMS_SEND_FAIL, e.getMessage());
-        }
+            log.info(SendSmsResponse.toJsonString(res));
 
-//        // 保存邮件发送记录
-//        EmailRecord record = new EmailRecord();
-//        BeanUtil.copyProperties(emailSendDTO, record);
-//        record.setSender(from);
-//        record.setSource(emailConfigWrapper.getConfig().getStorageType());
-//        log.debug("record: {}", record);
-//        emailRecordService.save(record);
-//        return new EmailProcess().setId(record.getId());
-        return null;
+            // 保存短信发送记录
+            SmsRecord record = new SmsRecord();
+            record.setContent(content);
+            record.setPhone(smsSendDTO.getReceiver());
+            record.setSource(smsConfigWrapper.getConfig().getStorageType());
+            record.setRelevance(smsSendDTO.getRelevance());
+            log.debug("sms record: {}", record);
+
+            smsRecordService.save(record);
+            return new SmsProcess().setId(record.getId());
+        } catch (TencentCloudSDKException e) {
+            e.printStackTrace();
+            throw new ApiException(ResultStatus.SMS_SEND_FAIL);
+        }
     }
 
 

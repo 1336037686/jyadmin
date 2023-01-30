@@ -12,6 +12,8 @@ import com.jyadmin.system.sms.process.domain.SmsProcess;
 import com.jyadmin.system.sms.process.model.dto.SmsSendDTO;
 import com.jyadmin.system.sms.process.service.SmsProcessHandler;
 import com.jyadmin.system.sms.process.service.SmsProcessService;
+import com.jyadmin.util.RedisUtil;
+import com.jyadmin.util.VerifyCodeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -19,6 +21,7 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author LGX_TvT <br>
@@ -33,6 +36,9 @@ public class SmsProcessServiceImpl implements SmsProcessService {
     @Resource
     private ModuleConfigService moduleConfigService;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     /**
      * 获取当前的附件配置
      * @return ConfigDetail 配置详情
@@ -40,7 +46,6 @@ public class SmsProcessServiceImpl implements SmsProcessService {
     private MultiModuleConfigWrapper getEnableSmsConfigDetail() {
         return moduleConfigService.getEnableMultiConfigDetail(GlobalConstants.SYS_SMS_CONFIG_ID);
     }
-
 
     @Override
     public SmsProcess sendSms(SmsSendDTO smsSendDTO) {
@@ -73,17 +78,31 @@ public class SmsProcessServiceImpl implements SmsProcessService {
         return smsProcessHandler.sendSms(smsSendDTO, smsConfigWrapper);
     }
 
+    /**
+     * 短信验证码发送，body 数据结构 [用户唯一标签, 验证码, 保存分钟数]
+     * @param smsSendDTO /
+     * @return SmsProcess
+     */
     @Override
     public SmsProcess sendVerificationCode(SmsSendDTO smsSendDTO) {
         smsSendDTO.setType(GlobalConstants.SysSmsConfigId.VERIFICATION_CODE.getCode());
-        smsSendDTO.setBody(new String[]{"6666", "5"});
+        Assert.notEmpty(smsSendDTO.getBody(), "验证码唯一标签不能为空！");
+
+        String uniqueTag = smsSendDTO.getBody()[0];
+        String verifyCode = VerifyCodeUtil.generateNumberVerifyCode(GlobalConstants.SYS_SMS_VERIFICATION_CODE_LENGTH);
+        String min = String.valueOf(GlobalConstants.SYS_SMS_VERIFICATION_CODE_TIME_LIMIT / 60 / 60);
+
+        // 保存验证码信息到redis
+        boolean saveStatus = redisUtil.setValue(GlobalConstants.SYS_SMS_VERIFICATION_CODE_PREFIX + ":" + uniqueTag, verifyCode, GlobalConstants.SYS_SMS_VERIFICATION_CODE_TIME_LIMIT, TimeUnit.SECONDS);
+        Assert.isTrue(saveStatus, "验证码信息发送失败！");
+
+        smsSendDTO.setBody(new String[]{ verifyCode, min });
         return this.sendSms(smsSendDTO);
     }
 
     @Override
     public SmsProcess sendSignInSuccess(SmsSendDTO smsSendDTO) {
         smsSendDTO.setType(GlobalConstants.SysSmsConfigId.SIGN_IN.getCode());
-        smsSendDTO.setBody(new String[]{"6666"});
         return this.sendSms(smsSendDTO);
     }
 

@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        return Result.fail(ResultStatus.FAIL, e.getMessage());
+        return Result.fail(ResultStatus.FAIL);
     }
 
     /**
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
      * 处理所有接口业务异常
      */
     @ExceptionHandler(ApiException.class)
-    public Result<Object> handleJyBusinessException(ApiException e){
+    public Result<Object> handleApiException(ApiException e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return Result.fail(e.getCode(), e.getMsg());
