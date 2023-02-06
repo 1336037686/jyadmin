@@ -9,11 +9,13 @@ import com.jyadmin.exception.ApiException;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.security.domain.UserLoginVO;
 import com.jyadmin.security.service.AuthService;
+import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RedisUtil;
 import com.jyadmin.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -75,6 +77,19 @@ public class AuthController {
         String username = SecurityUtil.getCurrentUsername();
         authService.logout(username);
         return Result.ok();
+    }
+
+    /**
+     * 登陆续期
+     * @return /
+     */
+    @Log(title = "系统认证：登陆续期", desc = "")
+    @ApiOperation(value = "登陆续期", notes = "")
+    @PostMapping(value = "/refreshToken")
+    public Result<Object> doRefreshToken(@RequestBody String refreshToken) {
+        if (StringUtils.isNotBlank(refreshToken) && JWTUtil.verify(refreshToken)) throw new ApiException(ResultStatus.REFRESH_TOKEN_ERROR);
+        String accessToken = authService.refreshToken(refreshToken);
+        return Result.ok(accessToken);
     }
 
     /**

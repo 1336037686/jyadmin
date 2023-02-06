@@ -21,6 +21,8 @@ public class JyIgnoreUrlConfig {
         IGNORE_URL.add("/api/auth/register");
         // 验证码
         IGNORE_URL.add("/api/auth/captcha/{uniqueId}");
+        // 登陆续期
+        IGNORE_URL.add("/api/auth/refreshToken");
     }
 
     public static String[] getIgnoreUrls() {

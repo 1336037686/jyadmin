@@ -40,9 +40,8 @@ public class OfflineController {
     @ApiOperation(value = "强制下线", notes = "")
     @DeleteMapping("/forcedOffline")
     public Result<Object> doForcedOffline(@RequestBody String username) {
-        if (StringUtils.isEmpty(username)) {
-            throw new ApiException(ResultStatus.FAIL, "强制下线时用户名不能为空");
-        }
+        // 强制下线时用户名不能为空
+        if (StringUtils.isEmpty(username)) throw new ApiException(ResultStatus.PARAM_ERROR);
         offlineService.forcedOffline(username);
         return Result.ok();
     }

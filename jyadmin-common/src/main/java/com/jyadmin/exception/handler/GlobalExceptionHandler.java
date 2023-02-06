@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         log.error(ThrowableUtil.getStackTrace(e));
         List<FieldError> fieldErrors = ((MethodArgumentNotValidException) e).getBindingResult().getFieldErrors();
         List<String> msgList = fieldErrors.stream().map(FieldError :: getDefaultMessage).collect(Collectors.toList());
-        return Result.fail(ResultStatus.FAIL, String.join(",", msgList));
+        return Result.fail(ResultStatus.PARAM_ERROR, String.join(ResultStatus.PARAM_ERROR.getReasonPhrase(), String.join(",", msgList)));
     }
 
     /**

@@ -16,8 +16,7 @@ package com.jyadmin.consts;
  */
 public enum ResultStatus {
 
-    // --- 0000 xxxx 基础状态码 ---
-
+    // region--- 0000 xxxx 基础状态码 ---
     /**
      * 0000 0200 成功
      */
@@ -26,10 +25,10 @@ public enum ResultStatus {
     /**
      * 0000 0400 失败
      */
-    FAIL(400, ModuleSeries.BASE, "操作失败"),
+    FAIL(400, ModuleSeries.BASE, "服务异常"),
+    // endregion------------------------
 
-    // --- 0001 xxxx 权限相关状态码 ---
-
+    // region--- 0001 xxxx 权限相关状态码 ---
     /**
      * 0001 0001 权限不足
      */
@@ -76,16 +75,6 @@ public enum ResultStatus {
     NOT_FOUND_LOGIN_INFO(10009, ModuleSeries.AUTH, "找不到当前登录的信息"),
 
     /**
-     * 0001 0010 验证码过期
-     */
-    CAPTCHA_EXPIRED(10010, ModuleSeries.AUTH, "验证码过期"),
-
-    /**
-     * 0001 0011 验证码输入错误
-     */
-    CAPTCHA_INPUT_ERROR(10011, ModuleSeries.AUTH, "验证码输入错误"),
-
-    /**
      * 0001 0010 访问次数超出限制
      */
     LIMIT_EXCEEDED(10010, ModuleSeries.AUTH, "访问次数超出限制"),
@@ -95,7 +84,39 @@ public enum ResultStatus {
      */
     REPEAT_OPERATION(10011, ModuleSeries.AUTH, "请勿重复操作"),
 
-    // --- 0005 xxxx 附件相关状态码 ---
+    /**
+     * 0001 10012 验证码获取失败
+     */
+    CAPTCHA_FETCH_FAIL(10012, ModuleSeries.AUTH, "验证码获取失败"),
+
+    /**
+     * 0001 0013 验证码过期
+     */
+    CAPTCHA_EXPIRED(10013, ModuleSeries.AUTH, "验证码过期"),
+
+    /**
+     * 0001 0014 验证码输入错误
+     */
+    CAPTCHA_INPUT_ERROR(10014, ModuleSeries.AUTH, "验证码输入错误"),
+
+    /**
+     * 0001 0015 RefreshToken获取异常
+     */
+    REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "RefreshToken获取异常"),
+
+
+
+    // endregion--------------------
+
+    // region--- 0002 xxxx 参数错误相关状态码 ---
+    /**
+     * 0002 0001
+     */
+    PARAM_ERROR(20001, ModuleSeries.PARAM, "请求参数错误"),
+
+    // endregion---------------------
+
+    // region--- 0005 xxxx 附件相关状态码 ---
     /**
      * 0005 0001
      */
@@ -110,21 +131,23 @@ public enum ResultStatus {
      * 0005 0003
      */
     FILE_REMOVE_FAIL(50003, ModuleSeries.FILE, "文件删除失败"),
+    // endregion---------------------
 
-    // --- 0006 xxxx 短信相关状态码 ---
+    // region--- 0006 xxxx 短信相关状态码 ---
     /**
      * 0006 0001
      */
     SMS_SEND_FAIL(60001, ModuleSeries.SMS, "短信发送失败"),
+    // endregion--------------------
 
-    // --- 0007 xxxx 邮件相关状态码 ---
+    // region--- 0007 xxxx 邮件相关状态码 ---
     /**
-     * 0007 0001
+     * 0007 0001 邮件发送失败
      */
     EMAIL_SEND_FAIL(70001, ModuleSeries.EMAIL, "邮件发送失败")
+
+    // endregion--------------------------
     ;
-
-
 
     // 状态码
     private final int value;
@@ -157,11 +180,12 @@ public enum ResultStatus {
      * 模块类别枚举
      */
     public enum ModuleSeries {
-
         // 0 基础
         BASE(0),
         // 1 权限
         AUTH(1),
+        // 2 参数异常
+        PARAM(2),
         // 5 附件
         FILE(5),
         // 6 短信

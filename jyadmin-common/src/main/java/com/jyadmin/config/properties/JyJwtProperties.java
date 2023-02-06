@@ -1,7 +1,6 @@
 package com.jyadmin.config.properties;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +24,9 @@ public class JyJwtProperties {
 
     /**
      * refreshToken过期时间
-     * 默认：2h
+     * 默认：12h
      */
-    private Long refreshTokenExpiration = 2 * 60 * 60L;
+    private Long refreshTokenExpiration = 12 * 60 * 60L;
 
     /**
      * 系统加密密钥

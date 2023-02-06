@@ -11,6 +11,7 @@ import com.jyadmin.system.sms.process.model.dto.SmsSendDTO;
 import com.jyadmin.system.sms.process.service.SmsProcessHandler;
 import com.jyadmin.system.sms.record.domain.SmsRecord;
 import com.jyadmin.system.sms.record.service.SmsRecordService;
+import com.jyadmin.util.ThrowableUtil;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -137,7 +138,7 @@ public class TencentSmsProcessHandlerImpl implements SmsProcessHandler {
             smsRecordService.save(record);
             return new SmsProcess().setId(record.getId());
         } catch (TencentCloudSDKException e) {
-            e.printStackTrace();
+            log.error(ThrowableUtil.getStackTrace(e));
             throw new ApiException(ResultStatus.SMS_SEND_FAIL);
         }
     }

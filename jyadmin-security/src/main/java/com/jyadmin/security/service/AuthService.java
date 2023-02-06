@@ -33,4 +33,6 @@ public interface AuthService extends IService<User> {
     String getIdempotentToken();
 
     void getCaptcha(String uniqueId, HttpServletResponse response) throws IOException;
+
+    String refreshToken(String refreshToken);
 }

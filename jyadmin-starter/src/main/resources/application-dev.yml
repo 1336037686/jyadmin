@@ -76,7 +76,7 @@ jyadmin:
     jwt:
       secret-key: jyadmin
       access-token-expiration: 3600 # accessToken过期时间 1h
-      refresh-token-expiration: 7200 # refreshToken过期时间 2h
+      refresh-token-expiration: 43200 # refreshToken过期时间 12h
   rate-limit:
     enabled: true
     prefix: jyadmin_limit

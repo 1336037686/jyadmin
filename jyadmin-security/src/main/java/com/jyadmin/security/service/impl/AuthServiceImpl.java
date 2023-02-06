@@ -10,7 +10,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.config.properties.JyIdempotentProperties;
+import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.UserCacheInfo;
+import com.jyadmin.exception.ApiException;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
 import com.jyadmin.security.domain.User;
@@ -31,7 +33,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -95,6 +96,17 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
                 .setIpArea(IpUtil.getAddressAndIsp(ip))
                 .setBrowser(IpUtil.getBrowser(request))
                 .setCreateTime(new Date());
+    }
+
+    @Override
+    public String refreshToken(String refreshToken) {
+        String username = JWTUtil.parseToken(refreshToken);
+        String key = jyAuthProperties.getAuthUserPrefix() + ":" + username;
+        // 登陆续期
+        boolean expire = redisUtil.expire(key, jyAuthProperties.getAuthUserExpiration(), TimeUnit.SECONDS);
+        if (!expire) throw new ApiException(ResultStatus.REFRESH_TOKEN_ERROR);
+        // 返回两个token
+        return JWTUtil.createAccessToken(username);
     }
 
     @Override
@@ -162,15 +174,22 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
-    public void getCaptcha(String uniqueId, HttpServletResponse response) throws IOException {
-        String key = StringUtils.join(jyAuthProperties.getVerificationCodePrefix() + ":" + uniqueId);
-        GifCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 45);
-        captcha.setGenerator(new MathGenerator()); // 自定义验证码内容为四则运算方式
-        captcha.createCode(); // 重新生成code
-        String code = captcha.getCode(); // 获取验证码
-        redisUtil.setValue(key, code, jyAuthProperties.getVerificationCodeExpiration());
-        captcha.write(response.getOutputStream());
+    public void getCaptcha(String uniqueId, HttpServletResponse response) {
+        try {
+            String key = StringUtils.join(jyAuthProperties.getVerificationCodePrefix() + ":" + uniqueId);
+            GifCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 45);
+            captcha.setGenerator(new MathGenerator()); // 自定义验证码内容为四则运算方式
+            captcha.createCode(); // 重新生成code
+            String code = captcha.getCode(); // 获取验证码
+            redisUtil.setValue(key, code, jyAuthProperties.getVerificationCodeExpiration());
+            captcha.write(response.getOutputStream());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new ApiException(ResultStatus.CAPTCHA_FETCH_FAIL);
+        }
     }
+
+
 }
 
 

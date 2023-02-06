@@ -45,14 +45,14 @@ public class LogAspect {
             // 执行结束时间
             long endTime = System.currentTimeMillis();
             // 执行时间
-            Integer execTime = Math.toIntExact((endTime - startTime) / 1000);
+            Integer execTime = Math.toIntExact((endTime - startTime));
             logService.save(result, 1, execTime, joinPoint, null);
             return result;
         } catch (Throwable e) {
             // 执行结束时间
             long endTime = System.currentTimeMillis();
-            // 执行时间
-            Integer execTime = Math.toIntExact((endTime - startTime) / 1000);
+            // 执行时间 ms
+            Integer execTime = Math.toIntExact((endTime - startTime));
             logService.save(null, 0, execTime, joinPoint, ThrowableUtil.getStackTrace(e));
             throw e;
         }

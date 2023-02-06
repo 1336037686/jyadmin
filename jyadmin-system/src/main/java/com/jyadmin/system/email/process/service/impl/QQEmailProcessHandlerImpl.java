@@ -89,7 +89,7 @@ public class QQEmailProcessHandlerImpl implements EmailProcessHandler {
             javaMailSender.send(message);
 
         } catch (MessagingException e) {
-            throw new ApiException(ResultStatus.EMAIL_SEND_FAIL, e.getMessage());
+            throw new ApiException(ResultStatus.EMAIL_SEND_FAIL);
         }
 
         // 保存邮件发送记录
