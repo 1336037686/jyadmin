@@ -3,6 +3,7 @@ package com.jyadmin.system.user.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
@@ -42,6 +43,7 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @RateLimit
     @Log(title = "系统管理：新增用户", desc = "新增用户")
     @ApiOperation(value = "新增用户", notes = "")
     @PostMapping("/create")
@@ -51,6 +53,7 @@ public class UserController {
         return ResultUtil.toResult(userService.save(BeanUtil.copyProperties(vo, User.class)));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新用户", desc = "更新用户")
     @ApiOperation(value = "更新用户", notes = "")
     @PutMapping("/update")
@@ -61,6 +64,7 @@ public class UserController {
         return ResultUtil.toResult(userService.updateById(user));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新密码", desc = "更新密码")
     @ApiOperation(value = "更新密码", notes = "")
     @PutMapping("/update/password")
@@ -72,6 +76,7 @@ public class UserController {
         return ResultUtil.toResult(userService.updateById(user));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新用户自身密码", desc = "更新用户自身密码")
     @ApiOperation(value = "更新用户自身密码", notes = "")
     @PutMapping("/update/user-password")
@@ -85,6 +90,7 @@ public class UserController {
         return ResultUtil.toResult(userService.updateById(user));
     }
 
+    @RateLimit
     @Log(title = "系统管理：删除用户", desc = "删除用户")
     @ApiOperation(value = "删除用户", notes = "")
     @DeleteMapping("/remove")

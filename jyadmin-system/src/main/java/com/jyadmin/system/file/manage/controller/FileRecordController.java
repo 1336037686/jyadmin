@@ -2,6 +2,7 @@ package com.jyadmin.system.file.manage.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -37,6 +38,7 @@ public class FileRecordController {
     @Resource
     private FileRecordService fileRecordService;
 
+    @RateLimit
     @Log(title = "系统附件记录：删除附件记录", desc = "删除附件记录")
     @ApiOperation(value = "删除附件记录", notes = "")
     @DeleteMapping("/remove")

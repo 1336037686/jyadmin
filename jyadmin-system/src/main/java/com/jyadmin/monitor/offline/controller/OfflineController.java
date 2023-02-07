@@ -1,5 +1,6 @@
 package com.jyadmin.monitor.offline.controller;
 
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
@@ -37,6 +38,7 @@ public class OfflineController {
         return PageUtil.toPageResult(offlineService.getList(vo), vo);
     }
 
+    @RateLimit
     @ApiOperation(value = "强制下线", notes = "")
     @DeleteMapping("/forcedOffline")
     public Result<Object> doForcedOffline(@RequestBody String username) {

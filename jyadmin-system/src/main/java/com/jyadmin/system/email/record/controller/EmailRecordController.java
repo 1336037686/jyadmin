@@ -2,6 +2,7 @@ package com.jyadmin.system.email.record.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -37,6 +38,7 @@ public class EmailRecordController {
     @Resource
     private EmailRecordService emailRecordService;
 
+    @RateLimit
     @Log(title = "系统邮件记录：删除邮件记录", desc = "删除邮件记录")
     @ApiOperation(value = "删除邮件记录", notes = "")
     @DeleteMapping("/remove")

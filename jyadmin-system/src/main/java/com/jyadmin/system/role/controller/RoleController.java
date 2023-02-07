@@ -3,13 +3,14 @@ package com.jyadmin.system.role.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jyadmin.log.annotation.Log;
-import com.jyadmin.system.role.model.vo.RoleCreateVO;
-import com.jyadmin.system.role.model.vo.RoleQueryVO;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.role.domain.Role;
 import com.jyadmin.system.role.domain.UserRole;
+import com.jyadmin.system.role.model.vo.RoleCreateVO;
+import com.jyadmin.system.role.model.vo.RoleQueryVO;
 import com.jyadmin.system.role.model.vo.RoleUpdateVO;
 import com.jyadmin.system.role.service.RoleService;
 import com.jyadmin.system.role.service.UserRoleService;
@@ -46,6 +47,7 @@ public class RoleController {
     @Resource
     private UserRoleService userRoleService;
 
+    @RateLimit
     @Log(title = "系统管理：新增角色", desc = "新增角色")
     @ApiOperation(value = "新增角色", notes = "")
     @PostMapping("/create")
@@ -54,6 +56,7 @@ public class RoleController {
         return ResultUtil.toResult(roleService.save(BeanUtil.copyProperties(vo, Role.class)));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新角色", desc = "更新角色")
     @ApiOperation(value = "更新角色", notes = "")
     @PutMapping("/update")
@@ -64,6 +67,7 @@ public class RoleController {
         return ResultUtil.toResult(roleService.updateById(role));
     }
 
+    @RateLimit
     @Log(title = "系统管理：删除角色", desc = "删除角色")
     @ApiOperation(value = "删除角色", notes = "")
     @DeleteMapping("/remove")
@@ -108,6 +112,7 @@ public class RoleController {
         );
     }
 
+    @RateLimit
     @Log(title = "系统管理：创建用户角色", desc = "创建用户角色")
     @ApiOperation(value = "创建用户角色", notes = "")
     @PostMapping("/create/user/{userId}")

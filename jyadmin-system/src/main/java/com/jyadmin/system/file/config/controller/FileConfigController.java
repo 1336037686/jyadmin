@@ -1,6 +1,7 @@
 package com.jyadmin.system.file.config.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -38,6 +39,7 @@ public class FileConfigController {
     private ModuleConfigService moduleConfigService;
 
 
+    @RateLimit
     @Log(title = "系统附件配置：更新附件配置", desc = "更新附件配置")
     @ApiOperation(value = "更新附件配置", notes = "")
     @PutMapping("/update")

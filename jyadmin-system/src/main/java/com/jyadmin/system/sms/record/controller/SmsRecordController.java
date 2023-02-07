@@ -2,6 +2,7 @@ package com.jyadmin.system.sms.record.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -36,6 +37,7 @@ public class SmsRecordController {
     @Resource
     private SmsRecordService smsRecordService;
 
+    @RateLimit
     @Log(title = "系统短信记录：删除短信记录", desc = "删除短信记录")
     @ApiOperation(value = "删除短信记录", notes = "")
     @DeleteMapping("/remove")

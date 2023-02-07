@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.BasePageVO;
 import com.jyadmin.domain.PageResult;
@@ -40,6 +41,7 @@ public class LogController {
     @Resource
     private LogService logService;
 
+    @RateLimit
     @ApiOperation(value = "删除日志", notes = "")
     @DeleteMapping("/remove")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {

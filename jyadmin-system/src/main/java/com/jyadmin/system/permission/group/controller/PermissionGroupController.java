@@ -3,16 +3,17 @@ package com.jyadmin.system.permission.group.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
-import com.jyadmin.util.PageUtil;
-import com.jyadmin.util.ResultUtil;
 import com.jyadmin.system.permission.group.domain.PermissionActionGroup;
 import com.jyadmin.system.permission.group.model.vo.PermissionGroupCreateVO;
 import com.jyadmin.system.permission.group.model.vo.PermissionGroupQueryVO;
 import com.jyadmin.system.permission.group.model.vo.PermissionGroupUpdateVO;
 import com.jyadmin.system.permission.group.service.PermissionActionGroupService;
+import com.jyadmin.util.PageUtil;
+import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,7 @@ public class PermissionGroupController {
     @Resource
     private PermissionActionGroupService permissionActionGroupService;
 
+    @RateLimit
     @Log(title = "系统管理：新增组别", desc = "新增组别")
     @ApiOperation(value = "新增组别", notes = "")
     @PostMapping("/create")
@@ -47,6 +49,7 @@ public class PermissionGroupController {
         return ResultUtil.toResult(permissionActionGroupService.save(BeanUtil.copyProperties(vo, PermissionActionGroup.class)));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新组别", desc = "更新组别")
     @ApiOperation(value = "更新组别", notes = "")
     @PutMapping("/update")
@@ -57,6 +60,7 @@ public class PermissionGroupController {
         return ResultUtil.toResult(permissionActionGroupService.updateById(permissionActionGroup));
     }
 
+    @RateLimit
     @Log(title = "系统管理：删除组别", desc = "删除组别")
     @ApiOperation(value = "删除组别", notes = "")
     @DeleteMapping("/remove")

@@ -1,7 +1,7 @@
 package com.jyadmin.system.datadict.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.jyadmin.util.PageUtil;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.system.datadict.domain.DataDict;
@@ -11,6 +11,7 @@ import com.jyadmin.system.datadict.model.vo.DataDictCreateRootVO;
 import com.jyadmin.system.datadict.model.vo.DataDictQueryVO;
 import com.jyadmin.system.datadict.model.vo.DataDictUpdateVO;
 import com.jyadmin.system.datadict.service.DataDictService;
+import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,7 @@ public class DataDictController {
     @Resource
     private DataDictService sysDataDictService;
 
+    @RateLimit
     @ApiOperation(value = "创建根节点", notes = "")
     @PostMapping("/create-root")
     public Result<Object> doCreateRoot(@RequestBody @Valid DataDictCreateRootVO vo) {
@@ -47,6 +49,7 @@ public class DataDictController {
         return ResultUtil.toResult(sysDataDictService.save(sysDataDict));
     }
 
+    @RateLimit
     @ApiOperation(value = "创建子节点", notes = "")
     @PostMapping("/create-node")
     public Result<Object> doCreateNode(@RequestBody @Valid DataDictCreateNodeVO vo) {
@@ -55,6 +58,7 @@ public class DataDictController {
         return ResultUtil.toResult(sysDataDictService.save(sysDataDict));
     }
 
+    @RateLimit
     @ApiOperation(value = "更新节点", notes = "")
     @PutMapping("/update")
     public Result<Object> doUpdate(@RequestBody @Valid DataDictUpdateVO vo) {
@@ -63,6 +67,7 @@ public class DataDictController {
         return ResultUtil.toResult(sysDataDictService.updateById(sysDataDict));
     }
 
+    @RateLimit
     @ApiOperation(value = "删除节点", notes = "")
     @DeleteMapping("/remove")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {

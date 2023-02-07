@@ -1,6 +1,7 @@
 package com.jyadmin.system.email.process.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.email.process.domain.EmailProcess;
@@ -33,6 +34,7 @@ public class EmailProcessController {
     @Resource
     private EmailProcessService emailProcessService;
 
+    @RateLimit
     @Log(title = "邮件发送", desc = "邮件发送")
     @ApiOperation(value = "邮件发送", notes = "")
     @PostMapping("/send")

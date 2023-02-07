@@ -3,6 +3,7 @@ package com.jyadmin.system.job.manage.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
@@ -45,6 +46,7 @@ public class QuartzJobController {
     @Resource
     private QuartzJobService quartzService;
 
+    @RateLimit
     @Log(title = "系统定时任务管理：新增系统定时任务", desc = "新增系统定时任务")
     @ApiOperation(value = "新增系统定时任务", notes = "")
     @PostMapping("/create")
@@ -57,6 +59,7 @@ public class QuartzJobController {
         return ResultUtil.toResult(quartzService.saveJob(quartzJob));
     }
 
+    @RateLimit
     @Log(title = "系统定时任务管理：更新系统定时任务", desc = "更新系统定时任务")
     @ApiOperation(value = "更新系统定时任务", notes = "")
     @PutMapping("/update")
@@ -69,6 +72,7 @@ public class QuartzJobController {
         return ResultUtil.toResult(quartzService.updateJob(quartzJob));
     }
 
+    @RateLimit
     @Log(title = "系统定时任务管理：更新系统定时任务任务状态", desc = "更新系统定时任务任务状态")
     @ApiOperation(value = "更新系统定时任务任务状态", notes = "")
     @PutMapping("/update-status")
@@ -79,6 +83,7 @@ public class QuartzJobController {
         return ResultUtil.toResult(quartzService.updateJobStatus(quartzJob));
     }
 
+    @RateLimit
     @Log(title = "系统定时任务管理：删除系统定时任务", desc = "删除系统定时任务")
     @ApiOperation(value = "删除系统定时任务", notes = "")
     @DeleteMapping("/remove")

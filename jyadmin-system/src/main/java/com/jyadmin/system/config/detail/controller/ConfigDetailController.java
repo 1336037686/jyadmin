@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -13,12 +14,6 @@ import com.jyadmin.system.config.detail.model.vo.ConfigDetailCreateVO;
 import com.jyadmin.system.config.detail.model.vo.ConfigDetailQueryVO;
 import com.jyadmin.system.config.detail.model.vo.ConfigDetailUpdateVO;
 import com.jyadmin.system.config.detail.service.ConfigDetailService;
-import com.jyadmin.system.config.template.domain.ConfigTemplate;
-import com.jyadmin.system.config.template.domain.ConfigTemplateJsonModel;
-import com.jyadmin.system.config.template.model.vo.ConfigTemplateCreateVO;
-import com.jyadmin.system.config.template.model.vo.ConfigTemplateQueryVO;
-import com.jyadmin.system.config.template.model.vo.ConfigTemplateUpdateVO;
-import com.jyadmin.system.config.template.service.ConfigTemplateService;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -52,6 +47,7 @@ public class ConfigDetailController {
     @Resource
     private ConfigDetailService configDetailService;
 
+    @RateLimit
     @Log(title = "系统配置信息：新增配置信息", desc = "新增配置信息")
     @ApiOperation(value = "新增配置信息", notes = "")
     @PostMapping("/create")
@@ -60,6 +56,7 @@ public class ConfigDetailController {
         return ResultUtil.toResult(configDetailService.save(BeanUtil.copyProperties(vo, ConfigDetail.class)));
     }
 
+    @RateLimit
     @Log(title = "系统配置信息：更新配置信息", desc = "更新配置信息")
     @ApiOperation(value = "更新配置信息", notes = "")
     @PutMapping("/update")
@@ -70,6 +67,7 @@ public class ConfigDetailController {
         return ResultUtil.toResult(configDetailService.updateById(configDetail));
     }
 
+    @RateLimit
     @Log(title = "系统配置信息：删除配置信息", desc = "删除配置信息")
     @ApiOperation(value = "删除配置信息", notes = "")
     @DeleteMapping("/remove")

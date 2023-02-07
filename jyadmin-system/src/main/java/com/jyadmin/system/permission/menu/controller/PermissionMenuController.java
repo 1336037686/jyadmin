@@ -3,11 +3,10 @@ package com.jyadmin.system.permission.menu.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
-import com.jyadmin.util.PageUtil;
-import com.jyadmin.util.ResultUtil;
 import com.jyadmin.system.permission.menu.domain.PermissionMenu;
 import com.jyadmin.system.permission.menu.domain.PermissionRoleMenu;
 import com.jyadmin.system.permission.menu.model.vo.PermissionMenuCreateVO;
@@ -15,6 +14,8 @@ import com.jyadmin.system.permission.menu.model.vo.PermissionMenuQueryVO;
 import com.jyadmin.system.permission.menu.model.vo.PermissionMenuUpdateVO;
 import com.jyadmin.system.permission.menu.service.PermissionMenuService;
 import com.jyadmin.system.permission.menu.service.PermissionRoleMenuService;
+import com.jyadmin.util.PageUtil;
+import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class PermissionMenuController {
     @Resource
     private PermissionRoleMenuService permissionRoleMenuService;
 
+    @RateLimit
     @Log(title = "系统管理：新增菜单", desc = "新增菜单")
     @ApiOperation(value = "新增菜单", notes = "")
     @PostMapping("/create")
@@ -54,6 +56,7 @@ public class PermissionMenuController {
         return ResultUtil.toResult(permissionMenuService.save(BeanUtil.copyProperties(vo, PermissionMenu.class)));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新菜单", desc = "更新菜单")
     @ApiOperation(value = "更新菜单", notes = "")
     @PutMapping("/update")
@@ -64,6 +67,7 @@ public class PermissionMenuController {
         return ResultUtil.toResult(permissionMenuService.updateById(permissionMenu));
     }
 
+    @RateLimit
     @Log(title = "系统管理：删除菜单", desc = "删除菜单")
     @ApiOperation(value = "删除菜单", notes = "")
     @DeleteMapping("/remove")
@@ -128,6 +132,7 @@ public class PermissionMenuController {
         );
     }
 
+    @RateLimit
     @Log(title = "系统管理：创建角色菜单", desc = "创建角色菜单")
     @ApiOperation(value = "创建角色菜单", notes = "")
     @PostMapping("/create/role/{roleId}")

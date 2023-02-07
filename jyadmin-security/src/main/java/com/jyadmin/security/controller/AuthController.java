@@ -83,6 +83,7 @@ public class AuthController {
      * 登陆续期
      * @return /
      */
+    @RateLimit
     @Log(title = "系统认证：登陆续期", desc = "")
     @ApiOperation(value = "登陆续期", notes = "")
     @PostMapping(value = "/refreshToken")

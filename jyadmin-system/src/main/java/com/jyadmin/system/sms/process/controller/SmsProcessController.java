@@ -1,6 +1,7 @@
 package com.jyadmin.system.sms.process.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.sms.process.domain.SmsProcess;
@@ -34,6 +35,7 @@ public class SmsProcessController {
     private SmsProcessService smsProcessService;
 
 
+    @RateLimit
     @Log(title = "验证码发送", desc = "验证码发送")
     @ApiOperation(value = "验证码发送", notes = "")
     @PostMapping("/send/verificationCode")

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -13,11 +14,6 @@ import com.jyadmin.system.config.template.model.vo.ConfigTemplateCreateVO;
 import com.jyadmin.system.config.template.model.vo.ConfigTemplateQueryVO;
 import com.jyadmin.system.config.template.model.vo.ConfigTemplateUpdateVO;
 import com.jyadmin.system.config.template.service.ConfigTemplateService;
-import com.jyadmin.system.user.domain.User;
-import com.jyadmin.system.user.model.vo.UserCreateVO;
-import com.jyadmin.system.user.model.vo.UserQueryVO;
-import com.jyadmin.system.user.model.vo.UserUpdatePasswordVO;
-import com.jyadmin.system.user.model.vo.UserUpdateVO;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -25,12 +21,14 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +47,7 @@ public class ConfigTemplateController {
     @Resource
     private ConfigTemplateService configTemplateService;
 
+    @RateLimit
     @Log(title = "系统配置模板：新增模板", desc = "新增模板")
     @ApiOperation(value = "新增模板", notes = "")
     @PostMapping("/create")
@@ -57,6 +56,7 @@ public class ConfigTemplateController {
         return ResultUtil.toResult(configTemplateService.save(BeanUtil.copyProperties(vo, ConfigTemplate.class)));
     }
 
+    @RateLimit
     @Log(title = "系统配置模板：更新模板", desc = "更新模板")
     @ApiOperation(value = "更新模板", notes = "")
     @PutMapping("/update")
@@ -67,6 +67,7 @@ public class ConfigTemplateController {
         return ResultUtil.toResult(configTemplateService.updateById(configTemplate));
     }
 
+    @RateLimit
     @Log(title = "系统配置模板：删除模板", desc = "删除模板")
     @ApiOperation(value = "删除模板", notes = "")
     @DeleteMapping("/remove")

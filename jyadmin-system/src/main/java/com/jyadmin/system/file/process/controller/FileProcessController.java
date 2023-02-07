@@ -1,6 +1,7 @@
 package com.jyadmin.system.file.process.controller;
 
 import cn.hutool.core.io.file.FileNameUtil;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.Result;
 import com.jyadmin.system.file.manage.domain.FileRecord;
 import com.jyadmin.system.file.manage.service.FileRecordService;
@@ -37,6 +38,7 @@ public class FileProcessController {
     @Resource
     private FileRecordService fileRecordService;
 
+    @RateLimit
     @ApiOperation(value = "文件上传", notes = "")
     @PostMapping("upload/{relevance}")
     public Result<FileProcess> doUpload(MultipartFile file, @PathVariable("relevance") String relevance) throws Exception {
@@ -63,6 +65,7 @@ public class FileProcessController {
         return Result.ok(result);
     }
 
+    @RateLimit
     @ApiOperation(value = "文件下载", notes = "")
     @GetMapping("download/{id}")
     public Result<Object> doDownload(@PathVariable("id") String id, HttpServletResponse response) {

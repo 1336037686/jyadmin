@@ -3,18 +3,19 @@ package com.jyadmin.system.permission.action.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
+import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.permission.action.domain.PermissionAction;
-import com.jyadmin.util.PageUtil;
-import com.jyadmin.util.ResultUtil;
-import com.jyadmin.domain.Result;
 import com.jyadmin.system.permission.action.domain.PermissionMenuAction;
 import com.jyadmin.system.permission.action.model.vo.PermissionActionCreateVO;
 import com.jyadmin.system.permission.action.model.vo.PermissionActionQueryVO;
 import com.jyadmin.system.permission.action.model.vo.PermissionActionUpdateVO;
 import com.jyadmin.system.permission.action.service.PermissionActionService;
 import com.jyadmin.system.permission.action.service.PermissionMenuActionService;
+import com.jyadmin.util.PageUtil;
+import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,7 @@ public class PermissionActionController {
     @Resource
     private PermissionMenuActionService permissionMenuActionService;
 
+    @RateLimit
     @Log(title = "系统管理：新增权限动作", desc = "新增权限动作")
     @ApiOperation(value = "新增权限动作", notes = "")
     @PostMapping("/create")
@@ -54,6 +56,7 @@ public class PermissionActionController {
         return ResultUtil.toResult(permissionActionService.save(BeanUtil.copyProperties(vo, PermissionAction.class)));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新权限动作", desc = "更新权限动作")
     @ApiOperation(value = "更新权限动作", notes = "")
     @PutMapping("/update")
@@ -64,6 +67,7 @@ public class PermissionActionController {
         return ResultUtil.toResult(permissionActionService.updateById(permissionAction));
     }
 
+    @RateLimit
     @Log(title = "系统管理：删除权限动作", desc = "删除权限动作")
     @ApiOperation(value = "删除权限动作", notes = "")
     @DeleteMapping("/remove")

@@ -3,6 +3,7 @@ package com.jyadmin.system.datadict.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -11,10 +12,6 @@ import com.jyadmin.system.datadict.model.vo.SimpleDataDictCreateVO;
 import com.jyadmin.system.datadict.model.vo.SimpleDataDictQueryVO;
 import com.jyadmin.system.datadict.model.vo.SimpleDataDictUpdateVO;
 import com.jyadmin.system.datadict.service.SimpleDataDictService;
-import com.jyadmin.system.permission.action.domain.PermissionAction;
-import com.jyadmin.system.permission.action.model.vo.PermissionActionCreateVO;
-import com.jyadmin.system.permission.action.model.vo.PermissionActionQueryVO;
-import com.jyadmin.system.permission.action.model.vo.PermissionActionUpdateVO;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -45,6 +42,7 @@ public class SimpleDataDictController {
     @Resource
     private SimpleDataDictService simpleDataDictService;
 
+    @RateLimit
     @Log(title = "系统管理：新增通用数据字典", desc = "新增通用数据字典")
     @ApiOperation(value = "新增通用数据字典", notes = "")
     @PostMapping("/create")
@@ -53,6 +51,7 @@ public class SimpleDataDictController {
         return ResultUtil.toResult(simpleDataDictService.save(BeanUtil.copyProperties(vo, SimpleDataDict.class)));
     }
 
+    @RateLimit
     @Log(title = "系统管理：更新通用数据字典", desc = "更新通用数据字典")
     @ApiOperation(value = "更新通用数据字典", notes = "")
     @PutMapping("/update")
@@ -63,6 +62,7 @@ public class SimpleDataDictController {
         return ResultUtil.toResult(simpleDataDictService.updateById(simpleDataDict));
     }
 
+    @RateLimit
     @Log(title = "系统管理：删除通用数据字典", desc = "删除通用数据字典")
     @ApiOperation(value = "删除通用数据字典", notes = "")
     @DeleteMapping("/remove")
