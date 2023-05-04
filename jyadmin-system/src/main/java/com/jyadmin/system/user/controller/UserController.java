@@ -10,6 +10,7 @@ import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.user.domain.User;
+import com.jyadmin.system.user.model.dto.UserDTO;
 import com.jyadmin.system.user.model.vo.*;
 import com.jyadmin.system.user.service.UserService;
 import com.jyadmin.util.PageUtil;
@@ -109,17 +110,15 @@ public class UserController {
     @ApiOperation(value = "分页查询用户", notes = "")
     @GetMapping("/query")
     @PreAuthorize("@jy.check('user:query')")
-    public PageResult<User> doQueryPage(UserQueryVO vo) {
-        return PageUtil.toPageResult(
-                this.userService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
-                        new LambdaQueryWrapper<User>()
+    public PageResult<UserDTO> doQueryPage(UserQueryVO vo) {
+        return PageUtil.toPageResult(this.userService.getPage(new Page<>(vo.getPageNumber(), vo.getPageSize()),
+                new LambdaQueryWrapper<User>()
                         .like(StringUtils.isNotBlank(vo.getUsername()), User::getUsername, vo.getUsername())
                         .like(StringUtils.isNotBlank(vo.getNickname()), User::getNickname, vo.getNickname())
                         .like(StringUtils.isNotBlank(vo.getPhone()), User::getPhone, vo.getPhone())
                         .eq(Objects.nonNull(vo.getType()), User::getType, vo.getType())
                         .eq(Objects.nonNull(vo.getStatus()), User::getStatus, vo.getStatus())
-                )
-        );
+        ));
     }
 
 }

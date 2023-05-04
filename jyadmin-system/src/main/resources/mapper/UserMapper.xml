@@ -20,6 +20,23 @@
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap id="FullResultMap" type="com.jyadmin.system.user.model.dto.UserDTO">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+        <collection property="roleNames" column="id" select="com.jyadmin.system.user.mapper.UserMapper.selectRoleNamesByUserId" />
+    </resultMap>
+
     <sql id="Base_Column_List">
         id,username,password,
         nickname,avatar,phone,
@@ -27,4 +44,17 @@
         update_by,create_time,update_time,
         deleted
     </sql>
+
+    <select id="selectRoleNamesByUserId" resultType="java.lang.String">
+        SELECT
+            sr.name
+        FROM sys_user su
+                 INNER JOIN tr_user_role tur ON su.ID = tur.user_id
+                 INNER JOIN sys_role sr ON sr.ID = tur.role_id
+        WHERE sr.`status` = 1 AND sr.deleted = 0 and su.`status` = 1 and su.deleted = 0 and su.id = #{userId}
+    </select>
+
+    <select id="selectUserPage" resultMap="FullResultMap">
+        select * from sys_user
+    </select>
 </mapper>

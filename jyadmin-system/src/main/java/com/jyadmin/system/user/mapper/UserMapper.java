@@ -1,7 +1,14 @@
 package com.jyadmin.system.user.mapper;
 
-import com.jyadmin.system.user.domain.User;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.system.user.domain.User;
+import com.jyadmin.system.user.model.dto.UserDTO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 13360
@@ -11,6 +18,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface UserMapper extends BaseMapper<User> {
 
+    List<String> selectRoleNamesByUserId(@Param("userId") String userId);
+
+    Page<UserDTO> selectUserPage(Page<User> page, @Param(Constants.WRAPPER) LambdaQueryWrapper<User> wrapper);
 }
 
 

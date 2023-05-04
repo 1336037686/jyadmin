@@ -1,7 +1,9 @@
 package com.jyadmin.system.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jyadmin.system.user.model.dto.UserDTO;
 import com.jyadmin.system.user.service.UserService;
 import com.jyadmin.system.user.domain.User;
 import com.jyadmin.system.user.mapper.UserMapper;
@@ -18,6 +20,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User getByUserName(String userName) {
         return this.baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, userName));
+    }
+
+    @Override
+    public Page<UserDTO> getPage(Page<User> page, LambdaQueryWrapper<User> wrapper) {
+        return this.baseMapper.selectUserPage(page, wrapper);
     }
 }
 
