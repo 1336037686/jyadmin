@@ -62,6 +62,38 @@ public class GlobalConstants {
         }
     }
 
+    /**
+     * 角色接口权限（api_permission_portion=根据角色菜单限制接口权限， api_permission_all=拥有全部接口权限）
+     * 该枚举类与字典对应 sys_role_api_permission
+     */
+    public enum SysApiPermission {
+        API_PERMISSION_PORTION("根据角色菜单限制接口权限", "api_permission_portion", "根据角色菜单限制接口权限"),
+        API_PERMISSION_ALL("拥有全部接口权限", "api_permission_all", "拥有全部接口权限");
 
+        // 名称
+        private String name;
+        // 编码
+        private String code;
+        // 备注说明
+        private String remark;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+
+        SysApiPermission(String name, String code, String remark) {
+            this.name = name;
+            this.code = code;
+            this.remark = remark;
+        }
+    }
 
 }

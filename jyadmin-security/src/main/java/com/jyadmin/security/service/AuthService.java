@@ -22,7 +22,9 @@ public interface AuthService extends IService<User> {
 
     User getByUserName(String userName);
 
-    List<PermissionAction> getPermissions(String userId);
+    List<PermissionAction> getAllPermissions();
+
+    List<PermissionAction> getPermissionsByUserId(String userId);
 
     List<Map<String, Object>> getMenus(String userId);
 
@@ -35,4 +37,8 @@ public interface AuthService extends IService<User> {
     void getCaptcha(String uniqueId, HttpServletResponse response) throws IOException;
 
     String refreshToken(String refreshToken);
+
+    List<String> getApiPermissionByUserId(String id);
+
+
 }

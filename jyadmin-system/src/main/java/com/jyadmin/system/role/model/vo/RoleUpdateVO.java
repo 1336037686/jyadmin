@@ -40,6 +40,13 @@ public class RoleUpdateVO implements Serializable {
     private String code;
 
     /**
+     * 角色接口权限（api_permission_portion=根据角色菜单限制接口权限， api_permission_all=拥有全部接口权限）
+     */
+    @ApiModelProperty(value = "角色接口权限", name = "apiPermission")
+    @NotBlank(message = "角色接口权限不能为空")
+    private String apiPermission;
+
+    /**
      * 角色描述
      */
     @ApiModelProperty(value = "角色描述", name = "description")

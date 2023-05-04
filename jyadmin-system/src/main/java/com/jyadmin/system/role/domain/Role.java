@@ -38,6 +38,12 @@ public class Role extends BaseEntity implements Serializable {
     private String code;
 
     /**
+     * 角色接口权限（api_permission_portion=根据角色菜单限制接口权限， api_permission_all=拥有全部接口权限）
+     */
+    @TableField(value = "api_permission")
+    private String apiPermission;
+
+    /**
      * 角色描述
      */
     @TableField(value = "description")

@@ -5,6 +5,8 @@ import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,6 +37,25 @@ public class GlobalExceptionHandler {
     public Result<Object> handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
+        return Result.fail(ResultStatus.FAIL);
+    }
+
+    /**
+     * 处理所有登录失败异常
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    public Result<Object> handleAuthenticationException(AuthenticationException e) {
+        // 账号被锁定
+        if (e instanceof LockedException) return Result.fail(ResultStatus.ACCOUNT_LOCKOUT);
+        // 密码过期
+        if (e instanceof CredentialsExpiredException) return Result.fail(ResultStatus.PASSWORD_EXPIRATION);
+        // 账户过期
+        if (e instanceof AccountExpiredException) return Result.fail(ResultStatus.ACCOUNT_EXPIRATION);
+        // 账户被禁用
+        if (e instanceof DisabledException) return Result.fail(ResultStatus.ACCOUNT_DISABLED);
+        // 用户名或者密码输入错误
+        if (e instanceof BadCredentialsException) return Result.fail(ResultStatus.USERNAME_PASSWORD_ERROR);
+        // 其他
         return Result.fail(ResultStatus.FAIL);
     }
 

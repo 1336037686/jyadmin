@@ -115,8 +115,18 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
-    public List<PermissionAction> getPermissions(String userId) {
-        return authMapper.selectPermissions(userId);
+    public List<String> getApiPermissionByUserId(String userId) {
+        return authMapper.selectApiPermissionByUserId(userId);
+    }
+
+    @Override
+    public List<PermissionAction> getAllPermissions() {
+        return authMapper.selectAllPermissions();
+    }
+
+    @Override
+    public List<PermissionAction> getPermissionsByUserId(String userId) {
+        return authMapper.selectPermissionsByUserId(userId);
     }
 
     @Override
