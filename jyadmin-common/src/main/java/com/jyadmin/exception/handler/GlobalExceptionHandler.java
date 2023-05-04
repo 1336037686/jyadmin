@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +58,18 @@ public class GlobalExceptionHandler {
         if (e instanceof BadCredentialsException) return Result.fail(ResultStatus.USERNAME_PASSWORD_ERROR);
         // 其他
         return Result.fail(ResultStatus.FAIL);
+    }
+
+    /**
+     * AccessDeniedException 权限不足异常处理
+     * 认证成功的用户访问受保护的资源，但是权限不够
+     * 用以解决动态菜单权限配置 DefaultAccessDeniedHandler 不生效，而会被全局异常捕获的问题
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public Result<Object> handleAccessDeniedException(AccessDeniedException e) {
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return Result.fail(ResultStatus.INSUFFICIENT_PERMISSIONS);
     }
 
     /**
