@@ -33,10 +33,7 @@
             spa.id, spa.name, spa.code, spa.description, spa.group_id "groupId", spa.sort,
             spa.status, spa.create_by "createBy", spa.update_by "updateBy",
             spa.create_time "createTime", spa.update_time "updateTime", spa.deleted
-        from tr_user_role tur
-                 left join tr_permission_role_menu tprm on tur.role_id  = tprm.role_id
-                 left join tr_permission_menu_action tpma on tprm.menu_id = tpma.menu_id
-                 left join sys_permission_action spa on spa.id = tpma.action_id
+        from sys_permission_action spa
         where spa.deleted = 0 and spa.status = 1
     </select>
 
