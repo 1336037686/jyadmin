@@ -11,6 +11,8 @@ public class GlobalConstants {
 
     // SECURITY_CONTEXT
     public static final String SYS_SECURITY_CONTEXT = "SECURITY_CONTEXT";
+
+    // ======================= 系统短信、邮件、附件配置 START =======================
     // 系统附件配置ID
     public static final String SYS_FILE_CONFIG_ID = "1";
     // 系统短信配置ID
@@ -25,10 +27,17 @@ public class GlobalConstants {
     public static final Integer SYS_SMS_VERIFICATION_CODE_LENGTH = 4;
     // 系统短信验证码默认保存时限(秒s)
     public static final Integer SYS_SMS_VERIFICATION_CODE_TIME_LIMIT = 5 * 60;
+    // ======================= 系统短信、邮件、附件配置 END =======================
+
+    // ======================= 系统部门管理 START =======================
+    // 系统部门顶级部门常量值
+    public static final Integer SYS_DEPARTMENT_IS_ROOT = 1;
+    // ======================= 系统部门管理 END =======================
 
 
 
 
+    // ======================= 枚举 START =======================
     /**
      * 系统短信配置枚举类
      */
@@ -96,4 +105,57 @@ public class GlobalConstants {
         }
     }
 
+    /**
+     * status枚举类 1=启用 0=禁用
+     */
+    public enum SysStatus {
+        ON("启用", 1),
+        OFF("禁用", 0);
+
+        // 名称
+        private String name;
+        // 值
+        private Integer value;
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        SysStatus(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
+    /**
+     * deleted枚举类 1=删除 0=未删除
+     */
+    public enum SysDeleted {
+        DELETED("删除", 1),
+        EXIST("未删除", 0);
+
+        // 名称
+        private String name;
+        // 值
+        private Integer value;
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        SysDeleted(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
+    // ======================= 枚举 END =======================
 }

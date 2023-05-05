@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -72,8 +75,16 @@ public class DepartmentController {
                         new LambdaQueryWrapper<Department>()
                                 .like(StringUtils.isNotBlank(vo.getName()), Department::getName, vo.getName())
                                 .like(StringUtils.isNotBlank(vo.getCode()), Department::getCode, vo.getCode())
+                                .eq(Objects.nonNull(vo.getIsRoot()), Department::getIsRoot, vo.getIsRoot())
+                                .orderByAsc(Department::getSort)
                 )
         );
     }
-    
+
+    @ApiOperation(value = "层次列表查询部门信息", notes = "")
+    @GetMapping("/layer")
+    public Result<List<Map<String, Object>>> doQueryLayer(DepartmentQueryVO vo) {
+        return Result.ok(this.departmentService.getLayer(vo));
+    }
+
 }

@@ -36,7 +36,7 @@ import java.util.Date;
  *         location /file {   # 文件访问路径 ---> server_name:listen/file = Domain配置
  *             autoindex_localtime on;
  *             root F:/; # 文件保存地址 --> root/file = BasePath配置
- *             autoindex on;
+ *             autoindex off;
  *         }
  *     }
  *
@@ -63,7 +63,7 @@ public class LocalFileProcessHandler implements FileProcessHandler {
     public FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO, ModuleConfigWrapper fileConfigWrapper) {
         ConfigDetail configDetail = fileConfigWrapper.getConfigDetail();
         String basePath = configDetailService.getValueByCode(configDetail, BASE_PATH);
-        String date = DateUtil.format(new Date(), "yyyy-mm-dd");
+        String date = DateUtil.format(new Date(), "yyyy-MM-dd");
         basePath += basePath.charAt(basePath.length() - 1) == '/' ? date + "/" :  "/" + date + "/";
         String domain = configDetailService.getValueByCode(configDetail, DOMAIN);
         String key = fileProcessUploadDTO.getName();

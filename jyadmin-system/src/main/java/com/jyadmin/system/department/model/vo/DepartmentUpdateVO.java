@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -42,7 +43,7 @@ public class DepartmentUpdateVO implements Serializable {
      * 是否顶级部门（0=非顶级部门，1=顶级部门）
      */
     @ApiModelProperty("是否顶级部门")
-    @NotBlank(message = "是否顶级部门不能为空")
+    @NotNull(message = "是否顶级部门不能为空")
     private Integer isRoot;
 
     /**
@@ -53,9 +54,23 @@ public class DepartmentUpdateVO implements Serializable {
     private String parentId;
 
     /**
+     * 描述
+     */
+    @ApiModelProperty("描述")
+    private String description;
+
+    /**
      * 状态 0=禁用 1=启用
      */
     @ApiModelProperty("状态")
-    @NotBlank(message = "状态不能为空")
+    @NotNull(message = "状态不能为空")
     private Integer status;
+
+    /**
+     * 排序
+     */
+    @ApiModelProperty("排序")
+    @NotNull(message = "排序不能为空")
+    private Integer sort;
+
 }

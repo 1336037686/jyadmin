@@ -46,10 +46,22 @@ public class Department extends BaseEntity implements Serializable {
     private String parentId;
 
     /**
+     * 描述
+     */
+    @TableField(value = "description")
+    private String description;
+
+    /**
      * 状态 0=禁用 1=启用
      */
     @TableField(value = "status")
     private Integer status;
+
+    /**
+     * 排序
+     */
+    @TableField(value = "sort")
+    private Integer sort;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

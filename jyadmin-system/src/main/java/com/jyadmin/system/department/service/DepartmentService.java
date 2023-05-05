@@ -1,7 +1,11 @@
 package com.jyadmin.system.department.service;
 
-import com.jyadmin.system.department.domain.Department;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jyadmin.system.department.domain.Department;
+import com.jyadmin.system.department.model.vo.DepartmentQueryVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author 13360
@@ -9,5 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2023-05-04 22:45:07
 */
 public interface DepartmentService extends IService<Department> {
+
+    List<Map<String, Object>> getLayer(DepartmentQueryVO vo);
 
 }
