@@ -35,6 +35,12 @@ public class Post extends BaseEntity implements Serializable {
     private String code;
 
     /**
+     * 岗位简介
+     */
+    @TableField(value = "description")
+    private String description;
+
+    /**
      * 状态 0=禁用 1=启用
      */
     @TableField(value = "status")

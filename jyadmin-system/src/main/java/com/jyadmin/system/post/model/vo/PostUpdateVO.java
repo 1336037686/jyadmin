@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -39,10 +40,16 @@ public class PostUpdateVO implements Serializable {
     private String code;
 
     /**
+     * 岗位简介
+     */
+    @ApiModelProperty("岗位简介")
+    private String description;
+
+    /**
      * 状态 0=禁用 1=启用
      */
     @ApiModelProperty("状态")
-    @NotBlank(message = "状态不能为空")
+    @NotNull(message = "状态不能为空")
     private Integer status;
 
 }

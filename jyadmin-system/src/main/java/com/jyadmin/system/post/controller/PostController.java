@@ -72,6 +72,7 @@ public class PostController {
                         new LambdaQueryWrapper<Post>()
                                 .like(StringUtils.isNotBlank(vo.getName()), Post::getName, vo.getName())
                                 .like(StringUtils.isNotBlank(vo.getCode()), Post::getCode, vo.getCode())
+                                .orderByDesc(Post::getCreateTime)
                 )
         );
     }
