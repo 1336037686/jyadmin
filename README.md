@@ -65,6 +65,10 @@
 
 - [ ] 1.12 线程池管理
 
+- [x] 1.13 部门管理
+
+- [x] 1.14 岗位管理
+
 **2 系统监控**
 
 - [x] 2.1 服务器监控
@@ -115,17 +119,17 @@
 
 | 名称              | 作用         | 版本   | 备注                                                         |
 | ----------------- | ------------ | ------ | ------------------------------------------------------------ |
-| ==**语言**==      |              |        |                                                              |
+| **语言**     |              |        |                                                              |
 | Java              |              | 11     |                                                              |
 |                   |              |        |                                                              |
-| ==**数据库**==    |              |        |                                                              |
+| *数据库**    |              |        |                                                              |
 | MySQL             | 数据库       | 8      |                                                              |
 | Redis             | 缓存         | 5      |                                                              |
 | ELK               | 日志管理     | 7.6.2  |                                                              |
 |                   |              |        |                                                              |
 |                   |              |        |                                                              |
 |                   |              |        |                                                              |
-| ==**后端技术**==  |              |        |                                                              |
+| **后端技术**  |              |        |                                                              |
 | SpringBoot        |              | 2.5.12 | https://docs.spring.io/spring-boot/docs/2.5.12/reference/html/ |
 | Mybatis           |              |        | http://www.mybatis.org/mybatis-3/zh/index.html               |
 | MybatisPlus       |              |        | https://baomidou.com/                                        |
@@ -135,19 +139,19 @@
 |                   |              |        |                                                              |
 |                   |              |        |                                                              |
 |                   |              |        |                                                              |
-| ==**前端技术**==  |              |        |                                                              |
+| **前端技术**  |              |        |                                                              |
 | Vue               |              | 2.0    |                                                              |
 | Element           | 后端UI框架   |        |                                                              |
 | Vue-Element-Admin | 后端模板     |        | https://panjiachen.github.io/vue-element-admin-site/zh/guide/ |
 | Vant              | 移动端UI框架 |        | https://vant-contrib.gitee.io/vant/v2/#/zh-CN/home           |
 |                   |              |        |                                                              |
 |                   |              |        |                                                              |
-| ==**文档**==      |              |        |                                                              |
+| **文档**      |              |        |                                                              |
 | ApiFox            | API文档      |        |                                                              |
 | knife4j           | API文档      |        | https://doc.xiaominfo.com/knife4j/documentation/get_start.html |
 | Docsify           | 文档编写     |        | https://www.cnblogs.com/throwable/p/13605289.html            |
 |                   |              |        |                                                              |
-| ==**部署**==      |              |        |                                                              |
+| **部署**      |              |        |                                                              |
 | CentOS7           |              |        |                                                              |
 | Nginx             |              |        |                                                              |
 | Docker            |              |        |                                                              |
