@@ -41,21 +41,33 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(GlobalConstants.SYS_LOGIN_TOKEN_PARAM_NAME);
         // 如果当前token不存在 || 获取 token校验失败，执行下一个过滤器
-        if (StringUtils.isBlank(token) || !JWTUtil.verify(token)) filterChain.doFilter(request, response);
+        if (StringUtils.isBlank(token) || !JWTUtil.verify(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 如果当前token解析的username不存在 或者 缓存中不存在当前登录用户，执行下一个过滤器
         String username = JWTUtil.parseToken(token);
-        if (StringUtils.isBlank(username) || !cacheService.isExist(username)) filterChain.doFilter(request, response);
+        if (StringUtils.isBlank(username) || !cacheService.isExist(username)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 当前状态为已认证状态，执行下一个过滤器
-        if (Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())) filterChain.doFilter(request, response);
+        if (Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 如果当前用户登录信息在缓存中存在，且当前状态为未认证状态，则添加登录认证信息。
         // SecurityContextHolder.getContext().getAuthentication() == null 未认证则为true
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         // 如果查询不到登录用户信息，执行下一个过滤器
-        if (Objects.isNull(userDetails)) filterChain.doFilter(request, response);
+        if (Objects.isNull(userDetails)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 添加登录认证信息，将用户信息存入 authentication，方便后续校验
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

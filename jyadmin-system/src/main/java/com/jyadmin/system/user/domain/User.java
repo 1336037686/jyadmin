@@ -65,6 +65,18 @@ public class User extends BaseEntity implements Serializable {
     private Integer type;
 
     /**
+     * 所属部门
+     */
+    @TableField(value = "department")
+    private String department;
+
+    /**
+     * 所属岗位
+     */
+    @TableField(value = "post")
+    private String post;
+
+    /**
      * 状态
      */
     @TableField(value = "status")

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,6 +63,16 @@ public class PostController {
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(postService.getById(id));
+    }
+
+    @ApiOperation(value = "列表查询岗位", notes = "")
+    @GetMapping("/list")
+    public Result<List<Post>> doQueryList(PostQueryVO vo) {
+        return Result.ok(this.postService.list(new LambdaQueryWrapper<Post>()
+                        .like(StringUtils.isNotBlank(vo.getName()), Post::getName, vo.getName())
+                        .like(StringUtils.isNotBlank(vo.getCode()), Post::getCode, vo.getCode())
+                        .orderByDesc(Post::getCreateTime)
+        ));
     }
 
     @ApiOperation(value = "分页查询岗位", notes = "")

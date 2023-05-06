@@ -35,6 +35,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
                         .like(StringUtils.isNotBlank(vo.getName()), Department::getName, vo.getName())
                         .like(StringUtils.isNotBlank(vo.getCode()), Department::getCode, vo.getCode())
                         .eq(Objects.nonNull(vo.getIsRoot()), Department::getIsRoot, vo.getIsRoot())
+                        .eq(Objects.nonNull(vo.getStatus()), Department::getStatus, vo.getStatus())
                         .orderByAsc(Department::getSort)
         );
 
@@ -60,6 +61,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         // 获取所有顶级节点
         return deptMaps.stream().filter(x -> !childrenDepts.contains(x.get("id").toString())).collect(Collectors.toList());
     }
+
 }
 
 

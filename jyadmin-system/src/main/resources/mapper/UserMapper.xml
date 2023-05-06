@@ -34,6 +34,8 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+        <result property="departmentName" column="department_name" jdbcType="VARCHAR"/>
+        <result property="postName" column="post_name" jdbcType="VARCHAR"/>
         <collection property="roleNames" column="id" select="com.jyadmin.system.user.mapper.UserMapper.selectRoleNamesByUserId" />
     </resultMap>
 
@@ -55,6 +57,12 @@
     </select>
 
     <select id="selectUserPage" resultMap="FullResultMap">
-        select * from sys_user
+        SELECT * FROM (
+            SELECT
+                su.*, sd.`name` AS "department_name", sp.`name` AS "post_name"
+            FROM sys_user su
+            LEFT JOIN sys_department sd ON su.department = sd.id AND sd.deleted = 0
+            LEFT JOIN sys_post sp ON sp.id = su.post AND sp.deleted = 0
+        ) t ${ew.customSqlSegment}
     </select>
 </mapper>

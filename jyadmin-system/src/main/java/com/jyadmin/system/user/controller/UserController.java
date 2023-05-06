@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.annotation.RateLimit;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
@@ -118,6 +119,7 @@ public class UserController {
                         .like(StringUtils.isNotBlank(vo.getPhone()), User::getPhone, vo.getPhone())
                         .eq(Objects.nonNull(vo.getType()), User::getType, vo.getType())
                         .eq(Objects.nonNull(vo.getStatus()), User::getStatus, vo.getStatus())
+                        .eq(true, User::getDeleted, GlobalConstants.SysDeleted.EXIST.getValue())
         ));
     }
 

@@ -21,4 +21,14 @@ public class UserDTO extends User {
      */
     private List<String> roleNames;
 
+    /**
+     * 岗位名称
+     */
+    private String departmentName;
+
+    /**
+     * 角色名称
+     */
+    private String postName;
+
 }

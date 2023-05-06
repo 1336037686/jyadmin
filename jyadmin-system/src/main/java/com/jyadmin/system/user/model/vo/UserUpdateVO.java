@@ -60,6 +60,18 @@ public class UserUpdateVO implements Serializable {
     private Integer type;
 
     /**
+     * 所属部门
+     */
+    @ApiModelProperty(value = "所属部门", name = "department")
+    private String department;
+
+    /**
+     * 所属岗位
+     */
+    @ApiModelProperty(value = "所属岗位", name = "post")
+    private String post;
+
+    /**
      * 状态
      */
     @ApiModelProperty(value = "状态", name = "status")
