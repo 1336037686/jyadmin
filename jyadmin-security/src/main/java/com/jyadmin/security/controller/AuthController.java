@@ -3,6 +3,7 @@ package com.jyadmin.security.controller;
 import cn.hutool.captcha.generator.MathGenerator;
 import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.config.properties.JyAuthProperties;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
@@ -57,12 +58,8 @@ public class AuthController {
     public Result<Map<String, Object>> doLogin(@RequestBody @Valid UserLoginVO vo, HttpServletRequest request) {
         // 验证验证码是否正确
         Object value = redisUtil.getValue(jyAuthProperties.getVerificationCodePrefix() + ":" + vo.getUniqueId());
-        if (Objects.isNull(value)) {
-            throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
-        }
-        if (!new MathGenerator().verify(value.toString(), vo.getCaptcha())) {
-            throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
-        }
+        if (Objects.isNull(value)) throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
+        if (!new MathGenerator().verify(value.toString(), vo.getCaptcha())) throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
         Map<String, Object> token = authService.login(request, vo.getUsername(), vo.getPassword());
         return Result.ok(token);
     }
@@ -87,8 +84,8 @@ public class AuthController {
     @Log(title = "系统认证：登陆续期", desc = "")
     @ApiOperation(value = "登陆续期", notes = "")
     @PostMapping(value = "/refreshToken")
-    public Result<Object> doRefreshToken(@RequestBody String refreshToken) {
-        if (StringUtils.isNotBlank(refreshToken) && JWTUtil.verify(refreshToken)) throw new ApiException(ResultStatus.REFRESH_TOKEN_ERROR);
+    public Result<Object> doRefreshToken(@RequestHeader(GlobalConstants.SYS_LOGIN_REFRESH_TOKEN_PARAM_NAME) String refreshToken) {
+        if (StringUtils.isBlank(refreshToken) || !JWTUtil.verify(refreshToken)) throw new ApiException(ResultStatus.REFRESH_TOKEN_NOT_EXIST);
         String accessToken = authService.refreshToken(refreshToken);
         return Result.ok(accessToken);
     }

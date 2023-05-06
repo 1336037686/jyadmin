@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.annotation.Resource;
 
 /**
+ * SpringSecurity 配置
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-10 23:20 <br>

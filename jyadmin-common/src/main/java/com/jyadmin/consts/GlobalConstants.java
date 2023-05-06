@@ -12,6 +12,27 @@ public class GlobalConstants {
     // SECURITY_CONTEXT
     public static final String SYS_SECURITY_CONTEXT = "SECURITY_CONTEXT";
 
+    // ======================= 登录TOKEN START =======================
+    // Token 请求头标签名
+    public static final String SYS_LOGIN_TOKEN_PARAM_NAME = "X-Token";
+    // RefreshToken 请求头标签名
+    public static final String SYS_LOGIN_REFRESH_TOKEN_PARAM_NAME = "X-RefreshToken";
+    // ======================= 登录TOKEN END =======================
+
+    // ======================= 登录验证码 START =======================
+    // 登录验证码宽度
+    public static final Integer SYS_CAPTCHA_WIDTH = 200;
+    // 登录验证码高度
+    public static final Integer SYS_CAPTCHA_HEIGHT = 45;
+    // 验证码参与计算最大数字位数
+    public static final Integer SYS_CAPTCHA_MATH_GENERATOR_NUMBER_LENGTH = 1;
+    // ======================= 登录验证码 END =======================
+
+    // ======================= 系统菜单 START =======================
+    // 顶级菜单父节点ID为0
+    public static final String SYS_MENU_ROOT_PARENT_ID = "0";
+    // ======================= 系统菜单 END =======================
+
     // ======================= 系统短信、邮件、附件配置 START =======================
     // 系统附件配置ID
     public static final String SYS_FILE_CONFIG_ID = "1";

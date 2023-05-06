@@ -32,4 +32,10 @@ public class JyIdempotentProperties {
      */
     private Integer defaultPeriod = 30 * 60;
 
+    /**
+     * 缓存Key默认存放值，暂时无用
+     */
+    private String defaultValue = "1";
+
+
 }

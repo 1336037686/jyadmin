@@ -100,9 +100,14 @@ public enum ResultStatus {
     CAPTCHA_INPUT_ERROR(10014, ModuleSeries.AUTH, "验证码输入错误"),
 
     /**
-     * 0001 0015 RefreshToken获取异常
+     * 0001 0015 登陆续期失败
      */
-    REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "RefreshToken获取异常"),
+    REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "登陆续期失败"),
+
+    /**
+     * 0001 0016 RefreshToken不存在
+     */
+    REFRESH_TOKEN_NOT_EXIST(10016, ModuleSeries.AUTH, "RefreshToken不存在"),
 
 
 

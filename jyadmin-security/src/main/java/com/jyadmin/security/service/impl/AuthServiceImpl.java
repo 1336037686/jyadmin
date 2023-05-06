@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.config.properties.JyIdempotentProperties;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.exception.ApiException;
@@ -102,6 +103,9 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     public String refreshToken(String refreshToken) {
         String username = JWTUtil.parseToken(refreshToken);
         String key = jyAuthProperties.getAuthUserPrefix() + ":" + username;
+        // 判断当前refreshToken是否再缓存中存在，如果当前用户已经不存在了则代表已经退出
+        boolean exists = redisUtil.exists(key);
+        if (!exists) throw new ApiException(ResultStatus.REFRESH_TOKEN_ERROR);
         // 登陆续期
         boolean expire = redisUtil.expire(key, jyAuthProperties.getAuthUserExpiration(), TimeUnit.SECONDS);
         if (!expire) throw new ApiException(ResultStatus.REFRESH_TOKEN_ERROR);
@@ -144,7 +148,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
             children.add(menu);
             parentMenu.put("children", children);
         }
-        return menuMaps.stream().filter(x -> "0".equals(x.get("parentId"))).collect(Collectors.toList());
+        return menuMaps.stream().filter(x -> GlobalConstants.SYS_MENU_ROOT_PARENT_ID.equals(x.get("parentId"))).collect(Collectors.toList());
     }
 
     @Override
@@ -179,7 +183,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     public String getIdempotentToken() {
         String token = StringUtils.join(DateUtil.format(LocalDateTime.now(), "yyyy-MM-dd-HH-mm-ss-SSS"), "-", new Snowflake().nextIdStr());
         String key = StringUtils.join(jyIdempotentProperties.getPrefix(), ":", token);
-        redisUtil.setValue(key, "1", jyIdempotentProperties.getDefaultPeriod(), TimeUnit.SECONDS);
+        redisUtil.setValue(key, jyIdempotentProperties.getDefaultValue(), jyIdempotentProperties.getDefaultPeriod(), TimeUnit.SECONDS);
         return token;
     }
 
@@ -187,8 +191,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     public void getCaptcha(String uniqueId, HttpServletResponse response) {
         try {
             String key = StringUtils.join(jyAuthProperties.getVerificationCodePrefix() + ":" + uniqueId);
-            GifCaptcha captcha = CaptchaUtil.createGifCaptcha(200, 45);
-            captcha.setGenerator(new MathGenerator()); // 自定义验证码内容为四则运算方式
+            GifCaptcha captcha = CaptchaUtil.createGifCaptcha(GlobalConstants.SYS_CAPTCHA_WIDTH, GlobalConstants.SYS_CAPTCHA_HEIGHT);
+            captcha.setGenerator(new MathGenerator(GlobalConstants.SYS_CAPTCHA_MATH_GENERATOR_NUMBER_LENGTH)); // 自定义验证码内容为四则运算方式
             captcha.createCode(); // 重新生成code
             String code = captcha.getCode(); // 获取验证码
             redisUtil.setValue(key, code, jyAuthProperties.getVerificationCodeExpiration());

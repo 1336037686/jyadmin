@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.system.permission.menu.domain.PermissionMenu;
 import com.jyadmin.system.permission.menu.domain.PermissionRoleMenu;
 import com.jyadmin.system.permission.menu.mapper.PermissionMenuMapper;
@@ -81,7 +82,7 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
             children.add(menu);
             parentMenu.put("children", children);
         }
-        return menuMaps.stream().filter(x -> "0".equals(x.get("parentId"))).collect(Collectors.toList());
+        return menuMaps.stream().filter(x -> GlobalConstants.SYS_MENU_ROOT_PARENT_ID.equals(x.get("parentId"))).collect(Collectors.toList());
     }
 
     @Override
