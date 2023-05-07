@@ -8,6 +8,10 @@ package com.jyadmin.consts;
  * @description: JyGlobalConstants <br>
  */
 public class GlobalConstants {
+    // ======================= 特殊字符 START =======================
+    // 特殊字符 "."
+    public static final String SYS_SPECIAL_CHARACTER_DOT = ".";
+    // ======================= 特殊字符 END =======================
 
     // SECURITY_CONTEXT
     public static final String SYS_SECURITY_CONTEXT = "SECURITY_CONTEXT";

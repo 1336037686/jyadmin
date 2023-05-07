@@ -115,9 +115,19 @@ public enum ResultStatus {
 
     // region--- 0002 xxxx 参数错误相关状态码 ---
     /**
-     * 0002 0001
+     * 0002 0001 请求参数错误
      */
     PARAM_ERROR(20001, ModuleSeries.PARAM, "请求参数错误"),
+
+    /**
+     * 0002 0002 XSS过滤 存在敏感参数信息，不允许访问
+     */
+    PARAM_XSS_SENSITIVITY_INFO(20002, ModuleSeries.PARAM, "存在敏感参数信息，不允许访问"),
+
+    /**
+     * 0002 0003 XSS过滤异常
+     */
+    PARAM_XSS_ERROR(20003, ModuleSeries.PARAM, "XSS过滤异常，请联系管理员解决"),
 
     // endregion---------------------
 
