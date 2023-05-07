@@ -36,6 +36,18 @@ public class UserQueryVO extends BasePageVO implements Serializable {
     private String phone;
 
     /**
+     * 所属部门
+     */
+    @ApiModelProperty(value = "所属部门", name = "department")
+    private String department;
+
+    /**
+     * 所属岗位
+     */
+    @ApiModelProperty(value = "所属岗位", name = "post")
+    private String post;
+
+    /**
      * 账号类型
      */
     @ApiModelProperty(value = "账号类型", name = "type")

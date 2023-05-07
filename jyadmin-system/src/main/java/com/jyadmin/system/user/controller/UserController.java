@@ -119,7 +119,10 @@ public class UserController {
                         .like(StringUtils.isNotBlank(vo.getPhone()), User::getPhone, vo.getPhone())
                         .eq(Objects.nonNull(vo.getType()), User::getType, vo.getType())
                         .eq(Objects.nonNull(vo.getStatus()), User::getStatus, vo.getStatus())
+                        .eq(Objects.nonNull(vo.getDepartment()), User::getDepartment, vo.getDepartment())
+                        .eq(Objects.nonNull(vo.getPost()), User::getPost, vo.getPost())
                         .eq(true, User::getDeleted, GlobalConstants.SysDeleted.EXIST.getValue())
+                        .orderByDesc(User::getCreateTime)
         ));
     }
 
