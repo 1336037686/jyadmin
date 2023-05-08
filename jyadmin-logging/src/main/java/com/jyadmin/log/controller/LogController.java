@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.annotation.RateLimit;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
-import com.jyadmin.domain.BasePageVO;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.domain.Log;
@@ -71,10 +71,14 @@ public class LogController {
 
     @ApiOperation(value = "根据用户ID分页查询用户登录日志", notes = "")
     @GetMapping("/query-user-login/{userId}")
-    public PageResult<UserLoginLog> doQueryLoginPage(@PathVariable("userId") String userId, BasePageVO vo) {
+    public PageResult<UserLoginLog> doQueryLoginPage(@PathVariable("userId") String userId, LogQueryVO vo) {
         Page<Log> page = this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                 new LambdaQueryWrapper<Log>()
-                        .eq(true, Log::getRequestPath, "/api/auth/login")
+                        .like(StringUtils.isNotBlank(vo.getHandleName()), Log::getHandleName, vo.getHandleName())
+                        .eq(StringUtils.isNotBlank(vo.getRequestMethod()), Log::getRequestMethod, vo.getRequestMethod())
+                        .eq(Objects.nonNull(vo.getExecuteStatus()), Log::getExecuteStatus, vo.getExecuteStatus())
+                        .like(StringUtils.isNotBlank(vo.getUsername()), Log::getUsername, vo.getUsername())
+                        .eq(true, Log::getRequestPath, GlobalConstants.SYS_LOGIN_URI)
                         .eq(true, Log::getCreateBy, userId)
                         .orderByDesc(Log::getCreateTime)
         );
@@ -95,6 +99,47 @@ public class LogController {
                 .setRecords(userLoginLogs)
                 .setHasPrevious(page.hasPrevious())
                 .setHasNext(page.hasNext());
+    }
+
+    @ApiOperation(value = "根据用户ID分页查询用户登录日志", notes = "")
+    @GetMapping("/query-login")
+    public PageResult<UserLoginLog> doQueryLogin(LogQueryVO vo) {
+        Page<Log> page = this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
+                new LambdaQueryWrapper<Log>()
+                        .like(StringUtils.isNotBlank(vo.getHandleName()), Log::getHandleName, vo.getHandleName())
+                        .eq(StringUtils.isNotBlank(vo.getRequestMethod()), Log::getRequestMethod, vo.getRequestMethod())
+                        .eq(Objects.nonNull(vo.getExecuteStatus()), Log::getExecuteStatus, vo.getExecuteStatus())
+                        .like(StringUtils.isNotBlank(vo.getUsername()), Log::getUsername, vo.getUsername())
+                        .eq(true, Log::getRequestPath, GlobalConstants.SYS_LOGIN_URI)
+                        .eq(true, Log::getExecuteStatus, GlobalConstants.SysExecuteStatus.SUCCESS.getValue())
+                        .orderByDesc(Log::getCreateTime)
+        );
+
+        List<UserLoginLog> userLoginLogs = page.getRecords().stream().map(x -> {
+            UserLoginLog loginLog = new UserLoginLog();
+            BeanUtil.copyProperties(x, loginLog);
+            return loginLog;
+        }).collect(Collectors.toList());
+
+        Page<UserLoginLog> userLoginLogPage = new Page<>();
+        BeanUtil.copyProperties(page, userLoginLogPage);
+        userLoginLogPage.setRecords(userLoginLogs);
+
+        return PageUtil.toPageResult(userLoginLogPage);
+    }
+
+    @ApiOperation(value = "根据用户ID分页查询用户行为日志", notes = "")
+    @GetMapping("/query-active")
+    public PageResult<Log> doQueryActive(LogQueryVO vo) {
+        return PageUtil.toPageResult(this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
+                new LambdaQueryWrapper<Log>()
+                        .like(StringUtils.isNotBlank(vo.getHandleName()), Log::getHandleName, vo.getHandleName())
+                        .eq(StringUtils.isNotBlank(vo.getRequestMethod()), Log::getRequestMethod, vo.getRequestMethod())
+                        .eq(Objects.nonNull(vo.getExecuteStatus()), Log::getExecuteStatus, vo.getExecuteStatus())
+                        .like(StringUtils.isNotBlank(vo.getUsername()), Log::getUsername, vo.getUsername())
+                        .ne(true, Log::getRequestPath, GlobalConstants.SYS_LOGIN_URI)
+                        .orderByDesc(Log::getCreateTime)
+        ));
     }
 
 }

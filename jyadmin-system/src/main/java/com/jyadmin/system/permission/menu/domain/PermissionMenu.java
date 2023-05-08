@@ -101,7 +101,7 @@ public class PermissionMenu extends BaseEntity implements Serializable {
     /**
      * 是否缓存
      */
-    @TableField(value = "cache")
+    @TableField(value = "`cache`")
     private Integer cache;
 
     /**

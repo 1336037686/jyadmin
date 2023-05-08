@@ -13,6 +13,13 @@ public class GlobalConstants {
     public static final String SYS_SPECIAL_CHARACTER_DOT = ".";
     // ======================= 特殊字符 END =======================
 
+    // ======================= 访问URL START =======================
+    // 登录请求路径 /api/auth/login
+    public static final String SYS_LOGIN_URI = "/api/auth/login";
+
+
+    // ======================= 访问URL END =======================
+
     // SECURITY_CONTEXT
     public static final String SYS_SECURITY_CONTEXT = "SECURITY_CONTEXT";
 
@@ -177,6 +184,32 @@ public class GlobalConstants {
         }
 
         SysDeleted(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
+    /**
+     * 执行状态枚举类 1=成功 0=失败
+     */
+    public enum SysExecuteStatus {
+        SUCCESS("成功", 1),
+        FAIL("失败", 0);
+
+        // 名称
+        private String name;
+        // 值
+        private Integer value;
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        SysExecuteStatus(String name, Integer value) {
             this.name = name;
             this.value = value;
         }

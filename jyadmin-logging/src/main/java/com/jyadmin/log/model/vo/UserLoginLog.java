@@ -1,8 +1,7 @@
 package com.jyadmin.log.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -22,51 +21,63 @@ public class UserLoginLog {
     /**
      * ID
      */
-    @TableId(value = "id")
+    @ApiModelProperty("ID")
     private String id;
+
+    /**
+     * 操作用户
+     */
+    @ApiModelProperty("操作用户")
+    private String username;
 
     /**
      * 操作名称
      */
-    @TableField(value = "handle_name")
+    @ApiModelProperty("操作名称")
     private String handleName;
 
     /**
      * 操作描述
      */
-    @TableField(value = "handle_desc")
+    @ApiModelProperty("操作描述")
     private String handleDesc;
 
     /**
      * ip地址
      */
-    @TableField(value = "ip_address")
+    @ApiModelProperty("ip地址")
     private String ipAddress;
 
     /**
      * 所属地区
      */
-    @TableField(value = "ip_area")
+    @ApiModelProperty("所属地区")
     private String ipArea;
 
     /**
      * 浏览器
      */
-    @TableField(value = "browser")
+    @ApiModelProperty("浏览器")
     private String browser;
 
     /**
      * 设备
      */
-    @TableField(value = "application")
+    @ApiModelProperty("设备")
     private String application;
 
     /**
      * 请求时间
      */
+    @ApiModelProperty("请求时间")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    @TableField(value = "request_time")
     private LocalDateTime requestTime;
+
+    /**
+     * 执行状态
+     */
+    @ApiModelProperty("执行状态")
+    private Integer executeStatus;
 
 
 }

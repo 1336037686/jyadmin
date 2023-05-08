@@ -5,14 +5,15 @@ import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,8 @@ public class GlobalExceptionHandler {
         if (e instanceof DisabledException) return Result.fail(ResultStatus.ACCOUNT_DISABLED);
         // 用户名或者密码输入错误
         if (e instanceof BadCredentialsException) return Result.fail(ResultStatus.USERNAME_PASSWORD_ERROR);
+        // 用户不存在
+        if (e instanceof UsernameNotFoundException) return Result.fail(ResultStatus.USERNAME_PASSWORD_ERROR);
         // 其他
         return Result.fail(ResultStatus.FAIL);
     }
