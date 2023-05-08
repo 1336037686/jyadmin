@@ -1,5 +1,6 @@
 package com.jyadmin.security.config;
 
+import com.jyadmin.config.properties.JySecurityProperties;
 import com.jyadmin.security.filter.TokenAuthenticationFilter;
 import com.jyadmin.security.handler.DefaultAccessDeniedHandler;
 import com.jyadmin.security.handler.DefaultUnAuthHandler;
@@ -29,6 +30,9 @@ import javax.annotation.Resource;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class JySecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Resource
+    private JySecurityProperties jySecurityProperties;
 
     @Resource
     private UserDetailsService userDetailsService;
@@ -62,7 +66,7 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 设置登录请求地址，token刷新地址，并设置不拦截
         http.authorizeRequests()
-            .antMatchers(JyIgnoreUrlConfig.getIgnoreUrls())
+            .antMatchers(jySecurityProperties.getIgnoreUrls())
             .permitAll();
 
         // 跨域请求会先进行一次options请求
