@@ -2,6 +2,7 @@ package com.jyadmin.system.datadict.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.jyadmin.annotation.RateLimit;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.system.datadict.domain.DataDict;
@@ -45,7 +46,7 @@ public class DataDictController {
     @PostMapping("/create-root")
     public Result<Object> doCreateRoot(@RequestBody @Valid DataDictCreateRootVO vo) {
         DataDict sysDataDict = BeanUtil.copyProperties(vo, DataDict.class);
-        sysDataDict.setIsRoot(1);
+        sysDataDict.setIsRoot(GlobalConstants.SysRootNode.ROOT.getValue());
         return ResultUtil.toResult(sysDataDictService.save(sysDataDict));
     }
 
@@ -54,7 +55,7 @@ public class DataDictController {
     @PostMapping("/create-node")
     public Result<Object> doCreateNode(@RequestBody @Valid DataDictCreateNodeVO vo) {
         DataDict sysDataDict = BeanUtil.copyProperties(vo, DataDict.class);
-        sysDataDict.setIsRoot(0);
+        sysDataDict.setIsRoot(GlobalConstants.SysRootNode.NOT_ROOT.getValue());
         return ResultUtil.toResult(sysDataDictService.save(sysDataDict));
     }
 

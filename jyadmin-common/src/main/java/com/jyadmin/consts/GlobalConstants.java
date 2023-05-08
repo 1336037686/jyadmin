@@ -215,5 +215,31 @@ public class GlobalConstants {
         }
     }
 
+    /**
+     * 是否根节点枚举类 1=根节点 0=非根节点
+     */
+    public enum SysRootNode {
+        ROOT("根节点", 1),
+        NOT_ROOT("非根节点", 0);
+
+        // 名称
+        private String name;
+        // 值
+        private Integer value;
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        SysRootNode(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
     // ======================= 枚举 END =======================
 }
