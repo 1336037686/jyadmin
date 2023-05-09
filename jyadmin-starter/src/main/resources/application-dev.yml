@@ -3,9 +3,9 @@ server:
 spring:
   #数据库配置
   datasource:
-    url: jdbc:mysql://gz-cynosdbmysql-grp-04ibiuoj.sql.tencentcdb.com:28876/jyadmin?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    username: ENC(/tJ4NN1iRwEtd3bkeCkkpQ==)
-    password: ENC(fCo3UDEOu8AyfRmGlbPgG962sBsUBvWNBpR+zVZEEiA=)
+    url: jdbc:mysql://localhost:3306/jyadmin?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: ENC(username)
+    password: ENC(password)
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       initialSize: 10
@@ -78,6 +78,14 @@ jyadmin:
       secret-key: jyadmin
       access-token-expiration: 3600 # accessToken过期时间 1h
       refresh-token-expiration: 43200 # refreshToken过期时间 12h
+  safe:
+    security:
+      ignore-urls:
+        - /api/auth/login               # 注册
+        - /api/auth/register            # 注册
+        - /api/auth/captcha/{uniqueId}  # 验证码
+        - /api/auth/refreshToken        # 登陆续期
+        - /api/basic-setting/list       # 基础配置
   rate-limit:
     enabled: true
     prefix: jyadmin_limit
