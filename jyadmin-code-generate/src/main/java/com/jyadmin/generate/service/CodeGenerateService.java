@@ -4,6 +4,7 @@ import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author LGX_TvT <br>
@@ -16,4 +17,8 @@ public interface CodeGenerateService {
     List<TableOptionRespVO> getTableOptionsList(TableQueryReqVO vo);
 
     boolean saveTable(String tableName);
+
+    boolean updateTable(String tableName);
+
+    boolean removeByIds(Set<String> ids);
 }

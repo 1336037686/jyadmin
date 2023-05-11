@@ -48,17 +48,17 @@ public class CodeGenerateController {
         return ResultUtil.toResult(codeGenerateService.saveTable(tableName));
     }
 
-//    @ApiOperation(value = "同步数据库表", notes = "")
-//    @PutMapping("/update/table/{tableName}")
-//    public Result<Object> doUpdate(@PathVariable("tableName") String tableName) {
-//        return ResultUtil.toResult(codeGenerateService.updateTable(tableName));
-//    }
-//
-//    @ApiOperation(value = "删除数据库表", notes = "")
-//    @DeleteMapping("/remove/table")
-//    public Result<Object> doRemove(@RequestBody Set<String> ids) {
-//        return ResultUtil.toResult(codeGenerateService.removeByIds(ids));
-//    }
+    @ApiOperation(value = "同步数据库表", notes = "")
+    @PutMapping("/update/table/{tableName}")
+    public Result<Object> doUpdate(@PathVariable("tableName") String tableName) {
+        return ResultUtil.toResult(codeGenerateService.updateTable(tableName));
+    }
+
+    @ApiOperation(value = "删除数据库表", notes = "")
+    @DeleteMapping("/remove/table")
+    public Result<Object> doRemove(@RequestBody Set<String> ids) {
+        return ResultUtil.toResult(codeGenerateService.removeByIds(ids));
+    }
 
 
 }

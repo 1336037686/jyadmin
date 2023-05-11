@@ -1,6 +1,5 @@
 package com.jyadmin.generate.service.impl;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,8 +23,7 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.List;
-import java.util.Objects;
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,6 +102,16 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             throw new ApiException(ResultStatus.CODE_GEN_TABLE_LOAD_ERROR);
         }
         return true;
+    }
+
+    @Override
+    public boolean updateTable(String tableName) {
+        return false;
+    }
+
+    @Override
+    public boolean removeByIds(Set<String> ids) {
+        return false;
     }
 
     /**
