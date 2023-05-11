@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jyadmin.generate.mapper.CodeGenerateTableConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.jyadmin.generate.domain.CodeGenerateTableConfig">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="tableId" column="table_id" jdbcType="VARCHAR"/>
+            <result property="author" column="author" jdbcType="VARCHAR"/>
+            <result property="package" column="package" jdbcType="VARCHAR"/>
+            <result property="publicUrl" column="public_url" jdbcType="VARCHAR"/>
+            <result property="removeTablePrefix" column="remove_table_prefix" jdbcType="VARCHAR"/>
+            <result property="removeTableSuffix" column="remove_table_suffix" jdbcType="VARCHAR"/>
+            <result property="removeFieldPrefix" column="remove_field_prefix" jdbcType="VARCHAR"/>
+            <result property="removeFieldSuffix" column="remove_field_suffix" jdbcType="VARCHAR"/>
+            <result property="swaggerApiValue" column="swagger_api_value" jdbcType="VARCHAR"/>
+            <result property="swaggerApiTag" column="swagger_api_tag" jdbcType="VARCHAR"/>
+            <result property="pageViewPath" column="page_view_path" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,table_id,author,
+        package,public_url,remove_table_prefix,
+        remove_table_suffix,remove_field_prefix,remove_field_suffix,
+        swagger_api_value,swagger_api_tag,page_view_path,
+        create_by,update_by,create_time,
+        update_time,deleted
+    </sql>
+</mapper>

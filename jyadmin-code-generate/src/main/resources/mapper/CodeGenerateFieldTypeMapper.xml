@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jyadmin.generate.mapper.CodeGenerateFieldTypeMapper">
+
+    <resultMap id="BaseResultMap" type="com.jyadmin.generate.domain.CodeGenerateFieldType">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="jdbcType" column="jdbc_type" jdbcType="VARCHAR"/>
+            <result property="javaType" column="java_type" jdbcType="VARCHAR"/>
+            <result property="className" column="class_name" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,jdbc_type,java_type,
+        class_name,create_by,update_by,
+        create_time,update_time,deleted
+    </sql>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jyadmin.generate.mapper.CodeGenerateTableMapper">
+
+    <resultMap id="BaseResultMap" type="com.jyadmin.generate.domain.CodeGenerateTable">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="tableName" column="table_name" jdbcType="VARCHAR"/>
+            <result property="tableRemark" column="table_remark" jdbcType="VARCHAR"/>
+            <result property="tableEngine" column="table_engine" jdbcType="VARCHAR"/>
+            <result property="tableCharset" column="table_charset" jdbcType="VARCHAR"/>
+            <result property="tableOrder" column="table_order" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,table_name,table_remark,
+        table_engine,table_charset,table_order,
+        create_by,update_by,create_time,
+        update_time,deleted
+    </sql>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jyadmin.generate.mapper.CodeGenerateFieldMapper">
+
+    <resultMap id="BaseResultMap" type="com.jyadmin.generate.domain.CodeGenerateField">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="tableId" column="table_id" jdbcType="VARCHAR"/>
+            <result property="fieldName" column="field_name" jdbcType="VARCHAR"/>
+            <result property="fieldType" column="field_type" jdbcType="VARCHAR"/>
+            <result property="fieldLength" column="field_length" jdbcType="VARCHAR"/>
+            <result property="nonNull" column="non_null" jdbcType="VARCHAR"/>
+            <result property="pk" column="pk" jdbcType="VARCHAR"/>
+            <result property="defaultValue" column="default_value" jdbcType="VARCHAR"/>
+            <result property="fieldRemark" column="field_remark" jdbcType="VARCHAR"/>
+            <result property="sort" column="sort" jdbcType="INTEGER"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,table_id,field_name,
+        field_type,field_length,non_null,
+        pk,default_value,field_remark,
+        sort,create_by,update_by,
+        create_time,update_time,deleted
+    </sql>
+</mapper>

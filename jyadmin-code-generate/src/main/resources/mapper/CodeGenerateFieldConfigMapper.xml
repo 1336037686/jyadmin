@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jyadmin.generate.mapper.CodeGenerateFieldConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.jyadmin.generate.domain.CodeGenerateFieldConfig">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="fieldId" column="field_id" jdbcType="VARCHAR"/>
+            <result property="javaType" column="java_type" jdbcType="VARCHAR"/>
+            <result property="fieldAlias" column="field_alias" jdbcType="VARCHAR"/>
+            <result property="showPage" column="show_page" jdbcType="INTEGER"/>
+            <result property="showDetail" column="show_detail" jdbcType="INTEGER"/>
+            <result property="showForm" column="show_form" jdbcType="INTEGER"/>
+            <result property="require" column="require" jdbcType="INTEGER"/>
+            <result property="formType" column="form_type" jdbcType="VARCHAR"/>
+            <result property="formDict" column="form_dict" jdbcType="VARCHAR"/>
+            <result property="formSelectMethod" column="form_select_method" jdbcType="VARCHAR"/>
+            <result property="showQuery" column="show_query" jdbcType="INTEGER"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,field_id,java_type,
+        field_alias,show_page,show_detail,
+        show_form,require,form_type,
+        form_dict,form_select_method,show_query,
+        create_by,update_by,create_time,
+        update_time,deleted
+    </sql>
+</mapper>

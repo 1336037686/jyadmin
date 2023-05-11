@@ -159,9 +159,34 @@ public enum ResultStatus {
     /**
      * 0007 0001 邮件发送失败
      */
-    EMAIL_SEND_FAIL(70001, ModuleSeries.EMAIL, "邮件发送失败")
+    EMAIL_SEND_FAIL(70001, ModuleSeries.EMAIL, "邮件发送失败"),
 
     // endregion--------------------------
+
+    // region--- 0008 xxxx 代码生成器相关状态码 ---
+    /**
+     * 0008 0001 获取数据库表元数据失败
+     */
+    CODE_GEN_QUERY_TABLE_METADATA_FAIL(80001, ModuleSeries.EMAIL, "获取数据库表元数据失败"),
+
+    /**
+     * 0008 0002 获取数据库表字段元数据失败
+     */
+    CODE_GEN_QUERY_FIELD_METADATA_FAIL(80002, ModuleSeries.EMAIL, "获取数据库表字段元数据失败"),
+
+    /**
+     * 0008 0003 当前数据库表记录已存在
+     */
+    CODE_GEN_TABLE_ALREADY_EXIST(80003, ModuleSeries.EMAIL, "当前数据库表记录已存在"),
+
+    /**
+     * 0008 0004 当前数据库表数据加载失败
+     */
+    CODE_GEN_TABLE_LOAD_ERROR(80004, ModuleSeries.EMAIL, "当前数据库表数据加载失败")
+
+
+    // endregion--------------------------
+
     ;
 
     // 状态码
@@ -206,7 +231,9 @@ public enum ResultStatus {
         // 6 短信
         SMS(6),
         // 7 邮件
-        EMAIL(7);
+        EMAIL(7),
+        // 8 代码生成器
+        CODE_GEN(7);
 
         private final int value;
 
