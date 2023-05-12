@@ -12,6 +12,7 @@ import com.jyadmin.generate.common.constant.CodeGenerateConstant;
 import com.jyadmin.generate.domain.*;
 import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
+import com.jyadmin.generate.model.vo.UserConfigReqVO;
 import com.jyadmin.generate.service.*;
 import com.jyadmin.util.StringUtil;
 import com.jyadmin.util.ThrowableUtil;
@@ -179,6 +180,13 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             log.error(ThrowableUtil.getStackTrace(e));
             throw new ApiException(ResultStatus.CODE_GEN_TABLE_LOAD_ERROR);
         }
+    }
+
+    @Override
+    public boolean updateTableConfig(UserConfigReqVO vo) {
+        if (Objects.nonNull(vo.getTableConfig())) codeGenerateTableConfigService.updateById(vo.getTableConfig());
+        if (CollectionUtils.isNotEmpty(vo.getFieldConfigs())) codeGenerateFieldConfigService.updateBatchById(vo.getFieldConfigs());
+        return true;
     }
 
     @Override

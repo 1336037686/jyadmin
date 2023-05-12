@@ -2,6 +2,7 @@ package com.jyadmin.generate.service;
 
 import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
+import com.jyadmin.generate.model.vo.UserConfigReqVO;
 
 import java.util.List;
 import java.util.Set;
@@ -23,4 +24,6 @@ public interface CodeGenerateService {
     boolean removeByIds(Set<String> ids);
 
     boolean getTableExist(String tableId);
+
+    boolean updateTableConfig(UserConfigReqVO vo);
 }

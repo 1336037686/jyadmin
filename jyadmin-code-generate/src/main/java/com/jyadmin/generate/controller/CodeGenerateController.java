@@ -6,6 +6,7 @@ import com.jyadmin.domain.Result;
 import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
 
+import com.jyadmin.generate.model.vo.UserConfigReqVO;
 import com.jyadmin.generate.service.CodeGenerateService;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
@@ -53,6 +54,12 @@ public class CodeGenerateController {
         return ResultUtil.toResult(codeGenerateService.removeByIds(ids));
     }
 
+    @ApiOperation(value = "更新数据库表配置", notes = "")
+    @PutMapping("/update/table-config")
+    public Result<Object> doUpdateTableConfig(@RequestBody @Valid UserConfigReqVO vo) {
+        return ResultUtil.toResult(codeGenerateService.updateTableConfig(vo));
+    }
+
     @ApiOperation(value = "分页获取数据库表列表", notes = "")
     @GetMapping("/query-table-exist/{tableId}")
     public Result<Object> doQueryTableExist(@PathVariable("tableId") String tableId) {
@@ -65,5 +72,6 @@ public class CodeGenerateController {
         List<TableOptionRespVO> list = codeGenerateService.getTableOptionsList(vo);
         return PageUtil.toPageResult(list, vo);
     }
+
 
 }
