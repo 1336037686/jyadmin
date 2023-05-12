@@ -182,8 +182,12 @@ public enum ResultStatus {
     /**
      * 0008 0004 当前数据库表数据加载失败
      */
-    CODE_GEN_TABLE_LOAD_ERROR(80004, ModuleSeries.EMAIL, "当前数据库表数据加载失败")
+    CODE_GEN_TABLE_LOAD_ERROR(80004, ModuleSeries.EMAIL, "当前数据库表数据加载失败"),
 
+    /**
+     * 0008 0005 当前数据库表记录不存在
+     */
+    CODE_GEN_TABLE_ALREADY_INEXIST(80005, ModuleSeries.EMAIL, "当前数据库表记录不存在")
 
     // endregion--------------------------
 

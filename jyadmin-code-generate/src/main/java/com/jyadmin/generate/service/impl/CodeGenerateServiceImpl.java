@@ -1,6 +1,8 @@
 package com.jyadmin.generate.service.impl;
 import java.util.*;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
@@ -55,29 +57,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     @Resource
     private CodeGenerateFieldTypeService codeGenerateFieldTypeService;
 
-
-    @Override
-    public List<TableOptionRespVO> getTableOptionsList(TableQueryReqVO vo) {
-        List<TableOptionRespVO> res = Lists.newArrayList();
-        try (Connection conn = dataSource.getConnection()) {
-            DatabaseMetaData metaData = conn.getMetaData();
-            ResultSet rs = metaData.getTables(conn.getCatalog(), null, null, new String[] { "TABLE" });
-            while (rs.next()) {
-                String tableName = rs.getString("TABLE_NAME");
-                String remarks = rs.getString("REMARKS");
-                res.add(new TableOptionRespVO().setTableName(tableName).setTableRemark(remarks));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            log.error(ThrowableUtil.getStackTrace(e));
-            throw new ApiException(ResultStatus.CODE_GEN_QUERY_TABLE_METADATA_FAIL);
-        }
-        // 去除已存在记录的表
-        List<CodeGenerateTable> list = codeGenerateTableService.list();
-        List<String> existTableList = list.stream().map(CodeGenerateTable::getTableName).collect(Collectors.toList());
-        return res.stream().filter(x -> !existTableList.contains(x.getTableName())).collect(Collectors.toList());
-    }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveTable(String tableName) {
@@ -105,13 +84,123 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
-    public boolean updateTable(String tableName) {
-        return false;
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateTable(String tableId) {
+        // 获取旧数据 数据库表所有数据，表信息、表配置、字段信息、字段配置
+        CodeGenerateTable oldTable = codeGenerateTableService.getById(tableId);
+        CodeGenerateTableConfig oldTableConfig = codeGenerateTableConfigService.getOne(new LambdaQueryWrapper<CodeGenerateTableConfig>().eq(CodeGenerateTableConfig::getTableId, oldTable.getId()));
+        List<CodeGenerateField> oldFields = codeGenerateFieldService.list(new LambdaQueryWrapper<CodeGenerateField>().eq(CodeGenerateField::getTableId, oldTable.getId()));
+        List<String> oldFieldIds = oldFields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<CodeGenerateFieldConfig> oldFieldConfigs = codeGenerateFieldConfigService.list(new LambdaQueryWrapper<CodeGenerateFieldConfig>().in(CodeGenerateFieldConfig::getFieldId, oldFieldIds));
+        // 获取实时数据 当前数据库表所有数据，表信息、表配置、字段信息、字段配置
+        CodeGenerateTable newTable = null;
+        List<CodeGenerateField> newFields = null;
+        try (Connection conn = dataSource.getConnection()) {
+            newTable = getCodeGenerateTable(oldTable.getTableName(), conn);
+            Assert.notNull(newTable, "当前数据库表不存在");
+            newFields = getCodeGenerateFields(oldTable, conn);
+        } catch (Exception e) {
+            log.error(ThrowableUtil.getStackTrace(e));
+            throw new ApiException(ResultStatus.CODE_GEN_TABLE_LOAD_ERROR);
+        }
+        // 1、更新表数据, 复制旧的属性过来，有值的以新的为主，null的则以旧为主
+        BeanUtil.copyProperties(newTable, oldTable, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        codeGenerateTableService.updateById(oldTable);
+        // 2、更新表属性
+        // 2.1 去除已经不存在的字段数据
+        List<String> newFieldNames = newFields.stream().map(CodeGenerateField::getFieldName).collect(Collectors.toList());
+        // 2.1.1 获取不存在的字段信息
+        List<CodeGenerateField> fieldsToDelete = oldFields.stream().filter(x -> !newFieldNames.contains(x.getFieldName())).collect(Collectors.toList());
+        // 2.1.2 获取不存在的字段配置
+        List<String> fieldIdsToDelete = fieldsToDelete.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<CodeGenerateFieldConfig> fieldConfigsToDelete = oldFieldConfigs.stream().filter(x -> fieldIdsToDelete.contains(x.getFieldId())).collect(Collectors.toList());
+        // 2.1.3 删除多余数据
+        codeGenerateFieldService.removeByIds(fieldsToDelete);
+        codeGenerateFieldConfigService.removeByIds(fieldConfigsToDelete);
+        // 2.2 添加新增的字段
+        List<String> oldFieldNames = oldFields.stream().map(CodeGenerateField::getFieldName).collect(Collectors.toList());
+        // 2.2.1 获取并创建不存在的字段信息
+        List<CodeGenerateField> fieldsToSave = newFields.stream().filter(x -> !oldFieldNames.contains(x.getFieldName())).collect(Collectors.toList());
+        codeGenerateFieldService.saveBatch(fieldsToSave);
+        // 2.2.2 创建不存在的字段配置
+        List<CodeGenerateFieldConfig> fieldConfigsToSave = getCodeGenerateFieldConfigs(oldTable, fieldsToSave);
+        codeGenerateFieldConfigService.saveBatch(fieldConfigsToSave);
+        // 2.3 更新原始存在字段
+        List<CodeGenerateField> fieldsToUpdate = oldFields.stream().filter(x -> newFieldNames.contains(x.getFieldName())).collect(Collectors.toList());
+        Map<String, List<CodeGenerateField>> newFieldMaps = newFields.stream().collect(Collectors.groupingBy(CodeGenerateField::getFieldName));
+        // 2.3.1 更新原始存在字段信息
+        fieldsToUpdate = fieldsToUpdate.stream().peek(x -> {
+            CodeGenerateField newField = newFieldMaps.get(x.getFieldName()).get(0);
+            // 拷贝最新的属性
+            BeanUtil.copyProperties(newField, x, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        }).collect(Collectors.toList());
+        codeGenerateFieldService.updateBatchById(fieldsToUpdate);
+        // 2.3.2 更新原始存在字段配置
+        Map<String, List<CodeGenerateFieldConfig>> oldFieldConfigMaps = oldFieldConfigs.stream().collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
+        List<CodeGenerateFieldConfig> fieldConfigsToUpdate = fieldsToUpdate.stream().map(x -> updateCodeGenerateFieldConfigs(x, oldFieldConfigMaps.get(x.getId()).get(0))).collect(Collectors.toList());
+        codeGenerateFieldConfigService.updateBatchById(fieldConfigsToUpdate);
+        return true;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Set<String> ids) {
-        return false;
+        // 查找所有表数据
+        List<CodeGenerateTable> tables = codeGenerateTableService.listByIds(ids);
+        // 查找所有表配置数据
+        List<CodeGenerateTableConfig> tableConfigs = codeGenerateTableConfigService.list(new LambdaQueryWrapper<CodeGenerateTableConfig>()
+                .in(CodeGenerateTableConfig::getTableId, tables.stream().map(CodeGenerateTable::getId).collect(Collectors.toList()))
+        );
+        // 查找所有属性数据
+        List<CodeGenerateField> fields = codeGenerateFieldService.list(new LambdaQueryWrapper<CodeGenerateField>()
+                .in(CodeGenerateField::getTableId, tables.stream().map(CodeGenerateTable::getId).collect(Collectors.toList()))
+        );
+        // 查找所有属性配置数据
+        List<CodeGenerateFieldConfig> fieldConfigs = codeGenerateFieldConfigService.list(new LambdaQueryWrapper<CodeGenerateFieldConfig>()
+                .in(CodeGenerateFieldConfig::getFieldId, fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList()))
+        );
+        codeGenerateTableService.removeByIds(tables);
+        codeGenerateTableConfigService.removeByIds(tableConfigs);
+        codeGenerateFieldService.removeByIds(fields);
+        codeGenerateFieldConfigService.removeByIds(fieldConfigs);
+        return true;
+    }
+
+    @Override
+    public boolean getTableExist(String tableId) {
+        CodeGenerateTable table = this.codeGenerateTableService.getById(tableId);
+        try (Connection conn = dataSource.getConnection()) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet rs = metaData.getTables(null, null, table.getTableName(), null);
+            boolean hasNext = rs.next();
+            rs.close();
+            return hasNext;
+        } catch (Exception e) {
+            log.error(ThrowableUtil.getStackTrace(e));
+            throw new ApiException(ResultStatus.CODE_GEN_TABLE_LOAD_ERROR);
+        }
+    }
+
+    @Override
+    public List<TableOptionRespVO> getTableOptionsList(TableQueryReqVO vo) {
+        List<TableOptionRespVO> res = Lists.newArrayList();
+        try (Connection conn = dataSource.getConnection()) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet rs = metaData.getTables(conn.getCatalog(), null, null, new String[] { "TABLE" });
+            while (rs.next()) {
+                String tableName = rs.getString("TABLE_NAME");
+                String remarks = rs.getString("REMARKS");
+                res.add(new TableOptionRespVO().setTableName(tableName).setTableRemark(remarks));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            log.error(ThrowableUtil.getStackTrace(e));
+            throw new ApiException(ResultStatus.CODE_GEN_QUERY_TABLE_METADATA_FAIL);
+        }
+        // 去除已存在记录的表
+        List<CodeGenerateTable> list = codeGenerateTableService.list();
+        List<String> existTableList = list.stream().map(CodeGenerateTable::getTableName).collect(Collectors.toList());
+        return res.stream().filter(x -> !existTableList.contains(x.getTableName())).collect(Collectors.toList());
     }
 
     /**
@@ -120,6 +209,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      * @return /
      */
     public CodeGenerateTable getCodeGenerateTable(String tableName, Connection conn) throws SQLException {
+
         String tableRemark = "", engine = "", charset = "", collation = "", createTableSql = "";
         Boolean tableExist = false;
         DatabaseMetaData metaData = conn.getMetaData();
@@ -184,6 +274,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             String columnName = rs.getString("COLUMN_NAME");
             String typeName = rs.getString("TYPE_NAME");
             Integer columnSize = rs.getInt("COLUMN_SIZE");
+            Integer decimalDigits = rs.getInt("DECIMAL_DIGITS");
             boolean isNullable = Objects.equals(rs.getString("IS_NULLABLE"), "YES"); // YES 可以为null，NO 不可以为null
             boolean isAutoIncrement = Objects.equals(rs.getString("IS_AUTOINCREMENT"), "NO"); // yea 可 no 不可自增
             boolean isPrimaryKey = isPk(table.getTableName(), columnName, metaData);
@@ -191,12 +282,11 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             String remarks = rs.getString("REMARKS");
 
             CodeGenerateField field = new CodeGenerateField()
-            .setTableId(table.getId()).setFieldName(columnName)
-            .setFieldType(typeName).setFieldLength(String.valueOf(columnSize))
-            .setNonNull(String.valueOf(isNullable ? 0 : 1)).setPk(String.valueOf(isPrimaryKey ? 1 : 0))
-            .setAutoIncre(String.valueOf(isAutoIncrement ? 0 : 1)).setDefaultValue(defaultValue)
-            .setFieldRemark(remarks).setSort(index++);
-
+                    .setTableId(table.getId()).setFieldName(columnName)
+                    .setFieldType(typeName).setFieldLength(String.valueOf(columnSize))
+                    .setFieldDecimalDigits(String.valueOf(decimalDigits)).setNonNull(String.valueOf(isNullable ? 0 : 1))
+                    .setPk(String.valueOf(isPrimaryKey ? 1 : 0)).setAutoIncre(String.valueOf(isAutoIncrement ? 0 : 1))
+                    .setDefaultValue(defaultValue).setFieldRemark(remarks).setSort(index++);
             res.add(field);
         }
         rs.close();
@@ -259,6 +349,21 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             res.add(config);
         }
         return res;
+    }
+
+    /**
+     * 更新旧表字段配置信息
+     * @return /
+     */
+    public CodeGenerateFieldConfig updateCodeGenerateFieldConfigs(CodeGenerateField field, CodeGenerateFieldConfig config) {
+        // 获取对应的Java类型
+        CodeGenerateFieldType fieldType = codeGenerateFieldTypeService.getOne(
+                new LambdaQueryWrapper<CodeGenerateFieldType>().eq(CodeGenerateFieldType::getJdbcType, field.getFieldType())
+        );
+        String javaType = Objects.isNull(fieldType) ? null : fieldType.getJavaType();
+        // 设置更新属性类型
+        config.setJavaType(javaType);
+        return config;
     }
 
 }

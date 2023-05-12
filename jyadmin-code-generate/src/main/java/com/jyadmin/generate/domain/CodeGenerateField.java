@@ -51,6 +51,12 @@ public class CodeGenerateField extends BaseEntity implements Serializable {
     private String fieldLength;
 
     /**
+     * 字段小数点
+     */
+    @TableField(value = "field_decimal_digits")
+    private String fieldDecimalDigits;
+
+    /**
      * 是否非空 1=不能为空 0=可以为空
      */
     @TableField(value = "non_null")

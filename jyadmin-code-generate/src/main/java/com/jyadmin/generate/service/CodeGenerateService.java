@@ -18,7 +18,9 @@ public interface CodeGenerateService {
 
     boolean saveTable(String tableName);
 
-    boolean updateTable(String tableName);
+    boolean updateTable(String tableId);
 
     boolean removeByIds(Set<String> ids);
+
+    boolean getTableExist(String tableId);
 }
