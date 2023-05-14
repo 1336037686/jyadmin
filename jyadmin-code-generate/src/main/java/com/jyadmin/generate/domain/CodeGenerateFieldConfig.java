@@ -39,6 +39,12 @@ public class CodeGenerateFieldConfig extends BaseEntity implements Serializable 
     private String javaType;
 
     /**
+     * 属性对应的Java类型全类名
+     */
+    @TableField(value = "class_name")
+    private String className;
+
+    /**
      * 别名，用于在表单和列表展示的名称
      */
     @TableField(value = "field_alias")

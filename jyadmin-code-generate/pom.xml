@@ -22,6 +22,12 @@
             <artifactId>jyadmin-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!--模板引擎-->
+        <!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

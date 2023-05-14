@@ -223,6 +223,13 @@
                 <artifactId>guava</artifactId>
                 <version>31.1-jre</version>
             </dependency>
+            <!--模板引擎-->
+            <!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core -->
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>2.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

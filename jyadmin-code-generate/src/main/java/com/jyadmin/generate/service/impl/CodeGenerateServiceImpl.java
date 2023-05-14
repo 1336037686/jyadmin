@@ -3,7 +3,10 @@ import java.util.*;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.jyadmin.consts.ResultStatus;
@@ -19,6 +22,7 @@ import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -337,10 +341,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                     new LambdaQueryWrapper<CodeGenerateFieldType>().eq(CodeGenerateFieldType::getJdbcType, field.getFieldType())
             );
             String javaType = Objects.isNull(fieldType) ? null : fieldType.getJavaType();
+            String className = Objects.isNull(fieldType) ? null : fieldType.getClassName();
             // 设置属性默认配置数据
             CodeGenerateFieldConfig config = new CodeGenerateFieldConfig();
             config.setFieldId(field.getId());
             config.setJavaType(javaType);
+            config.setClassName(className);
             config.setFieldAlias(field.getFieldRemark());
             // 页面 | 详情展示
             config.setShowPage(isIgnoreField ? CodeGenerateConstant.EnableStatus.NO.getValue() : CodeGenerateConstant.FIELD_CONFIG_SHOW_PAGE);
@@ -369,8 +375,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 new LambdaQueryWrapper<CodeGenerateFieldType>().eq(CodeGenerateFieldType::getJdbcType, field.getFieldType())
         );
         String javaType = Objects.isNull(fieldType) ? null : fieldType.getJavaType();
+        String className = Objects.isNull(fieldType) ? null : fieldType.getClassName();
         // 设置更新属性类型
         config.setJavaType(javaType);
+        config.setClassName(className);
         return config;
     }
 
