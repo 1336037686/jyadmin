@@ -18,6 +18,8 @@ public class CodeGenerateConstant {
     public static final String TABLE_CONFIG_PACKAGE_NAME_PREFIX = "com.jyadmin.generate";
     public static final String TABLE_CONFIG_PUBLIC_URL = "/api";
     public static final String TABLE_CONFIG_SWAGGER_API_TAG_PREFIX = "系统：";
+    public static final String TABLE_CONFIG_TYPE = "ot"; // 默认的数据库表类型为普通表
+    public static final String TABLE_CONFIG_VERSION = "1.0"; // 默认的数据库表类型为普通表
 
     public static final Integer FIELD_CONFIG_SHOW_PAGE = 1;
     public static final Integer FIELD_CONFIG_SHOW_DETAIL = 1;

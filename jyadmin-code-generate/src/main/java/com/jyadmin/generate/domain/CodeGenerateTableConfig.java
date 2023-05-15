@@ -32,6 +32,12 @@ public class CodeGenerateTableConfig extends BaseEntity implements Serializable 
     private String tableId;
 
     /**
+     * 表类型 ot=普通表，rt=关联中间表
+     */
+    @TableField(value = "table_type")
+    private String tableType;
+
+    /**
      * 作者
      */
     @TableField(value = "author")

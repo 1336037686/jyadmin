@@ -26,4 +26,7 @@ public interface CodeGenerateService {
     boolean getTableExist(String tableId);
 
     boolean updateTableConfig(UserConfigReqVO vo);
+
+    boolean generateCode(String tableId);
+
 }

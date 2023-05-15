@@ -73,6 +73,11 @@ public class CodeGenerateController {
         return PageUtil.toPageResult(list, vo);
     }
 
+    @ApiOperation(value = "代码生成接口", notes = "")
+    @GetMapping("/generate/{tableId}")
+    public Result<Object> doGenerateCode(@PathVariable("tableId") String tableId) {
+        return ResultUtil.toResult(codeGenerateService.generateCode(tableId));
+    }
 
 
 }

@@ -1,10 +1,17 @@
 package com.jyadmin.generate.service.impl;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,7 +19,10 @@ import com.google.common.collect.Lists;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.generate.common.constant.CodeGenerateConstant;
+import com.jyadmin.generate.common.utils.VelocityUtils;
 import com.jyadmin.generate.domain.*;
+import com.jyadmin.generate.model.dto.TemplateContextDTO;
+import com.jyadmin.generate.model.dto.TemplateModelDTO;
 import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
 import com.jyadmin.generate.model.vo.UserConfigReqVO;
@@ -22,6 +32,7 @@ import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -194,6 +205,73 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
+    public boolean generateCode(String tableId) {
+        TemplateContextDTO templateContext = buildTemplateContext(tableId);
+        VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
+
+        // 准备数据模型
+        Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
+
+        Template template = velocityEngine.getTemplate("template/simple-domain.vm");
+
+        // 渲染模板
+        Writer writer = null;
+        try {
+            writer = new FileWriter("output.html");
+            template.render(model, writer);
+            // 输出结果
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /**
+     * 构建模板生成上下文信息
+     * @param tableId
+     * @return
+     */
+    public TemplateContextDTO buildTemplateContext(String tableId) {
+        // 获取数据 数据库表所有数据，表信息、表配置、字段信息、字段配置
+        CodeGenerateTable table = codeGenerateTableService.getById(tableId);
+        CodeGenerateTableConfig tableConfig = codeGenerateTableConfigService.getOne(new LambdaQueryWrapper<CodeGenerateTableConfig>().eq(CodeGenerateTableConfig::getTableId, table.getId()));
+        List<CodeGenerateField> fields = codeGenerateFieldService.list(new LambdaQueryWrapper<CodeGenerateField>().eq(CodeGenerateField::getTableId, table.getId()));
+        List<String> oldFieldIds = fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<CodeGenerateFieldConfig> fieldConfigs = codeGenerateFieldConfigService.list(new LambdaQueryWrapper<CodeGenerateFieldConfig>().in(CodeGenerateFieldConfig::getFieldId, oldFieldIds));
+        Map<String, List<CodeGenerateFieldConfig>> fieldConfigMaps = fieldConfigs.stream().collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
+        List<String> importPackages = fieldConfigs.stream().map(CodeGenerateFieldConfig::getClassName).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+
+        // fields
+        List<TemplateModelDTO.FieldTemplateModel> fieldTemplateModels = Lists.newArrayList();
+        for (CodeGenerateField field : fields) {
+            CodeGenerateFieldConfig fieldConfig = fieldConfigMaps.get(field.getId()).get(0);
+            TemplateModelDTO.FieldTemplateModel fieldTemplateModel = new TemplateModelDTO.FieldTemplateModel();
+            BeanUtil.copyProperties(field, fieldTemplateModel);
+            BeanUtil.copyProperties(fieldConfig, fieldTemplateModel);
+            fieldTemplateModel.setRealFieldNameLowCamelCase(StrUtil.toCamelCase(field.getFieldName()));
+            fieldTemplateModel.setRealFieldNameUpperCamelCase(StrUtil.upperFirst(StrUtil.toCamelCase(field.getFieldName())));
+            fieldTemplateModels.add(fieldTemplateModel);
+        }
+
+        // table
+        TemplateModelDTO templateModelDTO = new TemplateModelDTO();
+        BeanUtil.copyProperties(table, templateModelDTO);
+        BeanUtil.copyProperties(tableConfig, templateModelDTO);
+        templateModelDTO.setRealTableNameLowCamelCase(StrUtil.toCamelCase(table.getTableName()));
+        templateModelDTO.setRealTableNameUpperCamelCase(StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName())));
+        templateModelDTO.setImportPackages(importPackages);
+        templateModelDTO.setClassName(StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName())));
+        templateModelDTO.setCurrTime(DateUtil.format(LocalDateTime.now(), DatePattern.NORM_DATETIME_PATTERN));
+        templateModelDTO.setDescription(table.getTableRemark());
+        templateModelDTO.setVersion(CodeGenerateConstant.TABLE_CONFIG_VERSION);
+        templateModelDTO.setFields(fieldTemplateModels);
+
+        return new TemplateContextDTO().setModel(templateModelDTO);
+    }
+
+    @Override
     public List<TableOptionRespVO> getTableOptionsList(TableQueryReqVO vo) {
         List<TableOptionRespVO> res = Lists.newArrayList();
         try (Connection conn = dataSource.getConnection()) {
@@ -269,7 +347,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .setTableId(tableId).setAuthor(CodeGenerateConstant.TABLE_CONFIG_Author)
                 .setPackageName(packageName).setPublicUrl(publicUrl).setSwaggerApiValue(tableRemark)
                 .setSwaggerApiTag(CodeGenerateConstant.TABLE_CONFIG_SWAGGER_API_TAG_PREFIX + tableRemark)
-                .setPageViewPath(tableNameCamelCase);
+                .setPageViewPath(tableNameCamelCase).setTableType(CodeGenerateConstant.TABLE_CONFIG_TYPE);
     }
 
     /**
