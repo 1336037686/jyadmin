@@ -34,4 +34,6 @@ public class VelocityUtils {
         return BeanUtil.beanToMap(obj);
     }
 
+
+
 }

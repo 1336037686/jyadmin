@@ -1,5 +1,7 @@
 package com.jyadmin.generate.service.impl;
+import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,7 +13,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -21,7 +25,9 @@ import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.generate.common.constant.CodeGenerateConstant;
 import com.jyadmin.generate.common.utils.VelocityUtils;
+import com.jyadmin.generate.common.utils.ZipUtils;
 import com.jyadmin.generate.domain.*;
+import com.jyadmin.generate.model.dto.TemplateConfig;
 import com.jyadmin.generate.model.dto.TemplateContextDTO;
 import com.jyadmin.generate.model.dto.TemplateModelDTO;
 import com.jyadmin.generate.model.vo.TableOptionRespVO;
@@ -37,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.stream.Collectors;
@@ -201,70 +208,92 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
-    public boolean generateCode(String tableId) {
+    public void generateCode(String tableId, HttpServletResponse response) {
+        TemplateContextDTO templateContext = buildTemplateContext(tableId);
         try {
-            TemplateContextDTO templateContext = buildTemplateContext(tableId);
             VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
             // 准备数据模型
             Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
-            String packagePath = templateContext.getModel().getPackageName().replace(".", "/");
+            String packagePath = templateContext.getModel().getPackageName().replace(".", FileUtil.FILE_SEPARATOR);
+
             Map<String, Template> templateMaps = Maps.newHashMap();
             Map<String, String> templatePathMaps = Maps.newHashMap();
             // controller
             String templateKeyController = templateContext.getModel().getRealTableNameUpperCamelCase() + "Controller.java";
-            templateMaps.put(templateKeyController, velocityEngine.getTemplate("template/simple-controller.java.vm"));
-            templatePathMaps.put(templateKeyController, "src/" + packagePath + "/controller");
+            templateMaps.put(templateKeyController, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-controller.java.vm"));
+            templatePathMaps.put(templateKeyController, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR +packagePath + FileUtil.FILE_SEPARATOR +"controller");
             // domain
             String templateKeyDomain = templateContext.getModel().getRealTableNameUpperCamelCase() + ".java";
-            templateMaps.put(templateKeyDomain, velocityEngine.getTemplate("template/simple-domain.java.vm"));
-            templatePathMaps.put(templateKeyDomain, "src/" + packagePath + "/domain");
+            templateMaps.put(templateKeyDomain, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-domain.java.vm"));
+            templatePathMaps.put(templateKeyDomain, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR +packagePath + FileUtil.FILE_SEPARATOR +"domain");
             // vo.createReqVO
             String templateKeyModelCreateReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "CreateReqVO.java";
-            templateMaps.put(templateKeyModelCreateReqVO, velocityEngine.getTemplate("template/simple-createReqVO.java.vm"));
-            templatePathMaps.put(templateKeyModelCreateReqVO, "src/" + packagePath + "/model/vo");
+            templateMaps.put(templateKeyModelCreateReqVO, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-createReqVO.java.vm"));
+            templatePathMaps.put(templateKeyModelCreateReqVO, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
             // vo.updateReqVO
             String templateKeyModelUpdateReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "UpdateReqVO.java";
-            templateMaps.put(templateKeyModelUpdateReqVO, velocityEngine.getTemplate("template/simple-updateReqVO.java.vm"));
-            templatePathMaps.put(templateKeyModelUpdateReqVO, "src/" + packagePath + "/model/vo");
+            templateMaps.put(templateKeyModelUpdateReqVO, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-updateReqVO.java.vm"));
+            templatePathMaps.put(templateKeyModelUpdateReqVO, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
             // vo.queryReqVO
             String templateKeyModelQueryReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "QueryReqVO.java";
-            templateMaps.put(templateKeyModelQueryReqVO, velocityEngine.getTemplate("template/simple-queryReqVO.java.vm"));
-            templatePathMaps.put(templateKeyModelQueryReqVO, "src/" + packagePath + "/model/vo");
+            templateMaps.put(templateKeyModelQueryReqVO, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-queryReqVO.java.vm"));
+            templatePathMaps.put(templateKeyModelQueryReqVO, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
             // service
             String templateKeyService = templateContext.getModel().getRealTableNameUpperCamelCase() + "Service.java";
-            templateMaps.put(templateKeyService, velocityEngine.getTemplate("template/simple-service.java.vm"));
-            templatePathMaps.put(templateKeyService, "src/" + packagePath + "/service");
+            templateMaps.put(templateKeyService, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-service.java.vm"));
+            templatePathMaps.put(templateKeyService, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "service");
             // serviceImpl
             String templateKeyServiceImpl = templateContext.getModel().getRealTableNameUpperCamelCase() + "ServiceImpl.java";
-            templateMaps.put(templateKeyServiceImpl, velocityEngine.getTemplate("template/simple-serviceImpl.java.vm"));
-            templatePathMaps.put(templateKeyServiceImpl, "src/" + packagePath + "/service/impl");
+            templateMaps.put(templateKeyServiceImpl, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-serviceImpl.java.vm"));
+            templatePathMaps.put(templateKeyServiceImpl, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "service" + FileUtil.FILE_SEPARATOR + "impl");
             // mapper
             String templateKeyMapper = templateContext.getModel().getRealTableNameUpperCamelCase() + "Mapper.java";
-            templateMaps.put(templateKeyMapper, velocityEngine.getTemplate("template/simple-mapper.java.vm"));
-            templatePathMaps.put(templateKeyMapper, "src/" + packagePath + "/mapper");
+            templateMaps.put(templateKeyMapper, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR +  "simple-mapper.java.vm"));
+            templatePathMaps.put(templateKeyMapper, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "mapper");
             // mapper.xml
             String templateKeyMapperXML = templateContext.getModel().getRealTableNameUpperCamelCase() + "Mapper.xml";
-            templateMaps.put(templateKeyMapperXML, velocityEngine.getTemplate("template/simple-mapper.xml.vm"));
-            templatePathMaps.put(templateKeyMapperXML, "resources/mapper");
+            templateMaps.put(templateKeyMapperXML, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-mapper.xml.vm"));
+            templatePathMaps.put(templateKeyMapperXML, CodeGenerateConstant.JAVA_SOURCE_CODE_RESOURCE_PATH + FileUtil.FILE_SEPARATOR + "mapper");
 
-            for (String key : templateMaps.keySet()) {
-                Template template = templateMaps.get(key);
-                String basePath = templatePathMaps.get(key);
-                // 渲染模板
-                String absPath = "D:\\code\\" + basePath + "\\" + key;
-                Path pathToFile = Paths.get(absPath);
-                Files.createDirectories(pathToFile.getParent());
-                Files.createFile(pathToFile);
-                Writer writer = new FileWriter(absPath);
-                template.render(model, writer);
-                // 输出结果
-                writer.flush();
-                writer.close();
-            }
+            // 本地生成代码
+            this.generateCodeFile(templateContext, model, templateMaps, templatePathMaps);
+            // 打包成zip返回
+            String sourceDirPath = templateContext.getConfig().getBasePathPrefix() + FileUtil.FILE_SEPARATOR + templateContext.getConfig().getBasePath();
+            ZipUtils.zipDirectory(sourceDirPath, CodeGenerateConstant.RESPONSE_ZIP_FILE_NAME, response);
+            // 删除原始文件
+            FileUtil.del(sourceDirPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+    }
+
+    /**
+     * 生成代码文件
+     * @param templateContext 配置上下文
+     * @param model 数据
+     * @param templateMaps 模板Map
+     * @param templatePathMaps 模板路径Map
+     * @throws IOException
+     */
+    public void generateCodeFile(TemplateContextDTO templateContext, Map<String, Object> model, Map<String, Template> templateMaps, Map<String, String> templatePathMaps) throws IOException {
+        for (String key : templateMaps.keySet()) {
+            Template template = templateMaps.get(key);
+            String basePath = templatePathMaps.get(key);
+            // 渲染模板
+            String sourceCodeGeneratePath =  templateContext.getConfig().getBasePathPrefix() +
+                    FileUtil.FILE_SEPARATOR + templateContext.getConfig().getBasePath() +
+                    FileUtil.FILE_SEPARATOR + basePath +
+                    FileUtil.FILE_SEPARATOR + key;
+            System.out.println(sourceCodeGeneratePath);
+            Path pathToFile = Paths.get(sourceCodeGeneratePath);
+            Files.createDirectories(pathToFile.getParent());
+            Files.createFile(pathToFile);
+            Writer writer = new FileWriter(sourceCodeGeneratePath);
+            template.render(model, writer);
+            // 输出结果
+            writer.flush();
+            writer.close();
+        }
     }
 
     /**
@@ -307,7 +336,13 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         templateModelDTO.setVersion(CodeGenerateConstant.TABLE_CONFIG_VERSION);
         templateModelDTO.setFields(fieldTemplateModels);
 
-        return new TemplateContextDTO().setModel(templateModelDTO);
+        // config
+        TemplateConfig config = new TemplateConfig()
+                .setBasePath(UUID.randomUUID().toString())
+                .setMetaName(table.getTableName());
+
+
+        return new TemplateContextDTO().setConfig(config).setModel(templateModelDTO);
     }
 
     @Override

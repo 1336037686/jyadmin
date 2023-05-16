@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
@@ -75,8 +76,8 @@ public class CodeGenerateController {
 
     @ApiOperation(value = "代码生成接口", notes = "")
     @GetMapping("/generate/{tableId}")
-    public Result<Object> doGenerateCode(@PathVariable("tableId") String tableId) {
-        return ResultUtil.toResult(codeGenerateService.generateCode(tableId));
+    public void doGenerateCode(@PathVariable("tableId") String tableId, HttpServletResponse response) {
+        codeGenerateService.generateCode(tableId, response);
     }
 
 

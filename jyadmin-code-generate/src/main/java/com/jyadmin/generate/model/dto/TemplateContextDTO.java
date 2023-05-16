@@ -1,6 +1,6 @@
 package com.jyadmin.generate.model.dto;
 
-import cn.hutool.extra.template.TemplateConfig;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 

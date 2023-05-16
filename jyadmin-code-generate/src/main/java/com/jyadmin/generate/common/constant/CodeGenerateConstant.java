@@ -1,5 +1,6 @@
 package com.jyadmin.generate.common.constant;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
 
@@ -13,6 +14,9 @@ import java.util.List;
  * @description: CodeGenerateConstant <br>
  */
 public class CodeGenerateConstant {
+
+    public static final String TEMPLATE_JAVA_VM_PATH = "template" + FileUtil.FILE_SEPARATOR + "java";
+    public static final String TEMPLATE_VUE_VM_PATH = "template" + FileUtil.FILE_SEPARATOR + "vue";
 
     public static final String TABLE_CONFIG_Author = "jyadmin code generate";
     public static final String TABLE_CONFIG_PACKAGE_NAME_PREFIX = "com.jyadmin.generate";
@@ -29,9 +33,14 @@ public class CodeGenerateConstant {
     public static final String FIELD_CONFIG_FORM_TYPE = "form_type_input";
     public static final String FIELD_CONFIG_FORM_SELECT_METHOD = "form_select_method_eq";
 
+    public static final String JAVA_SOURCE_CODE_SRC_PATH = "src";
+    public static final String JAVA_SOURCE_CODE_RESOURCE_PATH = "resources";
+
     public static final List<String> IGNORE_FIELDS = Lists.newArrayList(
             "create_by", "update_by", "create_time", "update_time", "deleted"
     );
+
+    public static final String RESPONSE_ZIP_FILE_NAME = "code-generate.zip";
 
 
     /**

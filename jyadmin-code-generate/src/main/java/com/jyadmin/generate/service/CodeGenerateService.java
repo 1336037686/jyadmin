@@ -4,6 +4,7 @@ import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
 import com.jyadmin.generate.model.vo.UserConfigReqVO;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,6 @@ public interface CodeGenerateService {
 
     boolean updateTableConfig(UserConfigReqVO vo);
 
-    boolean generateCode(String tableId);
+    void generateCode(String tableId, HttpServletResponse response);
 
 }
