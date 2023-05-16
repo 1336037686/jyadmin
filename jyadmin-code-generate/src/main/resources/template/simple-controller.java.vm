@@ -1,0 +1,82 @@
+package ${packageName}.controller;
+
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.domain.PageResult;
+import com.jyadmin.domain.Result;
+import ${packageName}.domain.${realTableNameUpperCamelCase};
+import ${packageName}.model.vo.${realTableNameUpperCamelCase}CreateReqVO;
+import ${packageName}.model.vo.${realTableNameUpperCamelCase}QueryReqVO;
+import ${packageName}.model.vo.${realTableNameUpperCamelCase}UpdateReqVO;
+import ${packageName}.service.${realTableNameUpperCamelCase}Service;
+import com.jyadmin.util.PageUtil;
+import com.jyadmin.util.ResultUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.Objects;
+import java.util.Set;
+
+/**
+ * $tableRemark <br>
+ * @author $author <br>
+ * @version $version <br>
+ * Create by $currTime <br>
+ * @description: ${realTableNameUpperCamelCase}Controller <br>
+ */
+@Slf4j
+@Api(value = "${swaggerApiValue}", tags = {"${swaggerApiTag}"})
+@RequestMapping("${publicUrl}")
+@RestController
+public class ${realTableNameUpperCamelCase}Controller {
+
+    @Resource
+    private ${realTableNameUpperCamelCase}Service ${realTableNameLowCamelCase}Service;
+
+    @ApiOperation(value = "新增${tableRemark}", notes = "")
+    @PostMapping("/create")
+    public Result<Object> doCreate(@RequestBody @Valid ${realTableNameUpperCamelCase}CreateReqVO vo) {
+        return ResultUtil.toResult(${realTableNameLowCamelCase}Service.save(BeanUtil.copyProperties(vo, ${realTableNameUpperCamelCase}.class)));
+    }
+
+    @ApiOperation(value = "更新${tableRemark}", notes = "")
+    @PutMapping("/update")
+    public Result<Object> doUpdate(@RequestBody @Valid ${realTableNameUpperCamelCase}UpdateReqVO vo) {
+        ${realTableNameUpperCamelCase} ${realTableNameLowCamelCase} = ${realTableNameLowCamelCase}Service.getById(vo.getId());
+        BeanUtil.copyProperties(vo, ${realTableNameLowCamelCase});
+        return ResultUtil.toResult(${realTableNameLowCamelCase}Service.updateById(${realTableNameLowCamelCase}));
+    }
+
+    @ApiOperation(value = "删除${tableRemark}", notes = "")
+    @DeleteMapping("/remove")
+    public Result<Object> doRemove(@RequestBody Set<String> ids) {
+        return ResultUtil.toResult(${realTableNameLowCamelCase}Service.removeByIds(ids));
+    }
+
+    @ApiOperation(value = "根据ID获取当前${tableRemark}", notes = "")
+    @GetMapping("/query/{id}")
+    public Result<Object> doQueryById(@PathVariable String id) {
+        return Result.ok(${realTableNameLowCamelCase}Service.getById(id));
+    }
+
+    @ApiOperation(value = "分页查询${tableRemark}", notes = "")
+    @GetMapping("/query")
+    public PageResult<${realTableNameUpperCamelCase}> doQueryPage(${realTableNameUpperCamelCase}QueryReqVO vo) {
+        return PageUtil.toPageResult(
+                this.${realTableNameLowCamelCase}Service.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
+                        new LambdaQueryWrapper<${realTableNameUpperCamelCase}>()
+                #foreach($field in $fields)
+                    #if($field.showQuery == 1)
+                            .eq(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                    #end
+                #end
+                )
+        );
+    }
+}

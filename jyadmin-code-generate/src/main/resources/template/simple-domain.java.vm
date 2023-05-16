@@ -1,0 +1,52 @@
+package ${packageName}.domain;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+#if($tableType.equals('ot'))
+import com.jyadmin.domain.BaseEntity;
+#else
+import com.jyadmin.domain.BaseTrEntity;
+#end
+import lombok.Data;
+import lombok.experimental.Accessors;
+import java.io.Serializable;
+#foreach($item in $importPackages)
+import $item;
+#end
+
+/**
+ * ${tableRemark} <br>
+ * @TableName ${tableName} <br>
+ * @author ${author} <br>
+ * @version ${version} <br>
+ * Create by ${currTime} <br>
+ * @description: ${realTableNameUpperCamelCase} <br>
+ */
+@TableName(value ="${tableName}")
+@Accessors(chain = true)
+@Data
+public class ${realTableNameUpperCamelCase} extends #if($tableType.equals('ot'))BaseEntity#{else}BaseTrEntity#end implements Serializable {
+#foreach($field in $fields)
+#if($field.fieldIgnore == 0)
+    #if($field.pk.equals('1'))
+
+    /**
+     * ${field.fieldRemark}
+     */
+    @TableId(value = "${field.fieldName}")
+    private ${field.javaType} ${field.realFieldNameLowCamelCase};
+    #else
+
+    /**
+     * ${field.fieldRemark}
+     */
+    @TableField(value = "${field.fieldName}")
+    private ${field.javaType} ${field.realFieldNameLowCamelCase};
+    #end
+#end
+#end
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+}

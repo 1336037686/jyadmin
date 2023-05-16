@@ -1,0 +1,33 @@
+package ${packageName}.model.vo;
+
+import com.jyadmin.domain.BasePageVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+
+/**
+ * ${tableRemark} <br>
+ * @author ${author} <br>
+ * @version ${version} <br>
+ * Create by ${currTime} <br>
+ * @description: ${realTableNameUpperCamelCase}QueryReqVO <br>
+ */
+@ApiModel("${tableRemark}-查询-数据模型")
+@Data
+public class ${realTableNameUpperCamelCase}QueryReqVO extends BasePageVO implements Serializable {
+#foreach($field in $fields)
+#if($field.fieldIgnore == 0)
+#if($field.showQuery == 1)
+
+    /**
+     * ${field.fieldRemark}
+     */
+    @ApiModelProperty(value = "${field.fieldRemark}", name = "${field.realFieldNameLowCamelCase}")
+    private ${field.javaType} ${field.realFieldNameLowCamelCase};
+#end
+#end
+#end
+}

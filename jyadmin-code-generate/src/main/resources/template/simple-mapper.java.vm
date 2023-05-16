@@ -1,0 +1,23 @@
+package ${packageName}.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import ${packageName}.domain.${realTableNameUpperCamelCase};
+import org.apache.ibatis.annotations.Mapper;
+
+
+/**
+ * ${tableRemark} Mapper <br>
+ * @author ${author} <br>
+ * @version ${version} <br>
+ * Create by ${currTime} <br>
+ * @Entity ${packageName}.domain.${realTableNameUpperCamelCase}
+ * @description: ${realTableNameUpperCamelCase}Mapper <br>
+ */
+@Mapper
+public interface ${realTableNameUpperCamelCase}Mapper extends BaseMapper<${realTableNameUpperCamelCase}> {
+
+}
+
+
+
+

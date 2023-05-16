@@ -1,7 +1,9 @@
 package com.jyadmin.generate.service.impl;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -9,13 +11,12 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.generate.common.constant.CodeGenerateConstant;
@@ -27,13 +28,10 @@ import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
 import com.jyadmin.generate.model.vo.UserConfigReqVO;
 import com.jyadmin.generate.service.*;
-import com.jyadmin.util.StringUtil;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -41,9 +39,7 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.Date;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author LGX_TvT <br>
@@ -206,22 +202,65 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     @Override
     public boolean generateCode(String tableId) {
-        TemplateContextDTO templateContext = buildTemplateContext(tableId);
-        VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
-
-        // 准备数据模型
-        Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
-
-        Template template = velocityEngine.getTemplate("template/simple-domain.vm");
-
-        // 渲染模板
-        Writer writer = null;
         try {
-            writer = new FileWriter("output.html");
-            template.render(model, writer);
-            // 输出结果
-            writer.flush();
-            writer.close();
+            TemplateContextDTO templateContext = buildTemplateContext(tableId);
+            VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
+            // 准备数据模型
+            Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
+            String packagePath = templateContext.getModel().getPackageName().replace(".", "/");
+            Map<String, Template> templateMaps = Maps.newHashMap();
+            Map<String, String> templatePathMaps = Maps.newHashMap();
+            // controller
+            String templateKeyController = templateContext.getModel().getRealTableNameUpperCamelCase() + "Controller.java";
+            templateMaps.put(templateKeyController, velocityEngine.getTemplate("template/simple-controller.java.vm"));
+            templatePathMaps.put(templateKeyController, "src/" + packagePath + "/controller");
+            // domain
+            String templateKeyDomain = templateContext.getModel().getRealTableNameUpperCamelCase() + ".java";
+            templateMaps.put(templateKeyDomain, velocityEngine.getTemplate("template/simple-domain.java.vm"));
+            templatePathMaps.put(templateKeyDomain, "src/" + packagePath + "/domain");
+            // vo.createReqVO
+            String templateKeyModelCreateReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "CreateReqVO.java";
+            templateMaps.put(templateKeyModelCreateReqVO, velocityEngine.getTemplate("template/simple-createReqVO.java.vm"));
+            templatePathMaps.put(templateKeyModelCreateReqVO, "src/" + packagePath + "/model/vo");
+            // vo.updateReqVO
+            String templateKeyModelUpdateReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "UpdateReqVO.java";
+            templateMaps.put(templateKeyModelUpdateReqVO, velocityEngine.getTemplate("template/simple-updateReqVO.java.vm"));
+            templatePathMaps.put(templateKeyModelUpdateReqVO, "src/" + packagePath + "/model/vo");
+            // vo.queryReqVO
+            String templateKeyModelQueryReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "QueryReqVO.java";
+            templateMaps.put(templateKeyModelQueryReqVO, velocityEngine.getTemplate("template/simple-queryReqVO.java.vm"));
+            templatePathMaps.put(templateKeyModelQueryReqVO, "src/" + packagePath + "/model/vo");
+            // service
+            String templateKeyService = templateContext.getModel().getRealTableNameUpperCamelCase() + "Service.java";
+            templateMaps.put(templateKeyService, velocityEngine.getTemplate("template/simple-service.java.vm"));
+            templatePathMaps.put(templateKeyService, "src/" + packagePath + "/service");
+            // serviceImpl
+            String templateKeyServiceImpl = templateContext.getModel().getRealTableNameUpperCamelCase() + "ServiceImpl.java";
+            templateMaps.put(templateKeyServiceImpl, velocityEngine.getTemplate("template/simple-serviceImpl.java.vm"));
+            templatePathMaps.put(templateKeyServiceImpl, "src/" + packagePath + "/service/impl");
+            // mapper
+            String templateKeyMapper = templateContext.getModel().getRealTableNameUpperCamelCase() + "Mapper.java";
+            templateMaps.put(templateKeyMapper, velocityEngine.getTemplate("template/simple-mapper.java.vm"));
+            templatePathMaps.put(templateKeyMapper, "src/" + packagePath + "/mapper");
+            // mapper.xml
+            String templateKeyMapperXML = templateContext.getModel().getRealTableNameUpperCamelCase() + "Mapper.xml";
+            templateMaps.put(templateKeyMapperXML, velocityEngine.getTemplate("template/simple-mapper.xml.vm"));
+            templatePathMaps.put(templateKeyMapperXML, "resources/mapper");
+
+            for (String key : templateMaps.keySet()) {
+                Template template = templateMaps.get(key);
+                String basePath = templatePathMaps.get(key);
+                // 渲染模板
+                String absPath = "D:\\code\\" + basePath + "\\" + key;
+                Path pathToFile = Paths.get(absPath);
+                Files.createDirectories(pathToFile.getParent());
+                Files.createFile(pathToFile);
+                Writer writer = new FileWriter(absPath);
+                template.render(model, writer);
+                // 输出结果
+                writer.flush();
+                writer.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

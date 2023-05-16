@@ -1,0 +1,15 @@
+package ${packageName}.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import ${packageName}.domain.${realTableNameUpperCamelCase};
+
+/**
+ * ${tableRemark} Service <br>
+ * @author ${author} <br>
+ * @version ${version} <br>
+ * Create by ${currTime} <br>
+ * @description: ${realTableNameUpperCamelCase}Service <br>
+ */
+public interface ${realTableNameUpperCamelCase}Service extends IService<${realTableNameUpperCamelCase}> {
+
+}

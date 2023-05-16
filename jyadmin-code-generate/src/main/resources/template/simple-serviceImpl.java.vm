@@ -1,0 +1,23 @@
+package ${packageName}.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import ${packageName}.domain.${realTableNameUpperCamelCase};
+import ${packageName}.mapper.${realTableNameUpperCamelCase}Mapper;
+import ${packageName}.service.${realTableNameUpperCamelCase}Service;
+import org.springframework.stereotype.Service;
+
+/**
+ * ${tableRemark} ServiceImpl <br>
+ * @author ${author} <br>
+ * @version ${version} <br>
+ * Create by ${currTime} <br>
+ * @description: ${realTableNameUpperCamelCase}ServiceImpl <br>
+ */
+@Service
+public class ${realTableNameUpperCamelCase}ServiceImpl extends ServiceImpl<${realTableNameUpperCamelCase}Mapper, ${realTableNameUpperCamelCase}> implements ${realTableNameUpperCamelCase}Service {
+
+}
+
+
+
+
