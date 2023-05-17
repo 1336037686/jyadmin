@@ -2,12 +2,15 @@
   <div style="margin: 10px">
     <el-card class="box-card" shadow="always">
       <el-form :inline="true" v-show="queryFormVisiable" size="mini"  :model="queryForm" label-width="100px">
-        <el-form-item label="类别名称：">
-          <el-input v-model="queryForm.name" placeholder="类别名称" />
+  #foreach($field in $fields)
+    #if($field.fieldIgnore == 0)
+      #if($field.showQuery == 1)
+        <el-form-item label="${field.fieldRemark}：">
+          <el-input v-model="queryForm.${field.realFieldNameLowCamelCase}" placeholder="${field.fieldRemark}" />
         </el-form-item>
-        <el-form-item label="类别编码：">
-          <el-input v-model="queryForm.code" placeholder="类别编码" />
-        </el-form-item>
+      #end
+    #end
+  #end
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">查 询</el-button>
           <el-button type="info" icon="el-icon-circle-close" @click="handleReset">重 置</el-button>
@@ -23,7 +26,7 @@
 
     <el-card class="box-card" shadow="always" style="margin-top: 5px">
       <div slot="header" class="clearfix">
-        <span><i class="el-icon-caret-right" /> 博客类别记录</span>
+        <span><i class="el-icon-caret-right" /> ${tableRemark}记录</span>
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
@@ -43,10 +46,13 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column type="index" width="80" label="序号" align="center" />
-        <el-table-column prop="name" label="类别名称" align="center"  />
-        <el-table-column prop="code" label="类别编码" align="center"  />
-        <el-table-column prop="createTime" label="创建时间" align="center"  />
-        <el-table-column prop="intro" label="类别简介" width="600" align="center"  />
+  #foreach($field in $fields)
+    #if($field.fieldIgnore == 0)
+      #if($field.showPage == 1)
+        <el-table-column prop="${field.realFieldNameLowCamelCase}" label="${field.fieldRemark}" align="center"  />
+      #end
+    #end
+  #end
       </el-table>
     </el-card>
 
@@ -62,23 +68,28 @@
       />
     </div>
 
-    <jy-category-form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
-    <jy-category-detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <${realTableNameUpperCamelCase}Form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
+    <${realTableNameUpperCamelCase}Detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
   </div>
 </template>
 
 <script>
-import jyCategoryApi from '@/api/module/jy-category'
-import JyCategoryForm from '@/views/module/blog/category/category-form'
-import JyCategoryDetail from '@/views/module/blog/category/category-detail'
+import ${realTableNameLowCamelCase}Api from '@/api/module/${realTableNameLowCamelCase}Api'
+import ${realTableNameUpperCamelCase}Form from '@/views/module/${realTableNameLowCamelCase}/${realTableNameLowCamelCase}-form'
+import ${realTableNameUpperCamelCase}Detail from '@/views/module/${realTableNameLowCamelCase}/${realTableNameLowCamelCase}-detail'
 export default {
-  components: { JyCategoryDetail, JyCategoryForm },
+  components: { ${realTableNameUpperCamelCase}Detail, ${realTableNameUpperCamelCase}Form },
   data() {
     return {
       queryFormVisiable: true,
       queryForm: {
-        name: '',
-        code: ''
+#foreach($field in $fields)
+  #if($field.fieldIgnore == 0)
+    #if($field.showQuery == 1)
+        ${field.realFieldNameLowCamelCase}: null,
+    #end
+  #end
+#end
       },
       tableData: {
         loading: false,
@@ -113,7 +124,7 @@ export default {
     getList() {
       this.tableData.loading = true
       const queryForm = { ...this.queryForm, pageNumber: this.tableData.pageNumber, pageSize: this.tableData.pageSize }
-      jyCategoryApi.getList(queryForm).then(response => {
+        ${realTableNameLowCamelCase}Api.getList(queryForm).then(response => {
         this.tableData.loading = false
         this.tableData = response
       })
@@ -125,6 +136,13 @@ export default {
     handleReset() {
       this.queryForm.name = ''
       this.queryForm.code = ''
+#foreach($field in $fields)
+#if($field.fieldIgnore == 0)
+  #if($field.showQuery == 1)
+      this.queryForm.${field.realFieldNameLowCamelCase} = null
+  #end
+#end
+#end
       this.tableData.pageNumber = 1
       this.getList()
     },
@@ -133,12 +151,12 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.showData.title = '查看类别'
+      this.showData.title = '查看${field.fieldRemark}'
       this.showData.id = this.selectData.current.id
       this.showData.visiable = true
     },
     handleCreate() {
-      this.editData.title = '新增类别'
+      this.editData.title = '新增${field.fieldRemark}'
       this.editData.id = null
       this.editData.visiable = true
     },
@@ -147,7 +165,7 @@ export default {
         this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.editData.title = '修改类别'
+      this.editData.title = '修改${field.fieldRemark}'
       this.editData.id = this.selectData.current.id
       this.editData.visiable = true
     },
@@ -164,7 +182,7 @@ export default {
       }).then(() => {
         const ids = []
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
-        jyCategoryApi.remove(ids).then(response => {
+          ${realTableNameLowCamelCase}Api.remove(ids).then(response => {
           this.getList()
           this.$notify.success({ title: '成功', message: '删除成功' })
         }).catch(e => {

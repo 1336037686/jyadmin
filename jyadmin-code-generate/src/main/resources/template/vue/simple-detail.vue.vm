@@ -9,24 +9,18 @@
   >
     <div>
       <el-descriptions :column="2" border>
+  #foreach($field in $fields)
+    #if($field.fieldIgnore == 0)
+      #if($field.showPage == 1)
         <el-descriptions-item>
           <template slot="label">
-            类别名称
+            ${field.fieldRemark}
           </template>
-          {{ form.name }}
+          {{ form.${field.realFieldNameLowCamelCase} }}
         </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            类别编码
-          </template>
-          {{ form.code }}
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            简介
-          </template>
-          {{ form.intro }}
-        </el-descriptions-item>
+      #end
+    #end
+  #end
       </el-descriptions>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -36,9 +30,9 @@
 </template>
 
 <script>
-import jyCategoryApi from '@/api/module/jy-category'
+import ${realTableNameLowCamelCase}Api from '@/api/module/${realTableNameLowCamelCase}Api'
 export default {
-  name: 'JyCategoryDetail',
+  name: '${realTableNameLowCamelCase}Detail',
   props: {
     title: {
       type: String,
@@ -57,10 +51,14 @@ export default {
     return {
       tmpVisible: this.visible,
       form: {
-        id: '',
-        name: '',
-        code: '',
-        intro: ''
+        id: null,
+  #foreach($field in $fields)
+    #if($field.fieldIgnore == 0)
+      #if($field.showDetail == 1)
+        ${field.realFieldNameLowCamelCase}: null,
+      #end
+    #end
+  #end
       }
     }
   },
@@ -78,11 +76,11 @@ export default {
   },
   methods: {
     getById(id) {
-      jyCategoryApi.getById(id).then(response => {
+      ${realTableNameLowCamelCase}Api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })
-      })
+      })}
     }
   }
 }

@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import jyCategoryApi from '@/api/module/jy-category'
+import ${realTableNameLowCamelCase}Api from '@/api/module/${realTableNameLowCamelCase}Api'
 export default {
-  name: 'JyCategoryForm',
+  name: '${realTableNameLowCamelCase}Form',
   props: {
     title: {
       type: String,
@@ -96,7 +96,7 @@ export default {
       })
     },
     handleCreate() {
-      jyCategoryApi.add(this.form).then(response => {
+      ${realTableNameLowCamelCase}Api.add(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -108,7 +108,7 @@ export default {
       })
     },
     handleUpdate() {
-      jyCategoryApi.update(this.form).then(response => {
+      ${realTableNameLowCamelCase}Api.update(this.form).then(response => {
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
@@ -120,7 +120,7 @@ export default {
       })
     },
     getById(id) {
-      jyCategoryApi.getById(id).then(response => {
+      ${realTableNameLowCamelCase}Api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
         this.$notify.error({ title: '失败', message: '获取数据失败' })

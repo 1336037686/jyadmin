@@ -3,7 +3,7 @@ import request from '@/utils/request-api'
 export default {
   getList(query) {
     return request({
-      url: '/api/category/query',
+      url: '/api/${realTableNameLowCamelCase}/query',
       method: 'get',
       params: query
     })
@@ -11,14 +11,14 @@ export default {
 
   getById(id) {
     return request({
-      url: '/api/category/query/' + id,
+      url: '/api/${realTableNameLowCamelCase}/query/' + id,
       method: 'get'
     })
   },
 
   add(data) {
     return request({
-      url: '/api/category/create',
+      url: '/api/${realTableNameLowCamelCase}/create',
       method: 'post',
       data
     })
@@ -26,7 +26,7 @@ export default {
 
   update(data) {
     return request({
-      url: '/api/category/update',
+      url: '/api/${realTableNameLowCamelCase}/update',
       method: 'put',
       data
     })
@@ -34,7 +34,7 @@ export default {
 
   remove(data) {
     return request({
-      url: '/api/category/remove',
+      url: '/api/${realTableNameLowCamelCase}/remove',
       method: 'delete',
       data
     })
