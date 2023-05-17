@@ -215,46 +215,15 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             // 准备数据模型
             Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
             String packagePath = templateContext.getModel().getPackageName().replace(".", FileUtil.FILE_SEPARATOR);
-
+            // 设置代码生成基础信息，包括模板，生成代码文件名，生成代码文件路径
             Map<String, Template> templateMaps = Maps.newHashMap();
             Map<String, String> templatePathMaps = Maps.newHashMap();
-            // controller
-            String templateKeyController = templateContext.getModel().getRealTableNameUpperCamelCase() + "Controller.java";
-            templateMaps.put(templateKeyController, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-controller.java.vm"));
-            templatePathMaps.put(templateKeyController, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR +packagePath + FileUtil.FILE_SEPARATOR +"controller");
-            // domain
-            String templateKeyDomain = templateContext.getModel().getRealTableNameUpperCamelCase() + ".java";
-            templateMaps.put(templateKeyDomain, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-domain.java.vm"));
-            templatePathMaps.put(templateKeyDomain, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR +packagePath + FileUtil.FILE_SEPARATOR +"domain");
-            // vo.createReqVO
-            String templateKeyModelCreateReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "CreateReqVO.java";
-            templateMaps.put(templateKeyModelCreateReqVO, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-createReqVO.java.vm"));
-            templatePathMaps.put(templateKeyModelCreateReqVO, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
-            // vo.updateReqVO
-            String templateKeyModelUpdateReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "UpdateReqVO.java";
-            templateMaps.put(templateKeyModelUpdateReqVO, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-updateReqVO.java.vm"));
-            templatePathMaps.put(templateKeyModelUpdateReqVO, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
-            // vo.queryReqVO
-            String templateKeyModelQueryReqVO = templateContext.getModel().getRealTableNameUpperCamelCase() + "QueryReqVO.java";
-            templateMaps.put(templateKeyModelQueryReqVO, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-queryReqVO.java.vm"));
-            templatePathMaps.put(templateKeyModelQueryReqVO, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
-            // service
-            String templateKeyService = templateContext.getModel().getRealTableNameUpperCamelCase() + "Service.java";
-            templateMaps.put(templateKeyService, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-service.java.vm"));
-            templatePathMaps.put(templateKeyService, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "service");
-            // serviceImpl
-            String templateKeyServiceImpl = templateContext.getModel().getRealTableNameUpperCamelCase() + "ServiceImpl.java";
-            templateMaps.put(templateKeyServiceImpl, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-serviceImpl.java.vm"));
-            templatePathMaps.put(templateKeyServiceImpl, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "service" + FileUtil.FILE_SEPARATOR + "impl");
-            // mapper
-            String templateKeyMapper = templateContext.getModel().getRealTableNameUpperCamelCase() + "Mapper.java";
-            templateMaps.put(templateKeyMapper, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR +  "simple-mapper.java.vm"));
-            templatePathMaps.put(templateKeyMapper, CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "mapper");
-            // mapper.xml
-            String templateKeyMapperXML = templateContext.getModel().getRealTableNameUpperCamelCase() + "Mapper.xml";
-            templateMaps.put(templateKeyMapperXML, velocityEngine.getTemplate(CodeGenerateConstant.TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-mapper.xml.vm"));
-            templatePathMaps.put(templateKeyMapperXML, CodeGenerateConstant.JAVA_SOURCE_CODE_RESOURCE_PATH + FileUtil.FILE_SEPARATOR + "mapper");
-
+            CodeGenerateConstant.TemplateInfo[] templateInfos = CodeGenerateConstant.TemplateInfo.values();
+            for (CodeGenerateConstant.TemplateInfo templateInfo : templateInfos) {
+                String codeGenFileName = templateInfo.getCodeGenFileName(templateContext.getModel().getRealTableNameUpperCamelCase());
+                templateMaps.put(codeGenFileName, velocityEngine.getTemplate(templateInfo.getTemplatePath()));
+                templatePathMaps.put(codeGenFileName, templateInfo.getCodeGenParentPath(packagePath));
+            }
             // 本地生成代码
             this.generateCodeFile(templateContext, model, templateMaps, templatePathMaps);
             // 打包成zip返回
@@ -284,7 +253,6 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                     FileUtil.FILE_SEPARATOR + templateContext.getConfig().getBasePath() +
                     FileUtil.FILE_SEPARATOR + basePath +
                     FileUtil.FILE_SEPARATOR + key;
-            System.out.println(sourceCodeGeneratePath);
             Path pathToFile = Paths.get(sourceCodeGeneratePath);
             Files.createDirectories(pathToFile.getParent());
             Files.createFile(pathToFile);

@@ -1,10 +1,15 @@
 package com.jyadmin.generate.common.constant;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * 代码生成器常量类
@@ -43,29 +48,89 @@ public class CodeGenerateConstant {
     public static final String RESPONSE_ZIP_FILE_NAME = "code-generate.zip";
 
 
+
     /**
      * status枚举类 1=启用 0=禁用
      */
+    @AllArgsConstructor
+    @Getter
     public enum EnableStatus {
         YES("显示", 1),
         NO("不显示", 0);
-
         // 名称
         private String name;
         // 值
         private Integer value;
+    }
 
-        public String getName() {
-            return name;
-        }
+    /**
+     * 模板信息枚举类
+     */
+    @Getter
+    public enum TemplateInfo {
+        CONTROLLER("controller", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-controller.java.vm"),
+        DOMAIN("domain", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-domain.java.vm"),
+        VO_CREATE_REQ_VO("vo.createReqVO", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-createReqVO.java.vm"),
+        VO_UPDATE_REQ_VO("vo.updateReqVO", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-updateReqVO.java.vm"),
+        VO_QUERY_REQ_VO("vo.queryReqVO", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-queryReqVO.java.vm"),
+        SERVICE("service", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-service.java.vm"),
+        SERVICE_IMPL("serviceImpl", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-serviceImpl.java.vm"),
+        MAPPER("mapper", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR +  "simple-mapper.java.vm"),
+        MAPPER_XML("mapper.xml", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-mapper.xml.vm")
+        ;
 
-        public Integer getValue() {
-            return value;
-        }
+        // 模板名称
+        private String name;
 
-        EnableStatus(String name, Integer value) {
+        // 模板路径
+        private String templatePath;
+
+        // 生成文件名
+        private Map<String, Function<String, String>> codeGenFileName = new HashMap<>() {{
+            put(TemplateInfo.CONTROLLER.getName(), fileNamePrefix -> fileNamePrefix + "Controller.java");
+            put(TemplateInfo.DOMAIN.getName(), fileNamePrefix -> fileNamePrefix + ".java");
+            put(TemplateInfo.VO_CREATE_REQ_VO.getName(), fileNamePrefix -> fileNamePrefix + "CreateReqVO.java");
+            put(TemplateInfo.VO_UPDATE_REQ_VO.getName(), fileNamePrefix -> fileNamePrefix + "UpdateReqVO.java");
+            put(TemplateInfo.VO_QUERY_REQ_VO.getName(), fileNamePrefix -> fileNamePrefix + "QueryReqVO.java");
+            put(TemplateInfo.SERVICE.getName(), fileNamePrefix -> fileNamePrefix + "Service.java");
+            put(TemplateInfo.SERVICE_IMPL.getName(), fileNamePrefix -> fileNamePrefix + "ServiceImpl.java");
+            put(TemplateInfo.MAPPER.getName(), fileNamePrefix -> fileNamePrefix + "Mapper.java");
+            put(TemplateInfo.MAPPER_XML.getName(), fileNamePrefix -> fileNamePrefix + "Mapper.xml");
+        }};
+
+        // 文件生成代码父路径
+        private Map<String, Function<String, String>> codeGenParentPath = new HashMap<>() {{
+            put(TemplateInfo.CONTROLLER.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR +"controller");
+            put(TemplateInfo.DOMAIN.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR +"domain");
+            put(TemplateInfo.VO_CREATE_REQ_VO.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
+            put(TemplateInfo.VO_UPDATE_REQ_VO.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
+            put(TemplateInfo.VO_QUERY_REQ_VO.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "model" + FileUtil.FILE_SEPARATOR + "vo");
+            put(TemplateInfo.SERVICE.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "service");
+            put(TemplateInfo.SERVICE_IMPL.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "service" + FileUtil.FILE_SEPARATOR + "impl");
+            put(TemplateInfo.MAPPER.getName(), packagePath -> JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR + "mapper");
+            put(TemplateInfo.MAPPER_XML.getName(), packagePath -> JAVA_SOURCE_CODE_RESOURCE_PATH + FileUtil.FILE_SEPARATOR + "mapper");
+        }};
+
+        TemplateInfo(String name, String templatePath) {
             this.name = name;
-            this.value = value;
+            this.templatePath = templatePath;
+        }
+
+        /**
+         * 获取生成代码文件父路径
+         * @param packagePath 包路径
+         * @return /
+         */
+        public String getCodeGenParentPath(String packagePath) {
+            return this.codeGenParentPath.get(this.getName()).apply(packagePath);
+        }
+
+        /**
+         * 获取生成代码文件名
+         * @return /
+         */
+        public String getCodeGenFileName(String fileNamePrefix) {
+            return this.codeGenFileName.get(this.getName()).apply(fileNamePrefix);
         }
     }
 

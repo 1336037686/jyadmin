@@ -24,6 +24,9 @@ public class TemplateConfig {
      */
     private String basePath;
 
+    /**
+     * 基础名称
+     */
     private String metaName;
 
 }
