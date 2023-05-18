@@ -15,16 +15,6 @@ import lombok.experimental.Accessors;
 public class TemplateConfig {
 
     /**
-     * 代码生成-根目录
-     */
-    private String basePathPrefix = "." + FileUtil.FILE_SEPARATOR + "codegens";
-
-    /**
-     * 代码生成-随机二级路径
-     */
-    private String basePath;
-
-    /**
      * 基础名称
      */
     private String metaName;

@@ -1,8 +1,5 @@
 package com.jyadmin.generate.service.impl;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,9 +21,11 @@ import com.google.common.collect.Maps;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.generate.common.constant.CodeGenerateConstant;
+import com.jyadmin.generate.common.utils.CodeGenerateMetaDataUtils;
 import com.jyadmin.generate.common.utils.VelocityUtils;
 import com.jyadmin.generate.common.utils.ZipUtils;
 import com.jyadmin.generate.domain.*;
+import com.jyadmin.generate.model.dto.CodeGenerateMetaDataDTO;
 import com.jyadmin.generate.model.dto.TemplateConfig;
 import com.jyadmin.generate.model.dto.TemplateContextDTO;
 import com.jyadmin.generate.model.dto.TemplateModelDTO;
@@ -47,6 +46,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author LGX_TvT <br>
@@ -214,54 +215,60 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
             // 准备数据模型
             Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
-            String packagePath = templateContext.getModel().getPackageName().replace(".", FileUtil.FILE_SEPARATOR);
+            // 文件中间路径
+            String javaPackagePath = templateContext.getModel().getPackageName().replace(".", FileUtil.FILE_SEPARATOR);
+            String vuePackagePath = templateContext.getModel().getPageViewPath().replace(".", FileUtil.FILE_SEPARATOR);
             // 设置代码生成基础信息，包括模板，生成代码文件名，生成代码文件路径
-            Map<String, Template> templateMaps = Maps.newHashMap();
-            Map<String, String> templatePathMaps = Maps.newHashMap();
+            Map<String, CodeGenerateMetaDataDTO> templateMaps = Maps.newHashMap();
             CodeGenerateConstant.TemplateInfo[] templateInfos = CodeGenerateConstant.TemplateInfo.values();
             for (CodeGenerateConstant.TemplateInfo templateInfo : templateInfos) {
-                String codeGenFileName = templateInfo.getCodeGenFileName(templateContext.getModel().getRealTableNameUpperCamelCase());
-                templateMaps.put(codeGenFileName, velocityEngine.getTemplate(templateInfo.getTemplatePath()));
-                templatePathMaps.put(codeGenFileName, templateInfo.getCodeGenParentPath(packagePath));
+                String codeGenFileName = CodeGenerateMetaDataUtils.getCodeGenFileName(templateInfo.getName(), templateContext.getModel().getRealTableNameUpperCamelCase());
+                String packagePath = templateInfo.getName().startsWith(CodeGenerateConstant.JAVA_TEMPLATE_NAME_PREFIX) ? javaPackagePath : vuePackagePath;
+                CodeGenerateMetaDataDTO generateMetaDataDTO = new CodeGenerateMetaDataDTO()
+                        .setTemplate(velocityEngine.getTemplate(templateInfo.getTemplatePath()))
+                        .setParentPath(CodeGenerateMetaDataUtils.getCodeGenParentPath(templateInfo.getName(), packagePath));
+                templateMaps.put(codeGenFileName, generateMetaDataDTO);
             }
-            // 本地生成代码
-            this.generateCodeFile(templateContext, model, templateMaps, templatePathMaps);
-            // 打包成zip返回
-            String sourceDirPath = templateContext.getConfig().getBasePathPrefix() + FileUtil.FILE_SEPARATOR + templateContext.getConfig().getBasePath();
-            ZipUtils.zipDirectory(sourceDirPath, CodeGenerateConstant.RESPONSE_ZIP_FILE_NAME, response);
-            // 删除原始文件
-            FileUtil.del(sourceDirPath);
+            // 生成代码
+            this.generateCodeFile(model, templateMaps, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(ThrowableUtil.getStackTrace(e));
+            throw new ApiException(ResultStatus.CODE_GEN_ERROR);
         }
     }
 
     /**
      * 生成代码文件
-     * @param templateContext 配置上下文
      * @param model 数据
      * @param templateMaps 模板Map
-     * @param templatePathMaps 模板路径Map
      * @throws IOException
      */
-    public void generateCodeFile(TemplateContextDTO templateContext, Map<String, Object> model, Map<String, Template> templateMaps, Map<String, String> templatePathMaps) throws IOException {
+    public void generateCodeFile(Map<String, Object> model, Map<String, CodeGenerateMetaDataDTO> templateMaps, HttpServletResponse response) throws IOException {
+        // 设置response相关信息
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + new String(CodeGenerateConstant.RESPONSE_ZIP_FILE_NAME.getBytes(), "ISO8859-1"));
+
+        // 创建输出流
+        OutputStream os = response.getOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(os);
+
         for (String key : templateMaps.keySet()) {
-            Template template = templateMaps.get(key);
-            String basePath = templatePathMaps.get(key);
+            CodeGenerateMetaDataDTO generateMetaDataDTO = templateMaps.get(key);
+            String parentPath = generateMetaDataDTO.getParentPath();
+            Template template = generateMetaDataDTO.getTemplate();
             // 渲染模板
-            String sourceCodeGeneratePath =  templateContext.getConfig().getBasePathPrefix() +
-                    FileUtil.FILE_SEPARATOR + templateContext.getConfig().getBasePath() +
-                    FileUtil.FILE_SEPARATOR + basePath +
-                    FileUtil.FILE_SEPARATOR + key;
-            Path pathToFile = Paths.get(sourceCodeGeneratePath);
-            Files.createDirectories(pathToFile.getParent());
-            Files.createFile(pathToFile);
-            Writer writer = new FileWriter(sourceCodeGeneratePath);
-            template.render(model, writer);
-            // 输出结果
-            writer.flush();
-            writer.close();
+            String sourceCodeGeneratePath =  parentPath + FileUtil.FILE_SEPARATOR + key;
+            // 将生成的代码文件添加到zip压缩包中
+            ZipEntry ze = new ZipEntry(sourceCodeGeneratePath);
+            zos.putNextEntry(ze);
+            ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+            template.render(model, baos2);
+            baos2.writeTo(zos);
+            zos.closeEntry();
+            baos2.close();
         }
+        zos.close();
+        os.close();
     }
 
     /**
@@ -306,10 +313,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
         // config
         TemplateConfig config = new TemplateConfig()
-                .setBasePath(UUID.randomUUID().toString())
                 .setMetaName(table.getTableName());
-
-
         return new TemplateContextDTO().setConfig(config).setModel(templateModelDTO);
     }
 

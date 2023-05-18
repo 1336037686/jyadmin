@@ -74,9 +74,9 @@
 </template>
 
 <script>
-import ${realTableNameLowCamelCase}Api from '@/api/module/${realTableNameLowCamelCase}Api'
-import ${realTableNameUpperCamelCase}Form from '@/views/module/${realTableNameLowCamelCase}/${realTableNameLowCamelCase}-form'
-import ${realTableNameUpperCamelCase}Detail from '@/views/module/${realTableNameLowCamelCase}/${realTableNameLowCamelCase}-detail'
+import ${realTableNameLowCamelCase}Api from '@/api/module/${pageViewPath}/${realTableNameLowCamelCase}-api'
+import ${realTableNameUpperCamelCase}Form from '@/views/module/${pageViewPath}/${realTableNameLowCamelCase}-form'
+import ${realTableNameUpperCamelCase}Detail from '@/views/module/${pageViewPath}/${realTableNameLowCamelCase}-detail'
 export default {
   components: { ${realTableNameUpperCamelCase}Detail, ${realTableNameUpperCamelCase}Form },
   data() {
@@ -134,8 +134,6 @@ export default {
       this.getList()
     },
     handleReset() {
-      this.queryForm.name = ''
-      this.queryForm.code = ''
 #foreach($field in $fields)
 #if($field.fieldIgnore == 0)
   #if($field.showQuery == 1)
@@ -148,7 +146,7 @@ export default {
     },
     handleShow() {
       if (!this.selectData.current) {
-        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
+        this.\$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
       this.showData.title = '查看${field.fieldRemark}'
@@ -162,7 +160,7 @@ export default {
     },
     handleUpdate() {
       if (!this.selectData.current) {
-        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
+        this.\$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
       this.editData.title = '修改${field.fieldRemark}'
@@ -170,29 +168,29 @@ export default {
       this.editData.visiable = true
     },
     handleRemove() {
-      const selectRows = this.$refs.table.selection
+      const selectRows = this.\$refs.table.selection
       if (!selectRows || selectRows.length === 0) {
-        this.$notify.warning({ title: '警告', message: '请先选择一条数据' })
+        this.\$notify.warning({ title: '警告', message: '请先选择一条数据' })
         return
       }
-      this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
+      this.\$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         const ids = []
-        for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection[i].id)
+        for (let i = 0; i < this.\$refs.table.selection.length; i++) ids.push(this.\$refs.table.selection\[i\].id)
           ${realTableNameLowCamelCase}Api.remove(ids).then(response => {
           this.getList()
-          this.$notify.success({ title: '成功', message: '删除成功' })
+          this.\$notify.success({ title: '成功', message: '删除成功' })
         }).catch(e => {
-          this.$notify.error({ title: '失败', message: '删除失败' })
+          this.\$notify.error({ title: '失败', message: '删除失败' })
         })
       })
     },
     handleTableRowClick(row, column, event) {
       this.selectData.current = row
-      this.$refs.table.toggleRowSelection(row)
+      this.\$refs.table.toggleRowSelection(row)
     },
     handleChangePage(page) {
       this.tableData.pageNumber = page

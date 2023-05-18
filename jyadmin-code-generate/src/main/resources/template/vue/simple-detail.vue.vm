@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import ${realTableNameLowCamelCase}Api from '@/api/module/${realTableNameLowCamelCase}Api'
+import ${realTableNameLowCamelCase}Api from '@/api/module/${pageViewPath}/${realTableNameLowCamelCase}-api'
 export default {
   name: '${realTableNameLowCamelCase}Detail',
   props: {
@@ -70,7 +70,7 @@ export default {
       }
     },
     tmpVisible(newVal) {
-      this.$emit('update:visible', newVal)
+      this.\$emit('update:visible', newVal)
     },
     deep: true
   },
@@ -79,7 +79,7 @@ export default {
       ${realTableNameLowCamelCase}Api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.\$notify.error({ title: '失败', message: '获取数据失败' })
       })}
     }
   }

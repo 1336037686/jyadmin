@@ -9,15 +9,15 @@
   >
     <div>
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="类别名称" prop="name">
-          <el-input v-model="form.name" />
-        </el-form-item>
-        <el-form-item label="类别编码" prop="code">
-          <el-input v-model="form.code" />
-        </el-form-item>
-        <el-form-item label="类别简介" prop="intro">
-          <el-input v-model="form.intro" type="textarea" />
-        </el-form-item>
+#foreach($field in $fields)
+  #if($field.fieldIgnore == 0)
+    #if($field.showForm == 1)
+      <el-form-item label="${field.fieldRemark}" prop="${field.realFieldNameLowCamelCase}">
+        <el-input v-model="form.${field.realFieldNameLowCamelCase}" />
+      </el-form-item>
+    #end
+  #end
+#end
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import ${realTableNameLowCamelCase}Api from '@/api/module/${realTableNameLowCamelCase}Api'
+import ${realTableNameLowCamelCase}Api from '@/api/module/${pageViewPath}/${realTableNameLowCamelCase}-api'
 export default {
   name: '${realTableNameLowCamelCase}Form',
   props: {
@@ -50,20 +50,25 @@ export default {
       tmpVisible: this.visible,
       type: 'insert',
       form: {
-        id: '',
-        name: '',
-        code: '',
-        intro: ''
+        id: null,
+  #foreach($field in $fields)
+    #if($field.fieldIgnore == 0)
+      #if($field.showForm == 1)
+        ${field.realFieldNameLowCamelCase}: null,
+      #end
+    #end
+  #end
       },
       rules: {
-        name: [
-          { required: true, message: '请输入类别名称', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
+  #foreach($field in $fields)
+    #if($field.fieldIgnore == 0)
+      #if($field.showForm == 1)
+        ${field.realFieldNameLowCamelCase}: [
+          { required: true, message: '请输入${field.fieldRemark}', trigger: 'blur' }
         ],
-        code: [
-          { required: true, message: '请输入类别编码', trigger: 'blur' },
-          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
-        ]
+      #end
+    #end
+  #end
       }
     }
   },
@@ -82,13 +87,13 @@ export default {
       }
     },
     tmpVisible(newVal) {
-      this.$emit('update:visible', newVal)
+      this.\$emit('update:visible', newVal)
     },
     deep: true
   },
   methods: {
     handleSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.\$refs\[formName\].validate((valid) => {
         if (valid) {
           if (this.type === 'insert') this.handleCreate()
           else this.handleUpdate()
@@ -97,38 +102,38 @@ export default {
     },
     handleCreate() {
       ${realTableNameLowCamelCase}Api.add(this.form).then(response => {
-        this.$notify.success({ title: '成功', message: '添加成功' })
-        this.$parent.getList()
+        this.\$notify.success({ title: '成功', message: '添加成功' })
+        this.\$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '添加失败' })
+        this.\$notify.error({ title: '失败', message: '添加失败' })
       })
     },
     handleUpdate() {
       ${realTableNameLowCamelCase}Api.update(this.form).then(response => {
-        this.$notify.success({ title: '成功', message: '修改成功' })
-        this.$parent.getList()
+        this.\$notify.success({ title: '成功', message: '修改成功' })
+        this.\$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '修改失败' })
+        this.\$notify.error({ title: '失败', message: '修改失败' })
       })
     },
     getById(id) {
       ${realTableNameLowCamelCase}Api.getById(id).then(response => {
         this.form = response.data
       }).catch(e => {
-        this.$notify.error({ title: '失败', message: '获取数据失败' })
+        this.\$notify.error({ title: '失败', message: '获取数据失败' })
       })
     },
     resetForm(formName) {
       this.form.id = null
-      this.$refs[formName].resetFields()
+      this.\$refs\[formName\].resetFields()
       this.tmpVisible = false
     }
   }

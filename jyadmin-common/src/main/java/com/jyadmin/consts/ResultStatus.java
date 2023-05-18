@@ -187,7 +187,12 @@ public enum ResultStatus {
     /**
      * 0008 0005 当前数据库表记录不存在
      */
-    CODE_GEN_TABLE_ALREADY_INEXIST(80005, ModuleSeries.EMAIL, "当前数据库表记录不存在")
+    CODE_GEN_TABLE_ALREADY_INEXIST(80005, ModuleSeries.EMAIL, "当前数据库表记录不存在"),
+
+    /**
+     * 0008 0006 代码生成失败
+     */
+    CODE_GEN_ERROR(80006, ModuleSeries.EMAIL, "代码生成失败")
 
     // endregion--------------------------
 

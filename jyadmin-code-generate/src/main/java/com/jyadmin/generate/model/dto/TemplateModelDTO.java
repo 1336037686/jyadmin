@@ -119,6 +119,11 @@ public class TemplateModelDTO {
     private String swaggerApiTag;
 
     /**
+     * 前端页面文件生成路径
+     */
+    private String pageViewPath;
+
+    /**
      * 字段信息
      */
     private List<FieldTemplateModel> fields;
