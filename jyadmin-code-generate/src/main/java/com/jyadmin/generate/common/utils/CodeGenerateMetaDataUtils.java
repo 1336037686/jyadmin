@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class CodeGenerateMetaDataUtils {
 
     // 生成文件名
-    private static Map<String, Function<String, String>> CODE_GEN_FILE_NAME = new HashMap<>() {{
+    private static final Map<String, Function<String, String>> CODE_GEN_FILE_NAME = new HashMap<>() {{
         // java
         put(CodeGenerateConstant.TemplateInfo.CONTROLLER.getName(), fileNamePrefix -> fileNamePrefix + "Controller.java");
         put(CodeGenerateConstant.TemplateInfo.DOMAIN.getName(), fileNamePrefix -> fileNamePrefix + ".java");
@@ -36,7 +36,7 @@ public class CodeGenerateMetaDataUtils {
     }};
 
     // 文件生成代码父路径
-    private static Map<String, Function<String, String>> CODE_GEN_PARENT_PATH = new HashMap<>() {{
+    private static final Map<String, Function<String, String>> CODE_GEN_PARENT_PATH = new HashMap<>() {{
         // java
         put(CodeGenerateConstant.TemplateInfo.CONTROLLER.getName(), packagePath -> CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR +"controller");
         put(CodeGenerateConstant.TemplateInfo.DOMAIN.getName(), packagePath -> CodeGenerateConstant.JAVA_SOURCE_CODE_SRC_PATH + FileUtil.FILE_SEPARATOR + packagePath + FileUtil.FILE_SEPARATOR +"domain");

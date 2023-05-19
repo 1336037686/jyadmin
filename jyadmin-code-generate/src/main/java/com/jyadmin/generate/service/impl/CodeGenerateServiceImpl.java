@@ -32,6 +32,7 @@ import com.jyadmin.generate.model.dto.TemplateModelDTO;
 import com.jyadmin.generate.model.vo.TableOptionRespVO;
 import com.jyadmin.generate.model.vo.TableQueryReqVO;
 import com.jyadmin.generate.model.vo.UserConfigReqVO;
+import com.jyadmin.generate.model.vo.UserConfigResVO;
 import com.jyadmin.generate.service.*;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -202,8 +203,11 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateTableConfig(UserConfigReqVO vo) {
+        if (Objects.nonNull(vo.getTable())) codeGenerateTableService.updateById(vo.getTable());
         if (Objects.nonNull(vo.getTableConfig())) codeGenerateTableConfigService.updateById(vo.getTableConfig());
+        if (CollectionUtils.isNotEmpty(vo.getFields())) codeGenerateFieldService.updateBatchById(vo.getFields());
         if (CollectionUtils.isNotEmpty(vo.getFieldConfigs())) codeGenerateFieldConfigService.updateBatchById(vo.getFieldConfigs());
         return true;
     }
@@ -235,6 +239,32 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             log.error(ThrowableUtil.getStackTrace(e));
             throw new ApiException(ResultStatus.CODE_GEN_ERROR);
         }
+    }
+
+    @Override
+    public UserConfigResVO getTableConfig(String tableId) {
+        // 获取数据 数据库表所有数据，表信息、表配置、字段信息、字段配置
+        // 拼接表数据
+        CodeGenerateTable table = codeGenerateTableService.getById(tableId);
+        CodeGenerateTableConfig tableConfig = codeGenerateTableConfigService.getOne(
+                new LambdaQueryWrapper<CodeGenerateTableConfig>().eq(CodeGenerateTableConfig::getTableId, table.getId())
+        );
+        UserConfigResVO.TableExtend tableExtend = new UserConfigResVO.TableExtend().setTable(table).setTableConfig(tableConfig);
+        // 拼接属性数据
+        List<CodeGenerateField> fields = codeGenerateFieldService.list(
+                new LambdaQueryWrapper<CodeGenerateField>().eq(CodeGenerateField::getTableId, table.getId())
+        );
+        List<String> oldFieldIds = fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<CodeGenerateFieldConfig> fieldConfigs = codeGenerateFieldConfigService.list(
+                new LambdaQueryWrapper<CodeGenerateFieldConfig>().in(CodeGenerateFieldConfig::getFieldId, oldFieldIds)
+        );
+        Map<String, List<CodeGenerateFieldConfig>> fieldMaps = fieldConfigs.stream()
+                .collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
+        List<UserConfigResVO.FieldExtend> fieldExtends = fields.stream()
+                .map(x -> new UserConfigResVO.FieldExtend().setField(x).setFieldConfig(fieldMaps.get(x.getId()).get(0)))
+                .collect(Collectors.toList());
+        // merge
+        return new UserConfigResVO().setTable(tableExtend).setFields(fieldExtends);
     }
 
     /**
