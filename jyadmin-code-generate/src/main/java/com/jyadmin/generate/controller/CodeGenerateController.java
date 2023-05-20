@@ -108,5 +108,10 @@ public class CodeGenerateController {
         return Result.ok(codeGenerateService.getTableConfig(tableId));
     }
 
+    @ApiOperation(value = "根据ID获取单一数据库表信息", notes = "")
+    @GetMapping("/query-sigle-table/{tableId}")
+    public Result<CodeGenerateTable> doQuerySigleTableById(@PathVariable("tableId") String tableId) {
+        return Result.ok(codeGenerateTableService.getById(tableId));
+    }
 
 }

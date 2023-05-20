@@ -366,7 +366,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 去除已存在记录的表
         List<CodeGenerateTable> list = codeGenerateTableService.list();
         List<String> existTableList = list.stream().map(CodeGenerateTable::getTableName).collect(Collectors.toList());
-        return res.stream().filter(x -> !existTableList.contains(x.getTableName())).collect(Collectors.toList());
+        return res.stream()
+                .filter(x -> !existTableList.contains(x.getTableName()))
+                .filter(x -> x.getTableName().contains(vo.getTableName()))
+                .collect(Collectors.toList());
     }
 
     /**
