@@ -16,6 +16,17 @@ import java.io.IOException;
  */
 public class ResponseUtil {
 
+    /**
+     * 初始化文件传输的Response对象，设置一些初始值
+     * @param response /
+     */
+    public static void initFtpResponse(HttpServletResponse response) {
+        // 自定义的header， requestType = file，标志该响应是文件传输
+        response.setHeader("requestType","file");
+        // 设置这个header 可见
+        response.setHeader("Access-Control-Expose-Headers", "requestType");
+    }
+
     public static void out(HttpServletResponse response, Result result) {
         ObjectMapper mapper = new ObjectMapper();
         response.setStatus(HttpStatus.OK.value());

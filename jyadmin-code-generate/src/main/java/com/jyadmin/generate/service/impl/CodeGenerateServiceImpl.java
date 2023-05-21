@@ -34,6 +34,7 @@ import com.jyadmin.generate.model.vo.TableQueryReqVO;
 import com.jyadmin.generate.model.vo.UserConfigReqVO;
 import com.jyadmin.generate.model.vo.UserConfigResVO;
 import com.jyadmin.generate.service.*;
+import com.jyadmin.util.ResponseUtil;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -275,6 +276,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      */
     public void generateCodeFile(Map<String, Object> model, Map<String, CodeGenerateMetaDataDTO> templateMaps, HttpServletResponse response) throws IOException {
         // 设置response相关信息
+        ResponseUtil.initFtpResponse(response);
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=" + new String(CodeGenerateConstant.RESPONSE_ZIP_FILE_NAME.getBytes(), "ISO8859-1"));
 
