@@ -29,10 +29,7 @@ import com.jyadmin.generate.model.dto.CodeGenerateMetaDataDTO;
 import com.jyadmin.generate.model.dto.TemplateConfig;
 import com.jyadmin.generate.model.dto.TemplateContextDTO;
 import com.jyadmin.generate.model.dto.TemplateModelDTO;
-import com.jyadmin.generate.model.vo.TableOptionRespVO;
-import com.jyadmin.generate.model.vo.TableQueryReqVO;
-import com.jyadmin.generate.model.vo.UserConfigReqVO;
-import com.jyadmin.generate.model.vo.UserConfigResVO;
+import com.jyadmin.generate.model.vo.*;
 import com.jyadmin.generate.service.*;
 import com.jyadmin.util.ResponseUtil;
 import com.jyadmin.util.ThrowableUtil;
@@ -264,6 +261,31 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
                 .collect(Collectors.toList());
         // merge
         return new UserConfigResVO().setTable(tableExtend).setFields(fieldExtends);
+    }
+
+    @Override
+    public List<CodePreviewResVO> generatePreviewCode(String tableId) {
+        try {
+            List<CodePreviewResVO> res = Lists.newArrayList();
+            TemplateContextDTO templateContext = buildTemplateContext(tableId);
+            // 创建引擎
+            VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
+            // 准备数据模型
+            Map<String, Object> model = VelocityUtils.obj2MapModel(templateContext.getModel());
+            // 生成代码
+            Map<String, CodeGenerateMetaDataDTO> templateMaps = Maps.newHashMap();
+            CodeGenerateConstant.TemplateInfo[] templateInfos = CodeGenerateConstant.TemplateInfo.values();
+            for (CodeGenerateConstant.TemplateInfo templateInfo : templateInfos) {
+                Template template = velocityEngine.getTemplate(templateInfo.getTemplatePath());
+                String code = template.render(model);
+                res.add(new CodePreviewResVO().setName(templateInfo.getName()).setType(templateInfo.getType()).setCode(code));
+            }
+            return res;
+        } catch (Exception e) {
+            log.error(ThrowableUtil.getStackTrace(e));
+            throw new ApiException(ResultStatus.CODE_GEN_ERROR);
+        }
+
     }
 
     /**

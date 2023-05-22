@@ -1,9 +1,6 @@
 package com.jyadmin.generate.service;
 
-import com.jyadmin.generate.model.vo.TableOptionRespVO;
-import com.jyadmin.generate.model.vo.TableQueryReqVO;
-import com.jyadmin.generate.model.vo.UserConfigReqVO;
-import com.jyadmin.generate.model.vo.UserConfigResVO;
+import com.jyadmin.generate.model.vo.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -32,4 +29,6 @@ public interface CodeGenerateService {
     void generateCode(String tableId, HttpServletResponse response);
 
     UserConfigResVO getTableConfig(String tableId);
+
+    List<CodePreviewResVO> generatePreviewCode(String tableId);
 }

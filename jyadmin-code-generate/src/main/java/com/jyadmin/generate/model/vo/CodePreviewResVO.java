@@ -13,22 +13,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CodePreviewResVO {
 
-    private String javaControllerCode;
+    private String name;
 
-    private String javaServiceCode;
+    private String type;
 
-    private String javaServiceImplCode;
-
-    private String javaMapperCode;
-
-    private String javaMapperXMLCode;
-
-    private String vueIndexCode;
-
-    private String vueFormCode;
-
-    private String vueDetailCode;
-
-    private String vueApiCode;
+    private String code;
 
 }

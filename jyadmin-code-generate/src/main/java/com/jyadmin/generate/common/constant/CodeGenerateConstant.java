@@ -46,6 +46,11 @@ public class CodeGenerateConstant {
     public static final String VUE_TEMPLATE_NAME_PREFIX = "vue";
     public static final List<String> IGNORE_FIELDS = Lists.newArrayList("create_by", "update_by", "create_time", "update_time", "deleted");
 
+    public static final String TEMPLATE_FILE_TYPE_JAVA = "java";
+    public static final String TEMPLATE_FILE_TYPE_VUE = "vue";
+    public static final String TEMPLATE_FILE_TYPE_XML = "xml";
+    public static final String TEMPLATE_FILE_TYPE_JS = "js";
+
     public static final String RESPONSE_ZIP_FILE_NAME = "code-generate.zip";
 
     /**
@@ -69,25 +74,26 @@ public class CodeGenerateConstant {
     @AllArgsConstructor
     public enum TemplateInfo {
         // java
-        CONTROLLER("java.controller", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-controller.java.vm"),
-        DOMAIN("java.domain", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-domain.java.vm"),
-        VO_CREATE_REQ_VO("java.vo.createReqVO", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-createReqVO.java.vm"),
-        VO_UPDATE_REQ_VO("java.vo.updateReqVO", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-updateReqVO.java.vm"),
-        VO_QUERY_REQ_VO("java.vo.queryReqVO", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-queryReqVO.java.vm"),
-        SERVICE("java.service", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-service.java.vm"),
-        SERVICE_IMPL("java.serviceImpl", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-serviceImpl.java.vm"),
-        MAPPER("java.mapper", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR +  "simple-mapper.java.vm"),
-        MAPPER_XML("java.mapper.xml", TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-mapper.xml.vm"),
+        CONTROLLER("java.controller", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-controller.java.vm"),
+        DOMAIN("java.domain", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-domain.java.vm"),
+        VO_CREATE_REQ_VO("java.vo.createReqVO", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-createReqVO.java.vm"),
+        VO_UPDATE_REQ_VO("java.vo.updateReqVO", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-updateReqVO.java.vm"),
+        VO_QUERY_REQ_VO("java.vo.queryReqVO", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-queryReqVO.java.vm"),
+        SERVICE("java.service", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-service.java.vm"),
+        SERVICE_IMPL("java.serviceImpl", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-serviceImpl.java.vm"),
+        MAPPER("java.mapper", TEMPLATE_FILE_TYPE_JAVA, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR +  "simple-mapper.java.vm"),
+        MAPPER_XML("java.mapper.xml", TEMPLATE_FILE_TYPE_XML, TEMPLATE_JAVA_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-mapper.xml.vm"),
         // vue
-        VUE_VIEW_INDEX("vue.view.index", TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "index.vue.vm"),
-        VUE_VIEW_FORM("vue.view.form", TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-form.vue.vm"),
-        VUE_VIEW_DETAIL("vue.view.detail", TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-detail.vue.vm"),
-        VUE_VIEW_API("vue.view.api", TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-api.js.vm")
+        VUE_VIEW_INDEX("vue.view.index", TEMPLATE_FILE_TYPE_VUE, TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "index.vue.vm"),
+        VUE_VIEW_FORM("vue.view.form", TEMPLATE_FILE_TYPE_VUE, TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-form.vue.vm"),
+        VUE_VIEW_DETAIL("vue.view.detail", TEMPLATE_FILE_TYPE_VUE, TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-detail.vue.vm"),
+        VUE_VIEW_API("vue.view.api", TEMPLATE_FILE_TYPE_JS, TEMPLATE_VUE_VM_PATH + FileUtil.FILE_SEPARATOR + "simple-api.js.vm")
         ;
 
         // 模板名称
         private String name;
-
+        // 文件类型
+        private String type;
         // 模板路径
         private String templatePath;
     }

@@ -76,6 +76,13 @@ public class CodeGenerateController {
         codeGenerateService.generateCode(tableId, response);
     }
 
+    @ApiOperation(value = "代码预览接口", notes = "")
+    @GetMapping("/generate-preview/{tableId}")
+    public Result<List<CodePreviewResVO>> doGeneratePreviewCode(@PathVariable("tableId") String tableId) {
+        List<CodePreviewResVO> codePreviewResVOS = codeGenerateService.generatePreviewCode(tableId);
+        return Result.ok(codePreviewResVOS);
+    }
+
     @ApiOperation(value = "更新数据库表配置", notes = "")
     @PutMapping("/update/table-config")
     public Result<Object> doUpdateTableConfig(@RequestBody @Valid UserConfigReqVO vo) {
