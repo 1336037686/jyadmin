@@ -206,9 +206,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateTableConfig(UserConfigReqVO vo) {
-        if (Objects.nonNull(vo.getTable())) codeGenerateTableService.updateById(vo.getTable());
         if (Objects.nonNull(vo.getTableConfig())) codeGenerateTableConfigService.updateById(vo.getTableConfig());
-        if (CollectionUtils.isNotEmpty(vo.getFields())) codeGenerateFieldService.updateBatchById(vo.getFields());
         if (CollectionUtils.isNotEmpty(vo.getFieldConfigs())) codeGenerateFieldConfigService.updateBatchById(vo.getFieldConfigs());
         return true;
     }
