@@ -5,12 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.generate.domain.CodeGenerateFieldType;
 import com.jyadmin.generate.domain.CodeGenerateTable;
-import com.jyadmin.generate.model.vo.TableOptionRespVO;
-import com.jyadmin.generate.model.vo.TableQueryReqVO;
+import com.jyadmin.generate.model.vo.*;
 
-import com.jyadmin.generate.model.vo.UserConfigReqVO;
-import com.jyadmin.generate.model.vo.UserConfigResVO;
+import com.jyadmin.generate.service.CodeGenerateFieldTypeService;
 import com.jyadmin.generate.service.CodeGenerateService;
 import com.jyadmin.generate.service.CodeGenerateTableService;
 import com.jyadmin.util.PageUtil;
@@ -24,8 +23,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成器
@@ -45,6 +48,9 @@ public class CodeGenerateController {
 
     @Resource
     private CodeGenerateTableService codeGenerateTableService;
+
+    @Resource
+    private CodeGenerateFieldTypeService codeGenerateFieldTypeService;
 
     @ApiOperation(value = "导入数据库表", notes = "")
     @PostMapping("/create/table/{tableName}")
@@ -112,6 +118,19 @@ public class CodeGenerateController {
     @GetMapping("/query-sigle-table/{tableId}")
     public Result<CodeGenerateTable> doQuerySigleTableById(@PathVariable("tableId") String tableId) {
         return Result.ok(codeGenerateTableService.getById(tableId));
+    }
+
+    @ApiOperation(value = "获取属性对应的Java类型列表", notes = "")
+    @GetMapping("/query-field-type")
+    public Result<List<CodeGenerateJavaFieldTypeResVO>> doQueryJavaFieldType() {
+        List<CodeGenerateFieldType> generateFieldTypes = codeGenerateFieldTypeService.list(
+                new LambdaQueryWrapper<CodeGenerateFieldType>().orderByDesc(CodeGenerateFieldType::getCreateTime)
+        );
+        ArrayList<CodeGenerateJavaFieldTypeResVO> javaFieldTypeResVOS = new ArrayList<>(generateFieldTypes.stream()
+                .map(x -> new CodeGenerateJavaFieldTypeResVO().setJavaType(x.getJavaType()).setClassName(x.getClassName()))
+                .collect(Collectors.toMap(CodeGenerateJavaFieldTypeResVO::getJavaType, Function.identity(), (a, b) -> a))
+                .values());
+        return Result.ok(javaFieldTypeResVOS);
     }
 
 }

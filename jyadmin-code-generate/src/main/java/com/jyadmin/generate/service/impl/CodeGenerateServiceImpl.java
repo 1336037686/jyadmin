@@ -513,10 +513,10 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             // 表单展示
             config.setShowForm(isIgnoreField ? CodeGenerateConstant.EnableStatus.NO.getValue() : CodeGenerateConstant.FIELD_CONFIG_SHOW_FORM);
             config.setFormRequire(isIgnoreField ? CodeGenerateConstant.EnableStatus.NO.getValue() : CodeGenerateConstant.FIELD_CONFIG_REQUIRE);
-            config.setFormType(isIgnoreField ? null : CodeGenerateConstant.FIELD_CONFIG_FORM_TYPE);
+            config.setFormType(CodeGenerateConstant.FIELD_CONFIG_FORM_TYPE);
             // 查询展示
             config.setShowQuery(isIgnoreField ? CodeGenerateConstant.EnableStatus.NO.getValue() : CodeGenerateConstant.FIELD_CONFIG_SHOW_QUERY);
-            config.setFormSelectMethod(isIgnoreField ? null : CodeGenerateConstant.FIELD_CONFIG_FORM_SELECT_METHOD);
+            config.setFormSelectMethod(CodeGenerateConstant.FIELD_CONFIG_FORM_SELECT_METHOD);
             // 是否忽略字段
             config.setFieldIgnore(isIgnoreField ? CodeGenerateConstant.EnableStatus.YES.getValue() : CodeGenerateConstant.EnableStatus.NO.getValue());
             res.add(config);
