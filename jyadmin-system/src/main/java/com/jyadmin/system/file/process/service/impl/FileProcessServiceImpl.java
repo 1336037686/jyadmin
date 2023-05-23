@@ -13,6 +13,7 @@ import com.jyadmin.system.file.process.model.dto.FileProcessDownloadDTO;
 import com.jyadmin.system.file.process.model.dto.FileProcessUploadDTO;
 import com.jyadmin.system.file.process.service.FileProcessHandler;
 import com.jyadmin.system.file.process.service.FileProcessService;
+import com.jyadmin.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -72,10 +73,8 @@ public class FileProcessServiceImpl implements FileProcessService {
     public void download(FileProcessDownloadDTO fileProcessDownloadDTO) {
         FileRecord fileRecord = fileProcessDownloadDTO.getFileRecord();
         HttpServletResponse response = fileProcessDownloadDTO.getResponse();
-        // 自定义的header
-        response.setHeader("requestType","file");
-        // 设置这个header 可见
-        response.setHeader("Access-Control-Expose-Headers", "requestType");
+        // 设置response为文件下载
+        ResponseUtil.initFtpResponse(response);
         // 设置文件下载方式：附件下载
         response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(fileRecord.getRealName()));
         // 执行状态

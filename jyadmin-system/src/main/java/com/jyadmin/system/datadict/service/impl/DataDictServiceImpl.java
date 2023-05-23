@@ -56,6 +56,7 @@ public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> i
                         .like(StringUtils.isNotBlank(dto.getDictType()), DataDict::getDictType, dto.getDictType())
                         .like(StringUtils.isNotBlank(dto.getName()), DataDict::getName, dto.getName())
                         .like(StringUtils.isNotBlank(dto.getCode()), DataDict::getCode, dto.getCode())
+                        .orderByAsc(DataDict::getSort)
                 );
     }
 
@@ -66,6 +67,7 @@ public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> i
                         .like(StringUtils.isNotBlank(vo.getName()), DataDict::getName, vo.getName())
                         .like(StringUtils.isNotBlank(vo.getCode()), DataDict::getCode, vo.getCode())
                         .eq(Objects.nonNull(vo.getDictType()), DataDict::getParentId, vo.getDictType())
+                        .orderByAsc(DataDict::getSort)
         );
 
         List<Map<String, Object>> dataDictMaps = dataDictList.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());

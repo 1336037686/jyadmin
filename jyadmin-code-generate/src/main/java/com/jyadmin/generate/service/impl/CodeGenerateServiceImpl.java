@@ -345,8 +345,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
             TemplateModelDTO.FieldTemplateModel fieldTemplateModel = new TemplateModelDTO.FieldTemplateModel();
             BeanUtil.copyProperties(field, fieldTemplateModel);
             BeanUtil.copyProperties(fieldConfig, fieldTemplateModel);
-            fieldTemplateModel.setRealFieldNameLowCamelCase(StrUtil.toCamelCase(field.getFieldName()));
-            fieldTemplateModel.setRealFieldNameUpperCamelCase(StrUtil.upperFirst(StrUtil.toCamelCase(field.getFieldName())));
+            // 去除指定前缀后缀
+            String realFieldName = StrUtil.isBlank(tableConfig.getRemoveFieldPrefix()) ? field.getFieldName() : StrUtil.removePrefix(field.getFieldName(), tableConfig.getRemoveFieldPrefix());
+            realFieldName = StrUtil.isBlank(tableConfig.getRemoveFieldSuffix()) ? realFieldName : StrUtil.removeSuffix(realFieldName, tableConfig.getRemoveFieldSuffix());
+            // 设置基础值
+            fieldTemplateModel.setRealFieldNameLowCamelCase(StrUtil.toCamelCase(realFieldName));
+            fieldTemplateModel.setRealFieldNameUpperCamelCase(StrUtil.upperFirst(StrUtil.toCamelCase(realFieldName)));
             fieldTemplateModels.add(fieldTemplateModel);
         }
 
@@ -354,15 +358,18 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         TemplateModelDTO templateModelDTO = new TemplateModelDTO();
         BeanUtil.copyProperties(table, templateModelDTO);
         BeanUtil.copyProperties(tableConfig, templateModelDTO);
-        templateModelDTO.setRealTableNameLowCamelCase(StrUtil.toCamelCase(table.getTableName()));
-        templateModelDTO.setRealTableNameUpperCamelCase(StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName())));
+        // 去除指定前缀后缀
+        String realTableName = StrUtil.isBlank(tableConfig.getRemoveTablePrefix()) ? table.getTableName() : StrUtil.removePrefix(table.getTableName(), tableConfig.getRemoveTablePrefix());
+        realTableName = StrUtil.isBlank(tableConfig.getRemoveTableSuffix()) ? realTableName : StrUtil.removeSuffix(realTableName, tableConfig.getRemoveTableSuffix());
+        // 设置基础值
+        templateModelDTO.setRealTableNameLowCamelCase(StrUtil.toCamelCase(realTableName));
+        templateModelDTO.setRealTableNameUpperCamelCase(StrUtil.upperFirst(StrUtil.toCamelCase(realTableName)));
         templateModelDTO.setImportPackages(importPackages);
         templateModelDTO.setClassName(StrUtil.upperFirst(StrUtil.toCamelCase(table.getTableName())));
         templateModelDTO.setCurrTime(DateUtil.format(LocalDateTime.now(), DatePattern.NORM_DATETIME_PATTERN));
         templateModelDTO.setDescription(table.getTableRemark());
         templateModelDTO.setVersion(CodeGenerateConstant.TABLE_CONFIG_VERSION);
         templateModelDTO.setFields(fieldTemplateModels);
-
         // config
         TemplateConfig config = new TemplateConfig()
                 .setMetaName(table.getTableName());
