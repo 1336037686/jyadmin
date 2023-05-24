@@ -18,6 +18,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -44,18 +45,21 @@ public class LogController {
     @RateLimit
     @ApiOperation(value = "删除日志", notes = "")
     @DeleteMapping("/remove")
+    @PreAuthorize("@jy.check('log:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(logService.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID获取当前日志信息", notes = "")
     @GetMapping("/query/{id}")
+    @PreAuthorize("@jy.check('log:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(logService.getById(id));
     }
 
     @ApiOperation(value = "分页查询日志", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('log:query')")
     public PageResult<Log> doQueryPage(LogQueryVO vo) {
         return PageUtil.toPageResult(
                 this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
@@ -71,6 +75,7 @@ public class LogController {
 
     @ApiOperation(value = "根据用户ID分页查询用户登录日志", notes = "")
     @GetMapping("/query-user-login/{userId}")
+    @PreAuthorize("@jy.check('log:queryLoginPage')")
     public PageResult<UserLoginLog> doQueryLoginPage(@PathVariable("userId") String userId, LogQueryVO vo) {
         Page<Log> page = this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                 new LambdaQueryWrapper<Log>()
@@ -103,6 +108,7 @@ public class LogController {
 
     @ApiOperation(value = "根据用户ID分页查询用户登录日志", notes = "")
     @GetMapping("/query-login")
+    @PreAuthorize("@jy.check('log:queryLogin')")
     public PageResult<UserLoginLog> doQueryLogin(LogQueryVO vo) {
         Page<Log> page = this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                 new LambdaQueryWrapper<Log>()
@@ -130,6 +136,7 @@ public class LogController {
 
     @ApiOperation(value = "根据用户ID分页查询用户行为日志", notes = "")
     @GetMapping("/query-active")
+    @PreAuthorize("@jy.check('log:queryActive')")
     public PageResult<Log> doQueryActive(LogQueryVO vo) {
         return PageUtil.toPageResult(this.logService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                 new LambdaQueryWrapper<Log>()
