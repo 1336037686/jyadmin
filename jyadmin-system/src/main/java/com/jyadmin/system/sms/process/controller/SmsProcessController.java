@@ -11,6 +11,7 @@ import com.jyadmin.system.sms.process.service.SmsProcessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ public class SmsProcessController {
     @Log(title = "验证码发送", desc = "验证码发送")
     @ApiOperation(value = "验证码发送", notes = "")
     @PostMapping("/send/verificationCode")
+    @PreAuthorize("@jy.check('sms-process:sendVerificationCode')")
     public Result<Object> doSendVerificationCode(@RequestBody @Valid SmsSendVO vo) {
         SmsSendDTO smsSendDTO = new SmsSendDTO();
         BeanUtil.copyProperties(vo, smsSendDTO);

@@ -76,7 +76,7 @@ public class QuartzJobController {
     @Log(title = "系统定时任务管理：更新系统定时任务任务状态", desc = "更新系统定时任务任务状态")
     @ApiOperation(value = "更新系统定时任务任务状态", notes = "")
     @PutMapping("/update-status")
-    @PreAuthorize("@jy.check('quartz-job:update-status')")
+    @PreAuthorize("@jy.check('quartz-job:updateStatus')")
     public Result<Object> doUpdateJobStatus(@RequestBody @Valid QuartzJobStatusUpdateVO vo) {
         QuartzJob quartzJob = quartzService.getById(vo.getId());
         BeanUtil.copyProperties(vo, quartzJob);

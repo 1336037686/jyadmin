@@ -17,6 +17,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -44,6 +45,7 @@ public class DataDictController {
     @RateLimit
     @ApiOperation(value = "创建根节点", notes = "")
     @PostMapping("/create-root")
+    @PreAuthorize("@jy.check('data-dict:createRoot')")
     public Result<Object> doCreateRoot(@RequestBody @Valid DataDictCreateRootVO vo) {
         DataDict sysDataDict = BeanUtil.copyProperties(vo, DataDict.class);
         sysDataDict.setIsRoot(GlobalConstants.SysRootNode.ROOT.getValue());
@@ -53,6 +55,7 @@ public class DataDictController {
     @RateLimit
     @ApiOperation(value = "创建子节点", notes = "")
     @PostMapping("/create-node")
+    @PreAuthorize("@jy.check('data-dict:createNode')")
     public Result<Object> doCreateNode(@RequestBody @Valid DataDictCreateNodeVO vo) {
         DataDict sysDataDict = BeanUtil.copyProperties(vo, DataDict.class);
         sysDataDict.setIsRoot(GlobalConstants.SysRootNode.NOT_ROOT.getValue());
@@ -62,6 +65,7 @@ public class DataDictController {
     @RateLimit
     @ApiOperation(value = "更新节点", notes = "")
     @PutMapping("/update")
+    @PreAuthorize("@jy.check('data-dict:update')")
     public Result<Object> doUpdate(@RequestBody @Valid DataDictUpdateVO vo) {
         DataDict sysDataDict = sysDataDictService.getById(vo.getId());
         BeanUtil.copyProperties(vo, sysDataDict);
@@ -71,30 +75,35 @@ public class DataDictController {
     @RateLimit
     @ApiOperation(value = "删除节点", notes = "")
     @DeleteMapping("/remove")
+    @PreAuthorize("@jy.check('data-dict:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(sysDataDictService.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID获取当前节点信息", notes = "")
     @GetMapping("/query/{id}")
+    @PreAuthorize("@jy.check('data-dict:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(sysDataDictService.getById(id));
     }
 
     @ApiOperation(value = "分页查询字典", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('data-dict:query')")
     public PageResult<DataDict> doQueryPage(DataDictQueryVO vo) {
         return PageUtil.toPageResult(this.sysDataDictService.getPage(BeanUtil.copyProperties(vo, DataDictQueryDTO.class)));
     }
 
     @ApiOperation(value = "层次列表查询字典信息", notes = "")
     @GetMapping("/layer")
+    @PreAuthorize("@jy.check('data-dict:layer')")
     public Result<List<Map<String, Object>>> doQueryLayer(DataDictQueryVO vo) {
         return Result.ok(this.sysDataDictService.getLayer(vo));
     }
 
     @ApiOperation(value = "根据ID查询下属节点", notes = "")
     @GetMapping("/query-child/{id}")
+    @PreAuthorize("@jy.check('data-dict:queryChild')")
     public Result<Object> doQueryChild(@PathVariable String id) {
         return Result.ok(sysDataDictService.getChildById(id));
     }

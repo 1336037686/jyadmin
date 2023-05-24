@@ -16,6 +16,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -41,12 +42,14 @@ public class PostController {
 
     @ApiOperation(value = "新增岗位", notes = "")
     @PostMapping("/create")
+    @PreAuthorize("@jy.check('post:create')")
     public Result<Object> doCreate(@RequestBody @Valid PostCreateVO vo) {
         return ResultUtil.toResult(postService.save(BeanUtil.copyProperties(vo, Post.class)));
     }
 
     @ApiOperation(value = "更新岗位", notes = "")
     @PutMapping("/update")
+    @PreAuthorize("@jy.check('post:update')")
     public Result<Object> doUpdate(@RequestBody @Valid PostUpdateVO vo) {
         Post post = postService.getById(vo.getId());
         BeanUtil.copyProperties(vo, post);
@@ -55,18 +58,21 @@ public class PostController {
 
     @ApiOperation(value = "删除岗位", notes = "")
     @DeleteMapping("/remove")
+    @PreAuthorize("@jy.check('post:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(postService.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID获取当前岗位信息", notes = "")
     @GetMapping("/query/{id}")
+    @PreAuthorize("@jy.check('post:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(postService.getById(id));
     }
 
     @ApiOperation(value = "列表查询岗位", notes = "")
     @GetMapping("/list")
+    @PreAuthorize("@jy.check('post:list')")
     public Result<List<Post>> doQueryList(PostQueryVO vo) {
         return Result.ok(this.postService.list(new LambdaQueryWrapper<Post>()
                         .like(StringUtils.isNotBlank(vo.getName()), Post::getName, vo.getName())
@@ -77,6 +83,7 @@ public class PostController {
 
     @ApiOperation(value = "分页查询岗位", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('post:query')")
     public PageResult<Post> doQueryPage(PostQueryVO vo) {
         return PageUtil.toPageResult(
                 this.postService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),

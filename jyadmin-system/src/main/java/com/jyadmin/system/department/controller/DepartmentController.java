@@ -16,6 +16,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -43,12 +44,14 @@ public class DepartmentController {
 
     @ApiOperation(value = "新增部门", notes = "")
     @PostMapping("/create")
+    @PreAuthorize("@jy.check('department:create')")
     public Result<Object> doCreate(@RequestBody @Valid DepartmentCreateVO vo) {
         return ResultUtil.toResult(departmentService.save(BeanUtil.copyProperties(vo, Department.class)));
     }
 
     @ApiOperation(value = "更新部门", notes = "")
     @PutMapping("/update")
+    @PreAuthorize("@jy.check('department:update')")
     public Result<Object> doUpdate(@RequestBody @Valid DepartmentUpdateVO vo) {
         Department department = departmentService.getById(vo.getId());
         BeanUtil.copyProperties(vo, department);
@@ -57,18 +60,21 @@ public class DepartmentController {
 
     @ApiOperation(value = "删除部门", notes = "")
     @DeleteMapping("/remove")
+    @PreAuthorize("@jy.check('department:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(departmentService.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID获取当前部门信息", notes = "")
     @GetMapping("/query/{id}")
+    @PreAuthorize("@jy.check('department:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(departmentService.getById(id));
     }
 
     @ApiOperation(value = "分页查询部门", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('department:query')")
     public PageResult<Department> doQueryPage(DepartmentQueryVO vo) {
         return PageUtil.toPageResult(
                 this.departmentService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
@@ -83,6 +89,7 @@ public class DepartmentController {
 
     @ApiOperation(value = "层次列表查询部门信息", notes = "")
     @GetMapping("/layer")
+    @PreAuthorize("@jy.check('department:layer')")
     public Result<List<Map<String, Object>>> doQueryLayer(DepartmentQueryVO vo) {
         return Result.ok(this.departmentService.getLayer(vo));
     }

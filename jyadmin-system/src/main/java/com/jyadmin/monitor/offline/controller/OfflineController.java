@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,6 +35,7 @@ public class OfflineController {
 
     @ApiOperation(value = "分页查询登录用户信息", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('offline:query')")
     public PageResult<UserCacheInfo> doQueryPage(UserQueryVO vo) {
         return PageUtil.toPageResult(offlineService.getList(vo), vo);
     }
@@ -41,6 +43,7 @@ public class OfflineController {
     @RateLimit
     @ApiOperation(value = "强制下线", notes = "")
     @DeleteMapping("/forcedOffline")
+    @PreAuthorize("@jy.check('offline:forcedOffline')")
     public Result<Object> doForcedOffline(@RequestBody String username) {
         // 强制下线时用户名不能为空
         if (StringUtils.isEmpty(username)) throw new ApiException(ResultStatus.PARAM_ERROR);

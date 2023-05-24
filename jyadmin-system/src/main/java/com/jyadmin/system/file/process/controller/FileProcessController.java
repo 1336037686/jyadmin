@@ -12,6 +12,7 @@ import com.jyadmin.system.file.process.service.FileProcessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,7 @@ public class FileProcessController {
     @RateLimit
     @ApiOperation(value = "文件上传", notes = "")
     @PostMapping("upload/{relevance}")
+    @PreAuthorize("@jy.check('file-process:upload')")
     public Result<FileProcess> doUpload(MultipartFile file, @PathVariable("relevance") String relevance) throws Exception {
         // 文件原名称
         String originalFilename = file.getOriginalFilename();
@@ -68,6 +70,7 @@ public class FileProcessController {
     @RateLimit
     @ApiOperation(value = "文件下载", notes = "")
     @GetMapping("download/{id}")
+    @PreAuthorize("@jy.check('file-process:download')")
     public Result<Object> doDownload(@PathVariable("id") String id, HttpServletResponse response) {
         FileRecord fileRecord = fileRecordService.getById(id);
         Assert.notNull(fileRecord, "当前文件不存在！");

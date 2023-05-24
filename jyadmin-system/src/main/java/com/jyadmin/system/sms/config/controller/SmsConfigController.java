@@ -58,7 +58,7 @@ public class SmsConfigController {
 
     @ApiOperation(value = "查找系统模板配置列表", notes = "")
     @GetMapping("/query-config/{code}")
-    @PreAuthorize("@jy.check('sms-config:query-config')")
+    @PreAuthorize("@jy.check('sms-config:queryConfig')")
     public Result<List<ConfigDetail>> doQueryConfigListByCode(@PathVariable("code") String code) {
         List<ConfigDetail> configDetails = this.smsConfigService.getConfigListByCode(code);
         return Result.ok(configDetails);

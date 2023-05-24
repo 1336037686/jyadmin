@@ -11,6 +11,7 @@ import com.jyadmin.system.email.process.service.EmailProcessService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,7 @@ public class EmailProcessController {
     @Log(title = "邮件发送", desc = "邮件发送")
     @ApiOperation(value = "邮件发送", notes = "")
     @PostMapping("/send")
+    @PreAuthorize("@jy.check('email-process:send')")
     public Result<Object> doSend(@RequestBody @Valid EmailSendVO vo) {
         EmailSendDTO emailSendDTO = new EmailSendDTO();
         BeanUtil.copyProperties(vo, emailSendDTO);

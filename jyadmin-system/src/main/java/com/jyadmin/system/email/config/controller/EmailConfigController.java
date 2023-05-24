@@ -59,7 +59,7 @@ public class EmailConfigController {
 
     @ApiOperation(value = "查找系统模板配置列表", notes = "")
     @GetMapping("/query-config/{code}")
-    @PreAuthorize("@jy.check('email-config:query-config')")
+    @PreAuthorize("@jy.check('email-config:queryConfig')")
     public Result<List<ConfigDetail>> doQueryConfigListByCode(@PathVariable("code") String code) {
         List<ConfigDetail> configDetails = this.emailConfigService.getConfigListByCode(code);
         return Result.ok(configDetails);

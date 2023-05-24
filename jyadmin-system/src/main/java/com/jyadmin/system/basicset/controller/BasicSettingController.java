@@ -8,6 +8,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,12 +32,14 @@ public class BasicSettingController {
 
     @ApiOperation(value = "更新系统基础配置", notes = "")
     @PutMapping("/update")
+    @PreAuthorize("@jy.check('basic-setting:update')")
     public Result<Object> doUpdate(@RequestBody List<BasicSetting> vo) {
         return ResultUtil.toResult(basicSettingService.updateBatchById(vo));
     }
 
     @ApiOperation(value = "列表查询系统基础配置", notes = "")
     @GetMapping("/list")
+    @PreAuthorize("@jy.check('basic-setting:list')")
     public Result<List<BasicSetting>> doQueryList() {
         List<BasicSetting> list = this.basicSettingService.list(new LambdaQueryWrapper<BasicSetting>().orderByAsc(BasicSetting::getId));
         return Result.ok(list);
