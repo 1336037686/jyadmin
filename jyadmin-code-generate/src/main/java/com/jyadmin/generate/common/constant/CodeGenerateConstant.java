@@ -20,35 +20,62 @@ import java.util.function.Function;
  */
 public class CodeGenerateConstant {
 
+    // java模板路径
     public static final String TEMPLATE_JAVA_VM_PATH = "template" + FileUtil.FILE_SEPARATOR + "java";
+    // vue模板路径
     public static final String TEMPLATE_VUE_VM_PATH = "template" + FileUtil.FILE_SEPARATOR + "vue";
 
+    // 默认表配置-作者
     public static final String TABLE_CONFIG_Author = "jyadmin code generate";
+    // 默认表配置-包名前缀
     public static final String TABLE_CONFIG_PACKAGE_NAME_PREFIX = "com.jyadmin.generate";
+    // 默认表配置-后端公共 URL 前缀
     public static final String TABLE_CONFIG_PUBLIC_URL = "/api";
+    // 默认表配置-SWAGGER_API_TAG
     public static final String TABLE_CONFIG_SWAGGER_API_TAG_PREFIX = "系统：";
+    // 默认表配置-默认的数据库表类型为普通表
     public static final String TABLE_CONFIG_TYPE = "ot"; // 默认的数据库表类型为普通表
-    public static final String TABLE_CONFIG_VERSION = "1.0"; // 默认的数据库表类型为普通表
+    // 默认表配置-版本
+    public static final String TABLE_CONFIG_VERSION = "1.0";
 
+    // 默认属性配置-默认在页面上展示
     public static final Integer FIELD_CONFIG_SHOW_PAGE = 1;
+    // 默认属性配置-默认在详情页展示
     public static final Integer FIELD_CONFIG_SHOW_DETAIL = 1;
+    // 默认属性配置-默认在表单展示
     public static final Integer FIELD_CONFIG_SHOW_FORM = 1;
+    // 默认属性配置-默认在查询表单展示
     public static final Integer FIELD_CONFIG_SHOW_QUERY = 1;
+    // 默认属性配置-默认必填
     public static final Integer FIELD_CONFIG_REQUIRE = 1;
+    // 默认属性配置-默认为文本输入框
     public static final String FIELD_CONFIG_FORM_TYPE = "form_type_input";
+    // 默认属性配置-默认查询方式为等于=
     public static final String FIELD_CONFIG_FORM_SELECT_METHOD = "form_select_method_eq";
 
+    // 生成的java代码src路径
     public static final String JAVA_SOURCE_CODE_SRC_PATH = "java" + FileUtil.FILE_SEPARATOR + "src";
+    // 生成的java代码resource路径
     public static final String JAVA_SOURCE_CODE_RESOURCE_PATH = "java" + FileUtil.FILE_SEPARATOR + "resources";
+    // 生成的vue代码页面views路径
     public static final String VUE_SOURCE_CODE_VIEW_PATH = "vue" + FileUtil.FILE_SEPARATOR + "views" + FileUtil.FILE_SEPARATOR + "module";
+    // 生成的vue代码请求api路径
     public static final String VUE_SOURCE_CODE_API_PATH = "vue" + FileUtil.FILE_SEPARATOR + "api" + FileUtil.FILE_SEPARATOR + "module";
+
+    // java模板名称开头
     public static final String JAVA_TEMPLATE_NAME_PREFIX = "java";
+    // vue模板名称开头
     public static final String VUE_TEMPLATE_NAME_PREFIX = "vue";
+    // 默认忽略字段
     public static final List<String> IGNORE_FIELDS = Lists.newArrayList("create_by", "update_by", "create_time", "update_time", "deleted");
 
+    // 模板对应的java文件类型
     public static final String TEMPLATE_FILE_TYPE_JAVA = "java";
+    // 模板对应的vue文件类型
     public static final String TEMPLATE_FILE_TYPE_VUE = "vue";
+    // 模板对应的xml文件类型
     public static final String TEMPLATE_FILE_TYPE_XML = "xml";
+    // 模板对应的js文件类型
     public static final String TEMPLATE_FILE_TYPE_JS = "js";
 
     public static final String RESPONSE_ZIP_FILE_NAME = "code-generate.zip";
