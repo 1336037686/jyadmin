@@ -22,7 +22,7 @@ public class CodeGenerateTableConfig extends BaseEntity implements Serializable 
     /**
      * ID
      */
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**

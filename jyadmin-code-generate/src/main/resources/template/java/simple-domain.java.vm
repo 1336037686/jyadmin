@@ -1,5 +1,6 @@
 package ${packageName}.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -34,7 +35,7 @@ public class ${realTableNameUpperCamelCase} extends #if($tableType.equals('ot'))
     /**
      * ${field.fieldRemark}
      */
-    @TableId(value = "${field.fieldName}")
+    @TableId(value = "${field.fieldName}", type = IdType.ASSIGN_ID)
     private ${field.javaType} ${field.realFieldNameLowCamelCase};
     #else
 

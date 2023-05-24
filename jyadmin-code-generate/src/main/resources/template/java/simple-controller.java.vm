@@ -41,12 +41,14 @@ public class ${realTableNameUpperCamelCase}Controller {
 
     @ApiOperation(value = "新增${tableRemark}", notes = "")
     @PostMapping("/create")
+    @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:create')")
     public Result<Object> doCreate(@RequestBody @Valid ${realTableNameUpperCamelCase}CreateReqVO vo) {
         return ResultUtil.toResult(${realTableNameLowCamelCase}Service.save(BeanUtil.copyProperties(vo, ${realTableNameUpperCamelCase}.class)));
     }
 
     @ApiOperation(value = "更新${tableRemark}", notes = "")
     @PutMapping("/update")
+    @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:update')")
     public Result<Object> doUpdate(@RequestBody @Valid ${realTableNameUpperCamelCase}UpdateReqVO vo) {
         ${realTableNameUpperCamelCase} ${realTableNameLowCamelCase} = ${realTableNameLowCamelCase}Service.getById(vo.getId());
         BeanUtil.copyProperties(vo, ${realTableNameLowCamelCase});
@@ -55,26 +57,55 @@ public class ${realTableNameUpperCamelCase}Controller {
 
     @ApiOperation(value = "删除${tableRemark}", notes = "")
     @DeleteMapping("/remove")
+    @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         return ResultUtil.toResult(${realTableNameLowCamelCase}Service.removeByIds(ids));
     }
 
     @ApiOperation(value = "根据ID获取当前${tableRemark}", notes = "")
     @GetMapping("/query/{id}")
+    @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
         return Result.ok(${realTableNameLowCamelCase}Service.getById(id));
     }
 
     @ApiOperation(value = "分页查询${tableRemark}", notes = "")
     @GetMapping("/query")
+    @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:query')")
     public PageResult<${realTableNameUpperCamelCase}> doQueryPage(${realTableNameUpperCamelCase}QueryReqVO vo) {
         return PageUtil.toPageResult(
                 this.${realTableNameLowCamelCase}Service.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                         new LambdaQueryWrapper<${realTableNameUpperCamelCase}>()
                 #foreach($field in $fields)
-                    #if($field.showQuery == 1)
+                #if($field.fieldIgnore == 0)
+                #if($field.showQuery == 1)
+                    #if($field.formSelectMethod == 'form_select_method_eq')
                             .eq(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
                     #end
+                    #if($field.formSelectMethod == 'form_select_method_lt')
+                            .lt(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                    #end
+                    #if($field.formSelectMethod == 'form_select_method_gt')
+                            .gt(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                    #end
+                    #if($field.formSelectMethod == 'form_select_method_ge')
+                            .ge(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                    #end
+                    #if($field.formSelectMethod == 'form_select_method_le')
+                            .le(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                    #end
+                    #if($field.formSelectMethod == 'form_select_method_neq')
+                            .ne(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                    #end
+                    #if($field.formSelectMethod == 'form_select_method_like')
+                        #if($field.javaType.equals('String'))
+                            .like(StringUtils.isNotBlank(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                        #else
+                            .ne(Objects.nonNull(vo.get${field.realFieldNameUpperCamelCase}()), ${realTableNameUpperCamelCase}::get${field.realFieldNameUpperCamelCase}, vo.get${field.realFieldNameUpperCamelCase}())
+                        #end
+                    #end
+                #end
+                #end
                 #end
                 )
         );

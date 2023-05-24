@@ -49,7 +49,7 @@
   #foreach($field in $fields)
     #if($field.fieldIgnore == 0)
       #if($field.showPage == 1)
-        <el-table-column prop="${field.realFieldNameLowCamelCase}" label="${field.fieldRemark}" align="center"  />
+        <el-table-column prop="${field.realFieldNameLowCamelCase}" label="${field.fieldRemark}" align="center" show-overflow-tooltip />
       #end
     #end
   #end
@@ -86,7 +86,11 @@ export default {
 #foreach($field in $fields)
   #if($field.fieldIgnore == 0)
     #if($field.showQuery == 1)
+    #if($foreach.last)
+        ${field.realFieldNameLowCamelCase}: null
+    #else
         ${field.realFieldNameLowCamelCase}: null,
+    #end
     #end
   #end
 #end

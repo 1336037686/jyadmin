@@ -54,7 +54,11 @@ export default {
   #foreach($field in $fields)
     #if($field.fieldIgnore == 0)
       #if($field.showForm == 1)
-        ${field.realFieldNameLowCamelCase}: null,
+      #if($foreach.last)
+          ${field.realFieldNameLowCamelCase}: null
+      #else
+          ${field.realFieldNameLowCamelCase}: null,
+      #end
       #end
     #end
   #end
@@ -63,9 +67,15 @@ export default {
   #foreach($field in $fields)
     #if($field.fieldIgnore == 0)
       #if($field.showForm == 1)
-        ${field.realFieldNameLowCamelCase}: [
+      #if($foreach.last)
+          ${field.realFieldNameLowCamelCase}: [
+          { required: true, message: '请输入${field.fieldRemark}', trigger: 'blur' }
+        ]
+      #else
+          ${field.realFieldNameLowCamelCase}: [
           { required: true, message: '请输入${field.fieldRemark}', trigger: 'blur' }
         ],
+      #end
       #end
     #end
   #end

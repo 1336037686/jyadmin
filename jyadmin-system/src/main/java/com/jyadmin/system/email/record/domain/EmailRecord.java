@@ -1,6 +1,8 @@
 package com.jyadmin.system.email.record.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jyadmin.domain.BaseEntity;
 import lombok.Data;
@@ -17,7 +19,7 @@ public class EmailRecord extends BaseEntity implements Serializable {
     /**
      * id
      */
-    @TableField(value = "id")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**

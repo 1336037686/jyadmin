@@ -1,6 +1,8 @@
 package com.jyadmin.system.datadict.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jyadmin.domain.BaseEntity;
 import lombok.Data;
@@ -18,7 +20,7 @@ public class SimpleDataDictDetail extends BaseEntity implements Serializable {
     /**
      * ID
      */
-    @TableField(value = "id")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**

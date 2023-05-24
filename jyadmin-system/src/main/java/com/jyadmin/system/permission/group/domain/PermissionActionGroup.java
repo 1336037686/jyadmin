@@ -1,5 +1,6 @@
 package com.jyadmin.system.permission.group.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -22,7 +23,7 @@ public class PermissionActionGroup extends BaseEntity implements Serializable {
     /**
      * ID
      */
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
     /**
