@@ -4,8 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.post.domain.Post;
 import com.jyadmin.system.post.model.vo.PostCreateVO;
 import com.jyadmin.system.post.model.vo.PostQueryVO;
@@ -40,6 +42,8 @@ public class PostController {
     @Resource
     private PostService postService;
 
+    @RateLimit
+    @Log(title = "岗位管理：新增岗位", desc = "新增岗位")
     @ApiOperation(value = "新增岗位", notes = "")
     @PostMapping("/create")
     @PreAuthorize("@jy.check('post:create')")
@@ -47,6 +51,8 @@ public class PostController {
         return ResultUtil.toResult(postService.save(BeanUtil.copyProperties(vo, Post.class)));
     }
 
+    @RateLimit
+    @Log(title = "岗位管理：更新岗位", desc = "更新岗位")
     @ApiOperation(value = "更新岗位", notes = "")
     @PutMapping("/update")
     @PreAuthorize("@jy.check('post:update')")
@@ -56,6 +62,8 @@ public class PostController {
         return ResultUtil.toResult(postService.updateById(post));
     }
 
+    @RateLimit
+    @Log(title = "岗位管理：删除岗位", desc = "删除岗位")
     @ApiOperation(value = "删除岗位", notes = "")
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('post:remove')")

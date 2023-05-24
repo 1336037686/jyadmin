@@ -6,6 +6,7 @@ import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.exception.ApiException;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.monitor.offline.model.vo.UserQueryVO;
 import com.jyadmin.monitor.offline.service.OfflineService;
 import com.jyadmin.util.PageUtil;
@@ -41,6 +42,7 @@ public class OfflineController {
     }
 
     @RateLimit
+    @Log(title = "用户下线：强制下线", desc = "强制下线")
     @ApiOperation(value = "强制下线", notes = "")
     @DeleteMapping("/forcedOffline")
     @PreAuthorize("@jy.check('offline:forcedOffline')")

@@ -36,7 +36,7 @@ public class EmailProcessController {
     private EmailProcessService emailProcessService;
 
     @RateLimit
-    @Log(title = "邮件发送", desc = "邮件发送")
+    @Log(title = "系统邮件处理：邮件发送", desc = "邮件发送")
     @ApiOperation(value = "邮件发送", notes = "")
     @PostMapping("/send")
     @PreAuthorize("@jy.check('email-process:send')")

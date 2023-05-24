@@ -5,6 +5,7 @@ import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.datadict.domain.DataDict;
 import com.jyadmin.system.datadict.model.dto.DataDictQueryDTO;
 import com.jyadmin.system.datadict.model.vo.DataDictCreateNodeVO;
@@ -43,6 +44,7 @@ public class DataDictController {
     private DataDictService sysDataDictService;
 
     @RateLimit
+    @Log(title = "数据字典：创建根节点", desc = "创建根节点")
     @ApiOperation(value = "创建根节点", notes = "")
     @PostMapping("/create-root")
     @PreAuthorize("@jy.check('data-dict:createRoot')")
@@ -53,6 +55,7 @@ public class DataDictController {
     }
 
     @RateLimit
+    @Log(title = "数据字典：创建子节点", desc = "创建子节点")
     @ApiOperation(value = "创建子节点", notes = "")
     @PostMapping("/create-node")
     @PreAuthorize("@jy.check('data-dict:createNode')")
@@ -63,6 +66,7 @@ public class DataDictController {
     }
 
     @RateLimit
+    @Log(title = "数据字典：更新节点", desc = "更新节点")
     @ApiOperation(value = "更新节点", notes = "")
     @PutMapping("/update")
     @PreAuthorize("@jy.check('data-dict:update')")
@@ -73,6 +77,7 @@ public class DataDictController {
     }
 
     @RateLimit
+    @Log(title = "数据字典：删除节点", desc = "删除节点")
     @ApiOperation(value = "删除节点", notes = "")
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('data-dict:remove')")

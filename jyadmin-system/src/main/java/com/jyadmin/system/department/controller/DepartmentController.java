@@ -4,8 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.department.domain.Department;
 import com.jyadmin.system.department.model.vo.DepartmentCreateVO;
 import com.jyadmin.system.department.model.vo.DepartmentQueryVO;
@@ -42,6 +44,8 @@ public class DepartmentController {
     @Resource
     private DepartmentService departmentService;
 
+    @RateLimit
+    @Log(title = "部门管理：新增部门", desc = "新增部门")
     @ApiOperation(value = "新增部门", notes = "")
     @PostMapping("/create")
     @PreAuthorize("@jy.check('department:create')")
@@ -49,6 +53,8 @@ public class DepartmentController {
         return ResultUtil.toResult(departmentService.save(BeanUtil.copyProperties(vo, Department.class)));
     }
 
+    @RateLimit
+    @Log(title = "部门管理：更新部门", desc = "更新部门")
     @ApiOperation(value = "更新部门", notes = "")
     @PutMapping("/update")
     @PreAuthorize("@jy.check('department:update')")
@@ -58,6 +64,8 @@ public class DepartmentController {
         return ResultUtil.toResult(departmentService.updateById(department));
     }
 
+    @RateLimit
+    @Log(title = "部门管理：删除部门", desc = "删除部门")
     @ApiOperation(value = "删除部门", notes = "")
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('department:remove')")

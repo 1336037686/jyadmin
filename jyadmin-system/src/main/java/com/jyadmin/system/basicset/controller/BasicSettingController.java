@@ -1,7 +1,9 @@
 package com.jyadmin.system.basicset.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.basicset.domain.BasicSetting;
 import com.jyadmin.system.basicset.service.BasicSettingService;
 import com.jyadmin.util.ResultUtil;
@@ -30,6 +32,8 @@ public class BasicSettingController {
     @Resource
     private BasicSettingService basicSettingService;
 
+    @RateLimit
+    @Log(title = "系统基础配置：更新系统基础配置", desc = "更新系统基础配置")
     @ApiOperation(value = "更新系统基础配置", notes = "")
     @PutMapping("/update")
     @PreAuthorize("@jy.check('basic-setting:update')")
@@ -39,7 +43,6 @@ public class BasicSettingController {
 
     @ApiOperation(value = "列表查询系统基础配置", notes = "")
     @GetMapping("/list")
-    @PreAuthorize("@jy.check('basic-setting:list')")
     public Result<List<BasicSetting>> doQueryList() {
         List<BasicSetting> list = this.basicSettingService.list(new LambdaQueryWrapper<BasicSetting>().orderByAsc(BasicSetting::getId));
         return Result.ok(list);

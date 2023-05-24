@@ -3,6 +3,7 @@ package com.jyadmin.system.file.process.controller;
 import cn.hutool.core.io.file.FileNameUtil;
 import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.Result;
+import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.file.manage.domain.FileRecord;
 import com.jyadmin.system.file.manage.service.FileRecordService;
 import com.jyadmin.system.file.process.domain.FileProcess;
@@ -40,6 +41,7 @@ public class FileProcessController {
     private FileRecordService fileRecordService;
 
     @RateLimit
+    @Log(title = "附件处理：文件上传", desc = "文件上传")
     @ApiOperation(value = "文件上传", notes = "")
     @PostMapping("upload/{relevance}")
     @PreAuthorize("@jy.check('file-process:upload')")
@@ -68,6 +70,7 @@ public class FileProcessController {
     }
 
     @RateLimit
+    @Log(title = "附件处理：文件下载", desc = "文件下载")
     @ApiOperation(value = "文件下载", notes = "")
     @GetMapping("download/{id}")
     @PreAuthorize("@jy.check('file-process:download')")

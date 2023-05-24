@@ -37,7 +37,7 @@ public class SmsProcessController {
 
 
     @RateLimit
-    @Log(title = "验证码发送", desc = "验证码发送")
+    @Log(title = "系统短信处理：验证码发送", desc = "验证码发送")
     @ApiOperation(value = "验证码发送", notes = "")
     @PostMapping("/send/verificationCode")
     @PreAuthorize("@jy.check('sms-process:sendVerificationCode')")
