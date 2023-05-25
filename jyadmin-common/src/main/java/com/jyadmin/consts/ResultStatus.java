@@ -109,6 +109,21 @@ public enum ResultStatus {
      */
     REFRESH_TOKEN_NOT_EXIST(10016, ModuleSeries.AUTH, "RefreshToken不存在"),
 
+    /**
+     * 0001 0017 Token不存在
+     */
+    TOKEN_NOT_EXIST(10017, ModuleSeries.AUTH, "Token不存在"),
+
+    /**
+     * 0001 10018 Token过期
+     */
+    TOKEN_EXPIR_ERROR(10018, ModuleSeries.AUTH, "Token过期"),
+
+    /**
+     * 0001 10019 Token格式异常
+     */
+    TOKEN_FORMAT_ERROR(10019, ModuleSeries.AUTH, "Token格式异常"),
+
 
 
     // endregion--------------------

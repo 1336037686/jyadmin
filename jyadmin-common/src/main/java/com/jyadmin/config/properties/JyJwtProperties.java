@@ -20,7 +20,7 @@ public class JyJwtProperties {
      * accessToken过期时间
      * 默认：1h
      */
-    private Long accessTokenExpiration= 1 * 60 * 60L;
+    private Long accessTokenExpiration= 2 * 60 * 60L;
 
     /**
      * refreshToken过期时间

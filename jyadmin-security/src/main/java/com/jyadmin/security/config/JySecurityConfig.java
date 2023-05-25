@@ -57,29 +57,18 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 禁用表单登录，前后端分离用不上
         http.formLogin().disable();
-
         // 关闭csrf
         http.csrf().disable();
-
         // 禁用session，JWT校验不需要session
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         // 设置登录请求地址，token刷新地址，并设置不拦截
-        http.authorizeRequests()
-            .antMatchers(jySecurityProperties.getIgnoreUrls())
-            .permitAll();
-
+        http.authorizeRequests().antMatchers(jySecurityProperties.getIgnoreUrls()).permitAll();
         // 跨域请求会先进行一次options请求
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS)
-                .permitAll();
-
+        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll();
         // 其他所有请求都需要校验
         http.authorizeRequests().anyRequest().authenticated();
-
         // 禁用缓存
         http.headers().cacheControl();
-
         // 处理异常情况
         http.exceptionHandling()
             // 认证未通过，不允许访问异常处理器
@@ -87,8 +76,9 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
             // 认证通过，但是没权限处理器
             .accessDeniedHandler(defaultAccessDeniedHandler);
 
-        //将Token校验过滤器配置到过滤器链中，否则不生效，放到UsernamePasswordAuthenticationFilter之前
-        http.addFilterBefore(tokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        //将Token校验过滤器配置到过滤器链中，否则不生效，放到UsernamePasswordAuthenticationFilter之前，同时设置对白名单路径不拦截
+        TokenAuthenticationFilter tokenAuthenticationFilter = tokenFilterBean();
+        http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     /**

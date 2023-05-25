@@ -48,7 +48,7 @@ public class ActiveJob extends QuartzJobBean {
         QuartzJob quartzJob = (QuartzJob) context.getMergedJobDataMap().get(QuartzJob.JOB_KEY);
         log.debug("ActiveJob job entity: {}", JSON.toJSONString(quartzJob));
         QuartzLog quartzLog = new QuartzLog();
-        BeanUtil.copyProperties(quartzJob, quartzLog);
+        BeanUtil.copyProperties(quartzJob, quartzLog, "id");
         quartzLog.setJobId(quartzJob.getId());
         long startTime = System.currentTimeMillis() ;
         // 执行任务
