@@ -1,5 +1,6 @@
 package com.jyadmin.config.properties;
 
+import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -35,11 +36,40 @@ public class JySecurityProperties {
      * IGNORE_URL.add("/api/auth/captcha/{uniqueId}");
      * // 登陆续期
      * IGNORE_URL.add("/api/auth/refreshToken");
+     * // Swagger-UI
+     * ...
      */
     private List<String> ignoreUrls = new ArrayList<>();
 
+    /**
+     * 获取白名单URL
+     * @return /
+     */
     public String[] getIgnoreUrls() {
-        return this.ignoreUrls.stream().toArray(String[]::new);
+        String[] configIgnoreUrls = this.ignoreUrls.stream().toArray(String[]::new);
+        String[] commonIgnoreUrls = getCommonIgnoreUrls();
+        return ArrayUtil.addAll(configIgnoreUrls, commonIgnoreUrls);
+    }
+
+    /**
+     * 公共白名单地址
+     * 包括Swagger路径， Knife路径，druid路径
+     * @return /
+     */
+    public String[] getCommonIgnoreUrls() {
+        return new String[] {
+                "/static/**",
+                "/doc.html",
+                "/swagger-ui.html",
+                "/v2/**",
+                "/v2/api-docs",
+                "/swagger-resources/configuration/ui",
+                "/swagger-resources",
+                "/swagger-resources/configuration/security",
+                "/swagger-resources/**",
+                "/webjars/**",
+                "/druid/**"
+        };
     }
 
 }

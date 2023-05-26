@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.jyadmin.domain.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @TableName(value ="sys_basic_setting")
 @Data
-public class BasicSetting implements Serializable {
+public class BasicSetting extends BaseEntity implements Serializable {
     /**
      * ID
      */
@@ -52,35 +53,6 @@ public class BasicSetting implements Serializable {
     @TableField(value = "description")
     private String description;
 
-    /**
-     * 创建人
-     */
-    @TableField(value = "create_by")
-    private String createBy;
-
-    /**
-     * 更新人
-     */
-    @TableField(value = "update_by")
-    private String updateBy;
-
-    /**
-     * 创建时间
-     */
-    @TableField(value = "create_time")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField(value = "update_time")
-    private LocalDateTime updateTime;
-
-    /**
-     * 是否删除
-     */
-    @TableField(value = "deleted")
-    private Integer deleted;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

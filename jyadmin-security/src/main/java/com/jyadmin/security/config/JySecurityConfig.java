@@ -95,19 +95,7 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // allow Swagger URL to be accessed without authentication
-        web.ignoring().antMatchers(
-                "/static/**",
-                "/doc.html",
-                "/swagger-ui.html",
-                "/v2/**",
-                "/v2/api-docs",                         // swagger api json
-                "/swagger-resources/configuration/ui",  // 用来获取支持的动作
-                "/swagger-resources",                   // 用来获取api-docs的URI
-                "/swagger-resources/configuration/security", // 安全选项
-                "/swagger-resources/**",
-                "/webjars/**",
-                "/druid/**"
-        );
+        web.ignoring().antMatchers(jySecurityProperties.getCommonIgnoreUrls());
     }
 
 }
