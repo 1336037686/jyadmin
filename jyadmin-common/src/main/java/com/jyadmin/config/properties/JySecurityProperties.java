@@ -20,6 +20,11 @@ import java.util.List;
 public class JySecurityProperties {
 
     /**
+     * 放行所有接口
+     */
+    private Boolean permitAll = false;
+
+    /**
      * 白名单地址配置
      *
      * // 登录

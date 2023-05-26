@@ -76,7 +76,7 @@ public class FileProcessServiceImpl implements FileProcessService {
         // 设置response为文件下载
         ResponseUtil.initFtpResponse(response);
         // 设置文件下载方式：附件下载
-        response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(fileRecord.getRealName()));
+        response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileRecord.getRealName()));
         // 执行状态
         int fetchIndex = 0;
         boolean fetchStatus = false;

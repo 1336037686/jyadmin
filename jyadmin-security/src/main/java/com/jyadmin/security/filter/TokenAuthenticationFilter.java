@@ -48,6 +48,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // 配置放行是否全部接口
+        if (jySecurityProperties.getPermitAll()) {
+            // 继续执行下一个过滤器
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // 判断是否是白名单路径，如果为白名单路径，直接放行
         if (isIgnoreUrl(request)) {

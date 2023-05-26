@@ -1,13 +1,19 @@
 package com.jyadmin.module.category.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.module.category.domain.Category;
+import com.jyadmin.module.category.model.vo.CategoryExportResVO;
 import com.jyadmin.util.PageUtil;
+import com.jyadmin.util.ResponseUtil;
 import com.jyadmin.util.ResultUtil;
 import com.jyadmin.module.category.model.vo.CategoryCreateVO;
 import com.jyadmin.module.category.model.vo.CategoryQueryVO;
@@ -19,7 +25,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -73,6 +85,22 @@ public class CategoryController {
                                 .like(StringUtils.isNotBlank(vo.getCode()), Category::getCode, vo.getCode())
                 )
         );
+    }
+
+    @ApiOperation(value = "数据导出", notes = "")
+    @GetMapping("/data-export")
+    public void download(CategoryQueryVO vo, HttpServletResponse response) throws IOException {
+        // 初始化Xlsx响应
+        ResponseUtil.initXlsxResponse(response, StrUtil.format("博客类别-{}", DateUtil.format(LocalDateTime.now(), DatePattern.NORM_DATE_PATTERN)));
+        // 查询数据
+        List<Category> categories = this.categoryService.list(new LambdaQueryWrapper<Category>()
+                .like(StringUtils.isNotBlank(vo.getName()), Category::getName, vo.getName())
+                .like(StringUtils.isNotBlank(vo.getCode()), Category::getCode, vo.getCode())
+        );
+        // 数据转义
+        List<CategoryExportResVO> exportResVOS = BeanUtil.copyToList(categories, CategoryExportResVO.class);
+        // 写出
+        EasyExcel.write(response.getOutputStream(), CategoryExportResVO.class).sheet("sheet1").doWrite(exportResVOS);
     }
     
 }
