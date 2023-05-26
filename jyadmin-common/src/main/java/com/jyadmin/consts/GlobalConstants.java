@@ -20,6 +20,9 @@ public class GlobalConstants {
 
     // ======================= 访问URL END =======================
 
+    // JWT TOKEN 载荷 自定义字段
+    public static final String SYS_JWT_TOKEN_PAYLOAD_USERNAME = "username";
+
     // SECURITY_CONTEXT
     public static final String SYS_SECURITY_CONTEXT = "SECURITY_CONTEXT";
 

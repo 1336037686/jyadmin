@@ -7,6 +7,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import com.jyadmin.config.properties.JyJwtProperties;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class JWTUtil {
         //生效时间
         payload.put(JWTPayload.NOT_BEFORE, now);
         //载荷
-        payload.put("username", username);
+        payload.put(GlobalConstants.SYS_JWT_TOKEN_PAYLOAD_USERNAME, username);
         return cn.hutool.jwt.JWTUtil.createToken(payload, jwtConfig.getSecretKey().getBytes());
     }
 
@@ -68,7 +69,7 @@ public class JWTUtil {
         //生效时间
         payload.put(JWTPayload.NOT_BEFORE, now);
         //载荷
-        payload.put("username", username);
+        payload.put(GlobalConstants.SYS_JWT_TOKEN_PAYLOAD_USERNAME, username);
         return cn.hutool.jwt.JWTUtil.createToken(payload, jwtConfig.getSecretKey().getBytes());
     }
 
@@ -80,7 +81,7 @@ public class JWTUtil {
     public static String parseToken(String token) {
         JyJwtProperties jwtConfig = SpringUtil.getBean(JyJwtProperties.class);
         JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(token);
-        Object username = jwt.setKey(jwtConfig.getSecretKey().getBytes()).getPayload("username");
+        Object username = jwt.setKey(jwtConfig.getSecretKey().getBytes()).getPayload(GlobalConstants.SYS_JWT_TOKEN_PAYLOAD_USERNAME);
         return username.toString();
     }
 
