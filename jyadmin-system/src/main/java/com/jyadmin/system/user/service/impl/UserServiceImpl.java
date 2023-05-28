@@ -26,6 +26,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Page<UserDTO> getPage(Page<User> page, LambdaQueryWrapper<User> wrapper) {
         return this.baseMapper.selectUserPage(page, wrapper);
     }
+
+    @Override
+    public UserDTO getUserDetailById(String id) {
+        return this.baseMapper.selectUserDetailById(id);
+    }
 }
 
 

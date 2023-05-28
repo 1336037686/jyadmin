@@ -105,7 +105,8 @@ public class UserController {
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('user:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(userService.getById(id));
+        UserDTO user = userService.getUserDetailById(id);
+        return Result.ok(user);
     }
 
     @ApiOperation(value = "分页查询用户", notes = "")

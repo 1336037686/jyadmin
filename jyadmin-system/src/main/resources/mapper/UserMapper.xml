@@ -65,4 +65,13 @@
             LEFT JOIN sys_post sp ON sp.id = su.post AND sp.deleted = 0
         ) t ${ew.customSqlSegment}
     </select>
+
+    <select id="selectUserDetailById" resultMap="FullResultMap">
+        SELECT
+            su.*, sd.`name` AS "department_name", sp.`name` AS "post_name"
+        FROM sys_user su
+                 LEFT JOIN sys_department sd ON su.department = sd.id AND sd.deleted = 0
+                 LEFT JOIN sys_post sp ON sp.id = su.post AND sp.deleted = 0
+        WHERE su.ID = #{userId}
+    </select>
 </mapper>

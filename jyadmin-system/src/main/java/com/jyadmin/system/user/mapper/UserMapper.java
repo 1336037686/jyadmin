@@ -21,6 +21,8 @@ public interface UserMapper extends BaseMapper<User> {
     List<String> selectRoleNamesByUserId(@Param("userId") String userId);
 
     Page<UserDTO> selectUserPage(Page<User> page, @Param(Constants.WRAPPER) LambdaQueryWrapper<User> wrapper);
+
+    UserDTO selectUserDetailById(@Param("userId") String userId);
 }
 
 

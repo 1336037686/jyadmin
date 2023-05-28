@@ -17,5 +17,5 @@ public interface UserService extends IService<User> {
 
     Page<UserDTO> getPage(Page<User> result, LambdaQueryWrapper<User> wrapper);
 
-
+    UserDTO getUserDetailById(String id);
 }
