@@ -104,25 +104,26 @@ public enum ResultStatus {
      */
     REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "登陆续期失败"),
 
-    /**
-     * 0001 0016 RefreshToken不存在
-     */
-    REFRESH_TOKEN_NOT_EXIST(10016, ModuleSeries.AUTH, "RefreshToken不存在"),
 
     /**
-     * 0001 0017 Token不存在
+     * 0001 0101 RefreshToken不存在
      */
-    TOKEN_NOT_EXIST(10017, ModuleSeries.AUTH, "Token不存在"),
+    REFRESH_TOKEN_NOT_EXIST(10101, ModuleSeries.AUTH, "RefreshToken不存在"),
 
     /**
-     * 0001 10018 Token过期
+     * 0001 0102 Token不存在
      */
-    TOKEN_EXPIR_ERROR(10018, ModuleSeries.AUTH, "Token过期"),
+    TOKEN_NOT_EXIST(10102, ModuleSeries.AUTH, "Token不存在"),
 
     /**
-     * 0001 10019 Token格式异常
+     * 0001 10103 Token过期
      */
-    TOKEN_FORMAT_ERROR(10019, ModuleSeries.AUTH, "Token格式异常"),
+    TOKEN_EXPIR_ERROR(10103, ModuleSeries.AUTH, "Token过期"),
+
+    /**
+     * 0001 10104 Token格式异常
+     */
+    TOKEN_FORMAT_ERROR(10104, ModuleSeries.AUTH, "Token格式异常"),
 
 
 
