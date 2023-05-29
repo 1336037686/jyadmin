@@ -2,6 +2,7 @@ package com.jyadmin.security.config;
 
 import com.jyadmin.config.properties.JySecurityProperties;
 import com.jyadmin.security.filter.TokenAuthenticationFilter;
+import com.jyadmin.security.filter.XssVerifyFilter;
 import com.jyadmin.security.handler.DefaultAccessDeniedHandler;
 import com.jyadmin.security.handler.DefaultUnAuthHandler;
 import org.springframework.context.annotation.Bean;
@@ -79,6 +80,11 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
         //将Token校验过滤器配置到过滤器链中，否则不生效，放到UsernamePasswordAuthenticationFilter之前，同时设置对白名单路径不拦截
         TokenAuthenticationFilter tokenAuthenticationFilter = tokenFilterBean();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Xss校验过滤器
+        XssVerifyFilter xssVerifyFilter = xssVerifyFilterBean();
+        http.addFilterBefore(xssVerifyFilter, TokenAuthenticationFilter.class);
+
     }
 
     /**
@@ -87,6 +93,14 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public TokenAuthenticationFilter tokenFilterBean()  {
         return new TokenAuthenticationFilter();
+    }
+
+    /**
+     * Xss校验过滤器
+     */
+    @Bean
+    public XssVerifyFilter xssVerifyFilterBean()  {
+        return new XssVerifyFilter();
     }
 
     /**

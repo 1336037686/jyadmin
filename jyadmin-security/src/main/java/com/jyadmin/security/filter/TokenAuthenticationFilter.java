@@ -7,6 +7,7 @@ import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.JWTUtil;
+import com.jyadmin.util.RequestUtil;
 import com.jyadmin.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +57,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 判断是否是白名单路径，如果为白名单路径，直接放行
-        if (isIgnoreUrl(request)) {
+        if (RequestUtil.isIgnoreUrl(request, jySecurityProperties.getIgnoreUrls())) {
             // 继续执行下一个过滤器
             filterChain.doFilter(request, response);
             return;
@@ -120,16 +121,5 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-
-    private boolean isIgnoreUrl(HttpServletRequest request) {
-        String path = request.getServletPath();
-        AntPathMatcher matcher = new AntPathMatcher();
-        String[] ignoreUrls = jySecurityProperties.getIgnoreUrls();
-        for (String ignoreUrl : ignoreUrls) {
-            boolean match = matcher.match(ignoreUrl, path);
-            if (match) return match;
-        }
-        return false;
-    }
 
 }
