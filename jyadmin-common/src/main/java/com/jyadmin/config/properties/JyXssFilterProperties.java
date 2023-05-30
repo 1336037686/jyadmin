@@ -1,5 +1,6 @@
 package com.jyadmin.config.properties;
 
+import cn.hutool.core.util.ArrayUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,31 @@ import java.util.List;
 public class JyXssFilterProperties {
 
     /**
-     * 免XSS过滤方法全类名
-     * 如 com.jyadmin.module.category.controller.CategoryController.doCreate
+     * 放行所有接口
      */
-    private List<String> ignoreMethod = new ArrayList<>();
+    private Boolean permitAll = false;
+
+    /**
+     * 免XSS过滤白名单地址配置
+     */
+    private List<String> ignoreUrls = new ArrayList<>();
+
+    /**
+     * 获取白名单URL
+     * @return /
+     */
+    public String[] getIgnoreUrls() {
+        String[] configIgnoreUrls = this.ignoreUrls.stream().toArray(String[]::new);
+        String[] commonIgnoreUrls = getCommonIgnoreUrls();
+        return ArrayUtil.addAll(configIgnoreUrls, commonIgnoreUrls);
+    }
+
+    /**
+     * 公共白名单地址
+     * @return /
+     */
+    public String[] getCommonIgnoreUrls() {
+        return new String[] {};
+    }
 
 }

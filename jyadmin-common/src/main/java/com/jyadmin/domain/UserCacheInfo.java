@@ -1,7 +1,6 @@
 package com.jyadmin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,13 +26,6 @@ public class UserCacheInfo implements Serializable {
      */
     @ApiModelProperty(value = "登录用户", name = "username")
     private String username;
-
-    /**
-     * 用户权限
-     */
-    @JsonIgnore
-    @ApiModelProperty(value = "用户权限", name = "permissions")
-    private List<String> permissions;
 
     /**
      * ip 地址

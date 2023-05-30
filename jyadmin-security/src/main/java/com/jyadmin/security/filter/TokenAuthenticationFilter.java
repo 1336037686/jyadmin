@@ -4,7 +4,6 @@ import com.jyadmin.config.properties.JySecurityProperties;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
-import com.jyadmin.exception.ApiException;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RequestUtil;
@@ -49,8 +48,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // 配置放行是否全部接口
-        if (jySecurityProperties.getPermitAll()) {
+        // 配置是否放行全部接口
+        if (Boolean.TRUE.equals(jySecurityProperties.getPermitAll())) {
             // 继续执行下一个过滤器
             filterChain.doFilter(request, response);
             return;
@@ -103,7 +102,16 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         // 如果当前用户登录信息在缓存中存在，且当前状态为未认证状态，则添加登录认证信息。
         // SecurityContextHolder.getContext().getAuthentication() == null 未认证则为true
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        // （后续考虑如何通过缓存获取登录用户）获取缓存中登录用户，缓存中不存在当前登录用户，返回错误信息
+        // UserCacheInfo userCacheInfo = cacheService.get(username);
+        // if (Objects.isNull(userCacheInfo) || Objects.isNull(userCacheInfo.getUserDetails())) {
+        //     ResponseUtil.out(response, Result.fail(ResultStatus.LOGIN_STATUS_EXPIRED));
+        //     return;
+        // }
+        // UserDetails userDetails = userCacheInfo.getUserDetails();
+
+         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         // 如果查询不到登录用户信息，返回错误信息
         if (Objects.isNull(userDetails)) {

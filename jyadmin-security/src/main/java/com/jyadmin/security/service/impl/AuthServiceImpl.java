@@ -92,7 +92,6 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         String ip = IpUtil.getIp(request);
         return new UserCacheInfo()
                 .setUsername(userDetails.getCurrentUser().getUsername())
-                .setPermissions(userDetails.getPermissions())
                 .setIpAddress(ip)
                 .setIpArea(IpUtil.getAddressAndIsp(ip))
                 .setBrowser(IpUtil.getBrowser(request))
