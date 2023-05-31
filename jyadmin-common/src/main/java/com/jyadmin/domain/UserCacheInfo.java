@@ -1,11 +1,12 @@
 package com.jyadmin.domain;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +23,66 @@ import java.util.List;
 public class UserCacheInfo implements Serializable {
 
     /**
+     * ID
+     */
+    @ApiModelProperty(value = "id", name = "id")
+    private String id;
+
+    /**
      * 登录用户
      */
     @ApiModelProperty(value = "登录用户", name = "username")
     private String username;
+
+    /**
+     * 密码
+     */
+    @JsonIgnore
+    @ApiModelProperty(value = "密码", name = "password")
+    private String password;
+
+    /**
+     * 昵称
+     */
+    @ApiModelProperty(value = "昵称", name = "nickname")
+    private String nickname;
+
+    /**
+     * 头像
+     */
+    @ApiModelProperty(value = "头像", name = "avatar")
+    private String avatar;
+
+    /**
+     * 电话号码
+     */
+    @ApiModelProperty(value = "电话号码", name = "phone")
+    private String phone;
+
+    /**
+     * 账号类型
+     */
+    @ApiModelProperty(value = "账号类型", name = "type")
+    private Integer type;
+
+    /**
+     * 部门
+     */
+    @ApiModelProperty(value = "部门", name = "department")
+    private String department;
+
+    /**
+     * 岗位
+     */
+    @ApiModelProperty(value = "岗位", name = "post")
+    private String post;
+
+    /**
+     * 状态
+     */
+    @ApiModelProperty(value = "状态", name = "status")
+    private Integer status;
+
 
     /**
      * ip 地址
@@ -51,5 +108,11 @@ public class UserCacheInfo implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @ApiModelProperty(value = "登陆时间", name = "createTime")
     private Date createTime;
+
+    /**
+     * 当前用户权限
+     */
+    @ApiModelProperty(value = "当前用户权限", name = "permissions")
+    private List<String> permissions;
 
 }

@@ -91,12 +91,16 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
     private UserCacheInfo buildUserCacheInfo(SecurityUser userDetails, HttpServletRequest request) {
         String ip = IpUtil.getIp(request);
-        return new UserCacheInfo()
+        UserCacheInfo userCacheInfo = new UserCacheInfo();
+        User currentUser = userDetails.getCurrentUser();
+        BeanUtil.copyProperties(currentUser, userCacheInfo);
+        return userCacheInfo
                 .setUsername(userDetails.getCurrentUser().getUsername())
                 .setIpAddress(ip)
                 .setIpArea(IpUtil.getAddressAndIsp(ip))
                 .setBrowser(IpUtil.getBrowser(request))
-                .setCreateTime(new Date());
+                .setCreateTime(new Date())
+                .setPermissions(userDetails.getPermissions());
     }
 
     @Override

@@ -1,16 +1,21 @@
 package com.jyadmin.security.filter;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.google.common.collect.Lists;
 import com.jyadmin.config.properties.JySecurityProperties;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.domain.UserCacheInfo;
+import com.jyadmin.security.domain.SecurityUser;
+import com.jyadmin.security.domain.User;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RequestUtil;
 import com.jyadmin.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +31,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -96,8 +104,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 根据IP判断当前账号是否别处登录，如果异地登录返回错误信息
+        // 获取登录缓存信息
         UserCacheInfo userCacheInfo = cacheService.get(username);
+
+        // 根据IP判断当前账号是否别处登录，如果异地登录返回错误信息
         String ip = IpUtil.getIp(request);
         if (!ip.equals(userCacheInfo.getIpAddress())) {
             ResponseUtil.out(response, Result.fail(ResultStatus.REMOTE_LOGIN_ERROR));
@@ -113,17 +123,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         // 如果当前用户登录信息在缓存中存在，且当前状态为未认证状态，则添加登录认证信息。
         // SecurityContextHolder.getContext().getAuthentication() == null 未认证则为true
 
-        // （后续考虑如何通过缓存获取登录用户）获取缓存中登录用户，缓存中不存在当前登录用户，返回错误信息
-        // UserCacheInfo userCacheInfo = cacheService.get(username);
-        // if (Objects.isNull(userCacheInfo) || Objects.isNull(userCacheInfo.getUserDetails())) {
-        //     ResponseUtil.out(response, Result.fail(ResultStatus.LOGIN_STATUS_EXPIRED));
-        //     return;
-        // }
-        // UserDetails userDetails = userCacheInfo.getUserDetails();
-
-         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-        // 如果查询不到登录用户信息，返回错误信息
+        // 获取缓存中登录用户信息，缓存中不存在当前登录用户，返回错误信息
+         UserDetails userDetails = this.buildUserDetails(userCacheInfo);
         if (Objects.isNull(userDetails)) {
             ResponseUtil.out(response, Result.fail(ResultStatus.NOT_FOUND_LOGIN_INFO));
             return;
@@ -137,6 +138,20 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         // 继续执行下一个过滤器
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * 通过缓存的登录用户信息 构建 UserDetails
+     * @param userCacheInfo 缓存的登录用户信息
+     * @return UserDetails
+     */
+    public UserDetails buildUserDetails(UserCacheInfo userCacheInfo) {
+        if (Objects.isNull(userCacheInfo.getId())) return null;
+        User user = new User();
+        BeanUtil.copyProperties(userCacheInfo, user);
+        List<String> permissions = userCacheInfo.getPermissions();
+        if (CollectionUtils.isEmpty(permissions)) permissions = Lists.newArrayList();
+        return new SecurityUser().setCurrentUser(user).setPermissions(permissions);
     }
 
 
