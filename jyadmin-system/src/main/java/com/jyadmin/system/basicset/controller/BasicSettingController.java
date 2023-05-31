@@ -10,6 +10,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ public class BasicSettingController {
 
     @ApiOperation(value = "列表查询系统基础配置", notes = "")
     @GetMapping("/list")
+    @Cacheable(value = "BasicSettingController:doQueryList", key = "'list'")
     public Result<List<BasicSetting>> doQueryList() {
         List<BasicSetting> list = this.basicSettingService.list(new LambdaQueryWrapper<BasicSetting>().orderByAsc(BasicSetting::getId));
         return Result.ok(list);

@@ -24,6 +24,7 @@ import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -133,6 +134,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
+    @Cacheable(value = "AuthService:getMenus", key = "#userId")
     public List<Map<String, Object>> getMenus(String userId) {
         List<Map<String, Object>> menus = this.authMapper.selectMenus(userId);
         List<Map<String, Object>> menuMaps = menus.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
@@ -151,6 +153,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
+    @Cacheable(value = "AuthService:getUserInfo", key = "#userId")
     public Map<String, Object> getUserInfo(String userId) {
         User user = getById(userId);
         List<Map<String, Object>> rolesMap = authMapper.selectRoles(userId);
