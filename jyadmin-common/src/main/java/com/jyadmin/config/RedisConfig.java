@@ -18,7 +18,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * Create by 2022-05-04 03:01 <br>
  */
 @Configuration
-public class JyRedisConfig {
+public class RedisConfig {
 
     /**
      * 配置redis序列化与反序列化设置

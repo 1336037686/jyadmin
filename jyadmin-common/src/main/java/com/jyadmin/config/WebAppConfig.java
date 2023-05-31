@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @description: JyWebAppConfig <br>
  */
 @Configuration
-public class JyWebAppConfig implements WebMvcConfigurer {
+public class WebAppConfig implements WebMvcConfigurer {
 
 
 }

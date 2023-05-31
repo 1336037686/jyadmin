@@ -17,5 +17,5 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 @EnableConfigurationProperties
 @Import(BeanValidatorPluginsConfiguration.class) // 开启使用JSR303注解 https://doc.xiaominfo.com/knife4j/documentation/jsr303.html
 @Configuration
-public class JyGlobalConfig {
+public class GlobalConfig {
 }

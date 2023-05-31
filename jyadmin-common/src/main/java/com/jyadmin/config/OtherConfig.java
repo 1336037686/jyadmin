@@ -13,6 +13,6 @@ import org.springframework.context.annotation.Import;
 // 引入hutool SpringUtil工具类
 @Import(cn.hutool.extra.spring.SpringUtil.class)
 @Configuration
-public class JyOtherConfig {
+public class OtherConfig {
 
 }

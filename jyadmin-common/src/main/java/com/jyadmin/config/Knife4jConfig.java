@@ -25,7 +25,7 @@ import javax.annotation.Resource;
  */
 @Configuration
 @EnableSwagger2WebMvc
-public class JyKnife4jConfig {
+public class Knife4jConfig {
 
     @Resource
     private JyApiDocumentProperties jyApiDocumentProperties;

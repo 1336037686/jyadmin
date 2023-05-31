@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @description: JySecurityPermissionHandler <br>
  */
 @Service("jy")
-public class JySecurityPermissionHandler {
+public class SecurityPermissionHandler {
 
     /**
      * 校验当前用户是否拥有权限
