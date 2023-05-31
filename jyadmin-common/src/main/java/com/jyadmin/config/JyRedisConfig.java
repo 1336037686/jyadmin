@@ -20,9 +20,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class JyRedisConfig {
 
-
-
-
     /**
      * 配置redis序列化与反序列化设置
      */

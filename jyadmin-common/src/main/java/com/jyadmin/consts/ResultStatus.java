@@ -104,7 +104,6 @@ public enum ResultStatus {
      */
     REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "登陆续期失败"),
 
-
     /**
      * 0001 0101 RefreshToken不存在
      */
@@ -124,6 +123,11 @@ public enum ResultStatus {
      * 0001 10104 Token格式异常
      */
     TOKEN_FORMAT_ERROR(10104, ModuleSeries.AUTH, "Token格式异常"),
+
+    /**
+     * 0001 10151 异地登录
+     */
+    REMOTE_LOGIN_ERROR(10151, ModuleSeries.AUTH, "该账号已在别处登录"),
 
 
 

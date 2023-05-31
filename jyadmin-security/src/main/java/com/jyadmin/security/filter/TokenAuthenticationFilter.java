@@ -4,7 +4,9 @@ import com.jyadmin.config.properties.JySecurityProperties;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
+import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.security.service.CacheService;
+import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RequestUtil;
 import com.jyadmin.util.ResponseUtil;
@@ -91,6 +93,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         // 缓存中不存在当前登录用户，返回错误信息
         if (!cacheService.isExist(username)) {
             ResponseUtil.out(response, Result.fail(ResultStatus.LOGIN_STATUS_EXPIRED));
+            return;
+        }
+
+        // 根据IP判断当前账号是否别处登录，如果异地登录返回错误信息
+        UserCacheInfo userCacheInfo = cacheService.get(username);
+        String ip = IpUtil.getIp(request);
+        if (!ip.equals(userCacheInfo.getIpAddress())) {
+            ResponseUtil.out(response, Result.fail(ResultStatus.REMOTE_LOGIN_ERROR));
             return;
         }
 
