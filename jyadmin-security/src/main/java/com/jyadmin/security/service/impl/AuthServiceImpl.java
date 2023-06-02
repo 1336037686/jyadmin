@@ -128,7 +128,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
-    @Cacheable(value = "AuthService:getAllPermissions", key = "'allPermissions'")
+    @Cacheable(value = "AuthService:getAllPermissions", key = "#root.methodName")
     public List<PermissionAction> getAllPermissions() {
         return authMapper.selectAllPermissions();
     }
