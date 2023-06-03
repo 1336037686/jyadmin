@@ -20,6 +20,7 @@ import com.jyadmin.security.domain.User;
 import com.jyadmin.security.mapper.AuthMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
+import com.jyadmin.util.EncrypUtil;
 import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RedisUtil;
@@ -68,7 +69,9 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Override
     public Map<String, Object> login(HttpServletRequest request, String username, String password) {
         SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(username);
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+        // 解密密码
+        String decryptPassword = EncrypUtil.decrypt(password);
+        if (!passwordEncoder.matches(decryptPassword, userDetails.getPassword())) {
             throw new BadCredentialsException("密码不正确");
         }
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

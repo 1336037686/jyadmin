@@ -253,6 +253,12 @@
                 <artifactId>easyexcel</artifactId>
                 <version>3.3.1</version>
             </dependency>
+            <!--bcprov-->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.50</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
