@@ -64,6 +64,8 @@ public class JySecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // 设置登录请求地址，token刷新地址，并设置不拦截
         http.authorizeRequests().antMatchers(jySecurityProperties.getIgnoreUrls()).permitAll();
+        // 是否放行所有请求
+        if (Boolean.TRUE.equals(jySecurityProperties.getPermitAll())) http.authorizeRequests().antMatchers("/**").permitAll();
         // 跨域请求会先进行一次options请求
         http.authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll();
         // 其他所有请求都需要校验

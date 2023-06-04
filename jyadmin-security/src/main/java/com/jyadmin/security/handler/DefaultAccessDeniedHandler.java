@@ -26,9 +26,7 @@ public class DefaultAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.info("DefaultAccessDeniedHandler");
-        log.info("处理器当认证成功的用户访问受保护的资源，但是权限不够");
-
+        log.error("DefaultAccessDeniedHandler 认证通过，但是没权限处理, {}", accessDeniedException.getMessage());
         // 权限不足
         ResponseUtil.out(response, Result.fail(ResultStatus.INSUFFICIENT_PERMISSIONS));
     }

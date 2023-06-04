@@ -69,10 +69,13 @@ public class GlobalConstants {
     public static final Integer SYS_DEPARTMENT_IS_ROOT = 1;
     // ======================= 系统部门管理 END =======================
 
-
-
+    // ======================= 运行时日志 START =======================
+    public static final String SYS_RUNTIME_LOG_TYPE_DIR = "dir";
+    public static final String SYS_RUNTIME_LOG_TYPE_FILE = "file";
+    // ======================= 运行时日志 END =======================
 
     // ======================= 枚举 START =======================
+
     /**
      * 系统短信配置枚举类
      */

@@ -21,9 +21,15 @@ import java.util.List;
 public class JySecurityProperties {
 
     /**
-     * 放行所有接口
+     * 放行所有接口，只允许测试不需要登陆的接口时才可放开
+     * 放开后登陆操作等需要用到登录用户信息的功能均会由于缺少登录用户信息报错
      */
     private Boolean permitAll = false;
+
+    /**
+     * 只允许唯一IP登录
+     */
+    private Boolean singleIpLogin = false;
 
     /**
      * 白名单地址配置

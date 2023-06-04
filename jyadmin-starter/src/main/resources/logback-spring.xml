@@ -5,9 +5,9 @@
         debug="false" scan="true" scanPeriod="30 second">
 
     <property name="PROJECT" value="jyadmin" />
-    <property name="ROOT" value="logs/${PROJECT}/" />
-    <property name="FILESIZE" value="50MB" />
-    <property name="MAXHISTORY" value="100" />
+    <property name="ROOT" value="./logs/${PROJECT}/" />
+    <property name="FILESIZE" value="500KB" />
+    <property name="MAXHISTORY" value="1000" />
     <timestamp key="DATETIME" datePattern="yyyy-MM-dd HH:mm:ss" />
     <!-- 控制台打印 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

@@ -26,6 +26,7 @@ public class DefaultUnAuthHandler implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        log.error("DefaultUnAuthHandler 认证未通过，不允许访问异常, {}", authException.getMessage());
         // 请求未授权
         ResponseUtil.out(response, Result.fail(ResultStatus.REQUEST_NOT_AUTHORIZED));
     }

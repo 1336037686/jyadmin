@@ -108,10 +108,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         UserCacheInfo userCacheInfo = cacheService.get(username);
 
         // 根据IP判断当前账号是否别处登录，如果异地登录返回错误信息
-        String ip = IpUtil.getIp(request);
-        if (!ip.equals(userCacheInfo.getIpAddress())) {
-            ResponseUtil.out(response, Result.fail(ResultStatus.REMOTE_LOGIN_ERROR));
-            return;
+        if (Boolean.TRUE.equals(jySecurityProperties.getSingleIpLogin())) {
+            String ip = IpUtil.getIp(request);
+            if (!ip.equals(userCacheInfo.getIpAddress())) {
+                ResponseUtil.out(response, Result.fail(ResultStatus.REMOTE_LOGIN_ERROR));
+                return;
+            }
         }
 
         // 当前状态为已认证状态，执行下一个过滤器
