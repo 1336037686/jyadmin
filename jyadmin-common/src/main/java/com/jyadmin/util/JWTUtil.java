@@ -2,23 +2,19 @@ package com.jyadmin.util;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import com.jyadmin.config.properties.JyJwtProperties;
 import com.jyadmin.consts.GlobalConstants;
-import com.jyadmin.consts.ResultStatus;
-import com.jyadmin.exception.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * JWT工具类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-13 01:16 <br>

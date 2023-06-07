@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
+ * Response 工具类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-07 21:12 <br>

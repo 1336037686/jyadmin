@@ -1,4 +1,4 @@
-package com.jyadmin.config;
+package com.jyadmin.config.mybatisplus;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.jyadmin.util.SecurityUtil;

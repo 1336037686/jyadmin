@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
+ * 分页请求公共实体类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-07 20:44 <br>

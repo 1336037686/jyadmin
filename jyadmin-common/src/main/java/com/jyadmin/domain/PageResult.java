@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 统一分页返回值
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-05 16:10 <br>

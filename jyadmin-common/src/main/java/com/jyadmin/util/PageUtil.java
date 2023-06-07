@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 分页工具类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-07 21:12 <br>
@@ -21,7 +22,7 @@ public class PageUtil {
      * 将MybatisPlus Page对象转换为通用PageResult对象
      * @param page MybatisPlus Page对象
      * @param <T>
-     * @return
+     * @return /
      */
     public static <T> PageResult<T> toPageResult (Page<T> page) {
         return new PageResult<T>()
@@ -36,6 +37,13 @@ public class PageUtil {
         .setHasNext(page.hasNext());
     }
 
+    /**
+     * 手动分页
+     * @param records 记录
+     * @param vo 分页模型
+     * @param <T> /
+     * @return /
+     */
     public static <T> PageResult<T> toPageResult (List<T> records, BasePageVO vo) {
         // 总页数
         long pages = records.size() / vo.getPageSize() + (records.size() % vo.getPageSize() == 0 ? 0 : 1);

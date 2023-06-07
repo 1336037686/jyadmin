@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
+ * 公共DTO数据传输对象公共实体类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-05 02:18 <br>
