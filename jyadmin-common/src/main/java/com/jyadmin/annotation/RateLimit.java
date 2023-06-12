@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * Create by 2022-07-07 00:13 <br>
  * @description: Limit <br>
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RateLimit {
 

@@ -55,12 +55,13 @@ public class IdempotentAspect {
         Method signatureMethod = signature.getMethod();
         String fullMethodName = signatureMethod.getDeclaringClass().getSimpleName() + "." + signatureMethod.getName();
         Idempotent idempotent = signatureMethod.getAnnotation(Idempotent.class);
+        String userDefinedName = StringUtils.isNotBlank(idempotent.name()) ? idempotent.name() : fullMethodName;
         // 拼装redis key
         String keys = StringUtils.join(idempotentProperties.getPrefix(), ":", token);
         boolean exists = redisUtil.exists(keys);
         // 判断当前唯一token是否存在，如果存在则放行接口，并删除token
         if (exists) {
-            log.info("接口幂等：[{}] 请求Idempotent-Token为 [{}]，key为 [{}]，方法为 [{}] 的接口, 请求路径为[{}]", idempotent.name(), token, keys, fullMethodName, request.getRequestURI());
+            log.info("接口幂等：[{}] 请求Idempotent-Token为 [{}]，key为 [{}]，方法为 [{}] 的接口, 请求路径为[{}]", userDefinedName, token, keys, fullMethodName, request.getRequestURI());
             redisUtil.delete(keys);
             return joinPoint.proceed();
         }

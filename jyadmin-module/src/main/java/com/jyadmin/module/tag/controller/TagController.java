@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jyadmin.annotation.Idempotent;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.module.tag.domain.Tag;
@@ -38,6 +39,7 @@ public class TagController {
     @Resource
     private TagService tagService;
 
+    @Idempotent
     @ApiOperation(value = "新增标签", notes = "")
     @PreAuthorize("@jy.check('tag:create')")
     @PostMapping("/create")
@@ -45,6 +47,7 @@ public class TagController {
         return ResultUtil.toResult(tagService.save(BeanUtil.copyProperties(vo, Tag.class)));
     }
 
+    @Idempotent
     @ApiOperation(value = "更新标签", notes = "")
     @PreAuthorize("@jy.check('tag:update')")
     @PutMapping("/update")
@@ -54,6 +57,7 @@ public class TagController {
         return ResultUtil.toResult(tagService.updateById(tag));
     }
 
+    @Idempotent
     @ApiOperation(value = "删除标签", notes = "")
     @PreAuthorize("@jy.check('tag:remove')")
     @DeleteMapping("/remove")

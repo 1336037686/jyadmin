@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * Create by 2022-07-09 00:17 <br>
  * @description: Idempotent <br>
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Idempotent {
 
