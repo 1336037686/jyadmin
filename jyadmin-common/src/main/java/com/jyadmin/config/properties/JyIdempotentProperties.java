@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties("jyadmin.idempotent")
+@ConfigurationProperties(prefix = "jyadmin.idempotent")
 public class JyIdempotentProperties {
 
     /**
@@ -33,7 +33,7 @@ public class JyIdempotentProperties {
     private Integer defaultPeriod = 30 * 60;
 
     /**
-     * 缓存Key默认存放值，暂时无用
+     * 缓存Key默认存放值
      */
     private String defaultValue = "1";
 

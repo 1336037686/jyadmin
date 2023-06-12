@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
+ * 登录信息工具类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-16 17:18 <br>

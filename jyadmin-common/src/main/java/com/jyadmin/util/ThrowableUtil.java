@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
+ * 异常工具类
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-07 00:06 <br>

@@ -57,8 +57,7 @@ public class RateLimitAspect {
         Method signatureMethod = signature.getMethod();
         String fullMethodName = signatureMethod.getDeclaringClass().getName() + "." + signatureMethod.getName();
         RateLimit limit = signatureMethod.getAnnotation(RateLimit.class);
-
-
+        // 获取限流注解配置
         String prefix = StringUtils.isNotBlank(limit.prefix()) ? limit.prefix() : limitProperties.getPrefix();
         int period = limit.period() > 0 ? limit.period() : limitProperties.getDefaultPeriod();
         int count = limit.count() > 0 ? limit.count() : limitProperties.getDefaultCount();

@@ -18,24 +18,24 @@ import java.lang.annotation.Target;
 public @interface RateLimit {
 
     /**
-     * key
+     * 缓存key
      */
     String key() default "";
 
     /**
-     * 前缀
+     * 缓存前缀
      * 默认使用 JyLimitProperties配置
      */
     String prefix() default "";
 
     /**
-     * 时间的，单位秒
+     * 默认限制间隔时间，单位秒
      * 默认使用 JyLimitProperties配置
      */
     int period() default 0;
 
     /**
-     * 限制访问次数
+     * 默认限制访问次数
      * 默认使用 JyLimitProperties配置
      */
     int count() default 0;

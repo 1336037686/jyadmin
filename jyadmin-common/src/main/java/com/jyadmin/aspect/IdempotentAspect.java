@@ -48,19 +48,23 @@ public class IdempotentAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token = request.getParameter("idempotent-token");
+        // 如果token不存在，则返回请勿重复操作提醒
         if (StringUtils.isBlank(token)) throw new ApiException(ResultStatus.REPEAT_OPERATION);
-
+        // 获取基础信息
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method signatureMethod = signature.getMethod();
         String fullMethodName = signatureMethod.getDeclaringClass().getSimpleName() + "." + signatureMethod.getName();
         Idempotent idempotent = signatureMethod.getAnnotation(Idempotent.class);
+        // 拼装redis key
         String keys = StringUtils.join(idempotentProperties.getPrefix(), ":", token);
         boolean exists = redisUtil.exists(keys);
+        // 判断当前唯一token是否存在，如果存在则放行接口，并删除token
         if (exists) {
             log.info("接口幂等：[{}] 请求Idempotent-Token为 [{}]，key为 [{}]，方法为 [{}] 的接口, 请求路径为[{}]", idempotent.name(), token, keys, fullMethodName, request.getRequestURI());
             redisUtil.delete(keys);
             return joinPoint.proceed();
         }
+        // 如果token不存在，则返回请勿重复操作提醒
         else {
             throw new ApiException(ResultStatus.REPEAT_OPERATION);
         }

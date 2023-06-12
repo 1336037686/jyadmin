@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
  * Create by 2022-07-07 00:00 <br>
  * @description: JyLimitProperties <br>
  */
+@ConfigurationProperties(prefix = "jyadmin.rate-limit")
 @Data
 @Component
-@ConfigurationProperties("jyadmin.rate-limit")
 public class JyRateLimitProperties {
 
     /**

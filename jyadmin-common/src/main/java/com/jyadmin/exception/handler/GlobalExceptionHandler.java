@@ -20,9 +20,11 @@ import java.util.stream.Collectors;
 /**
  * 全局异常处理
  *
- * 请求参数异常处理
- * 业务异常处理
- * 系统异常处理
+ * 主要异常如下：
+ * 1、请求参数校验异常处理
+ * 2、权限异常处理
+ * 3、自定义异常处理
+ * 4、其它系统异常处理
  * @author LGX_TvT <br>
  * @version 1.0 <br>
  * Create by 2022-04-05 02:15 <br>
