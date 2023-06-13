@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.annotation.Idempotent;
+import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.module.tag.domain.Tag;
@@ -73,6 +74,7 @@ public class TagController {
     }
 
 
+    @RateLimit(period = 1, count = 2) // 添加限流注解，每秒（period）2次 （count），不做设置会默认采用JyLimitProperties配置
     @ApiOperation(value = "分页查询标签", notes = "")
     @PreAuthorize("@jy.check('tag:queryPage')")
     @GetMapping("/query")

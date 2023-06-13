@@ -1,12 +1,8 @@
 package com.jyadmin.config;
 
 import com.jyadmin.config.properties.JyApiDocumentProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -34,14 +30,21 @@ public class Knife4jConfig {
     public Docket defaultApi2() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
+                        // 更新api描述
                         .description(jyApiDocumentProperties.getDescription())
+                        // 更新服务条款url
+                        .termsOfServiceUrl(jyApiDocumentProperties.getTermsOfServiceUrl())
+                        // 更新此API负责人的联系信息
+                        .contact(jyApiDocumentProperties.getContact())
+                        // 更新api版本
                         .version(jyApiDocumentProperties.getVersion())
                         .build())
+                // 分组名称
+                .groupName(jyApiDocumentProperties.getGroupName())
                 .select()
                 //这里指定Controller扫描包路径
                 .apis(RequestHandlerSelectors.basePackage(jyApiDocumentProperties.getBasePackage()))
                 .paths(PathSelectors.any())
                 .build();
     }
-
 }

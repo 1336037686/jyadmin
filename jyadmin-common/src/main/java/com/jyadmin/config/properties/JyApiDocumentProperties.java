@@ -22,9 +22,24 @@ public class JyApiDocumentProperties {
     private String description = "jyadmin API文档";
 
     /**
+     * 更新服务条款url
+     */
+    private String termsOfServiceUrl = "";
+
+    /**
+     * API负责人的联系信息
+     */
+    private String contact = "jyadmin";
+
+    /**
      * 版本
      */
     private String version = "v0.1.0";
+
+    /**
+     * 分组名称
+     */
+    private String groupName = "默认";
 
     /**
      * 基础扫描包路径
