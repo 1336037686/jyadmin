@@ -1,10 +1,4 @@
 package com.jyadmin.generate.service.impl;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.*;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -12,7 +6,6 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.ZipUtil;
 import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.engine.velocity.VelocityEngine;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -20,10 +13,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
+import com.jyadmin.generate.common.config.CodeGenerateConfig;
 import com.jyadmin.generate.common.constant.CodeGenerateConstant;
 import com.jyadmin.generate.common.utils.CodeGenerateMetaDataUtils;
 import com.jyadmin.generate.common.utils.VelocityUtils;
-import com.jyadmin.generate.common.utils.ZipUtils;
 import com.jyadmin.generate.domain.*;
 import com.jyadmin.generate.model.dto.CodeGenerateMetaDataDTO;
 import com.jyadmin.generate.model.dto.TemplateConfig;
@@ -43,7 +36,15 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -75,6 +76,9 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     @Resource
     private CodeGenerateFieldTypeService codeGenerateFieldTypeService;
+
+    @Resource
+    private CodeGenerateConfig codeGenerateConfig;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -465,7 +469,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      */
     public List<CodeGenerateField> getCodeGenerateFields(CodeGenerateTable table, Connection conn) throws SQLException {
         DatabaseMetaData metaData = conn.getMetaData();
-        ResultSet rs = metaData.getColumns(null, null, table.getTableName(), null);
+        ResultSet rs = metaData.getColumns(codeGenerateConfig.getDbName(), codeGenerateConfig.getDbName(), table.getTableName(), null);
         List<CodeGenerateField> res = Lists.newArrayList();
         int index = 1;
         while (rs.next()) {
