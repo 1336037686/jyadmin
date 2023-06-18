@@ -2,7 +2,6 @@ package com.jyadmin.monitor.runtimeLog.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
-import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.ArrayUtil;
 import com.google.common.collect.Lists;
 import com.jyadmin.config.properties.JyRuntimeLogProperties;
@@ -17,8 +16,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author LGX_TvT <br>
@@ -74,9 +74,9 @@ public class RuntimeLogServiceImpl implements RuntimeLogService {
      */
     private List<RuntimeLogDirResVO> convertFilesToRes(File[] files) {
         List<RuntimeLogDirResVO> res = new ArrayList<>();
-        for (File file : files) {
+        Arrays.stream(files).forEach(file -> {
             RuntimeLogDirResVO vo = new RuntimeLogDirResVO()
-                    .setId(new Snowflake().nextIdStr())
+                    .setId(UUID.randomUUID().toString().replace("-", ""))
                     .setName(file.getName())
                     .setPath(file.getPath());
             if (file.isDirectory()) {
@@ -87,7 +87,7 @@ public class RuntimeLogServiceImpl implements RuntimeLogService {
                 vo.setType(GlobalConstants.SYS_RUNTIME_LOG_TYPE_FILE);
             }
             res.add(vo);
-        }
+        });
         return res;
     }
 }
