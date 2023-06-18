@@ -1,5 +1,8 @@
 package com.jyadmin.monitor.offline.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.monitor.offline.model.vo.UserQueryVO;
@@ -37,7 +40,14 @@ public class OfflineServiceImpl implements OfflineService {
     public List<UserCacheInfo> getList(UserQueryVO vo) {
         Set<String> keys = redisTemplate.keys(jyAuthProperties.getAuthUserPrefix() + ":*");
         List<UserCacheInfo> record = new ArrayList<>();
-        keys.stream().map(x -> (UserCacheInfo) redisUtil.getValue(x)).forEach(x -> record.add(x));
+        for (String key : keys) {
+            try {
+                UserCacheInfo userCacheInfo = new ObjectMapper().readValue(JSON.toJSONString(redisUtil.getValue(key)), UserCacheInfo.class);
+                record.add(userCacheInfo);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return record.stream().filter(x ->
                 !StringUtils.isNotBlank(vo.getUsername()) || x.getUsername().contains(vo.getUsername())
         ).collect(Collectors.toList());
