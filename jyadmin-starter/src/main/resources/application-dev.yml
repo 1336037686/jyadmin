@@ -52,7 +52,6 @@ spring:
         # 连接池中的最小空闲连接 (default:0)
         min-idle: 1
 
-
 #  autoconfigure:
 #    #跳过security自动配置
 #    exclude:
@@ -61,7 +60,7 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    cache-enabled: true # 开启mybatis的二级缓存
+    cache-enabled: true               # 开启mybatis的二级缓存
   global-config:
     db-config:
       logic-delete-field: deleted     # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
@@ -69,34 +68,79 @@ mybatis-plus:
       logic-not-delete-value: 0       # 逻辑未删除值(默认为 0)
 
 jyadmin:
+  # 鉴权相关配置
   auth:
-    auth-user-prefix: login_user # 登录用户缓存前缀
-    auth-user-expiration: 7200
-    verification-code-prefix: verification_code # 登录验证码前缀
-    verification-code-expiration: 300 # 登录验证码过期时间
+    # 登录用户缓存前缀
+    auth-user-prefix: login_user
+    # 认证用户缓存过期时间
+    auth-user-expiration: 43200
+    # 登录验证码前缀
+    verification-code-prefix: verification_code
+    # 登录验证码过期时间
+    verification-code-expiration: 300
+    # JWT Token 生成配置
     jwt:
+      # 系统加密密钥
       secret-key: jyadmin
-      access-token-expiration: 3600 # accessToken过期时间 1h
-      refresh-token-expiration: 43200 # refreshToken过期时间 12h
+      # accessToken过期时间 1h
+      access-token-expiration: 1200
+      # refreshToken过期时间 12h
+      refresh-token-expiration: 43200
+  # 安全相关配置
   safe:
+    # SpringSecurity自定义配置
     security:
       ignore-urls:
-        - /api/auth/login               # 注册
+        - /api/auth/login               # 登录
         - /api/auth/register            # 注册
         - /api/auth/captcha/{uniqueId}  # 验证码
         - /api/auth/refreshToken        # 登陆续期
         - /api/basic-setting/list       # 基础配置
+      # 放行所有接口，只允许测试不需要登陆的接口时才可放开
+      permit-all: false
+      # 只允许唯一IP登录
+      single-ip-login: false
+    # XSS校验配置
+    xss:
+      # 是否放行全部
+      permit-all: true
+  # 限流配置
   rate-limit:
+    # 是否启用
     enabled: true
+    # 缓存key前缀
     prefix: jyadmin_limit
-    default-period: 5
+    # 间隔时间
+    default-period: 2
+    # 访问次数
     default-count: 1
+    # 限制类型
     limit-type: CUSTOMER
+  # 幂等接口配置
   idempotent:
+    # 是否启用
     enabled: true
+    # 缓存key前缀
     prefix: jyadmin_idempotent
+    # 默认过期时间
     default-period: 1800
+  # Api文档配置
   document:
-    description: "jyadmin API文档"
-    version: v1.0
+    # 文档描述
+    description: "jyadmin RESTful API文档"
+    # 服务URL
+    terms-of-service-url: "https://www.baidu.com"
+    contact: "linguoxiang1997@163.com"
+    version: "v1.0"
+    groupName: "默认文档"
     base-package: com.jyadmin
+  # 日志配置
+  log:
+    # 系统实时运行日志配置
+    runtime-log:
+      # 系统运行日志路径
+      base-path: F:\CodeProject\Java_Projects\my-project\jyadmin\jyadmin\logs\jyadmin
+  # 代码生成器配置
+  code-generate:
+    # 数据库名，用来查找表结构信息
+    db-name: jyadmin
