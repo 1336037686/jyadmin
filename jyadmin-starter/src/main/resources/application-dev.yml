@@ -95,6 +95,7 @@ jyadmin:
         - /api/auth/register            # 注册
         - /api/auth/captcha/{uniqueId}  # 验证码
         - /api/auth/refreshToken        # 登陆续期
+        - /api/auth/rsa-public-key      # 获取RSA公钥
         - /api/basic-setting/list       # 基础配置
       # 放行所有接口，只允许测试不需要登陆的接口时才可放开
       permit-all: false
@@ -144,3 +145,9 @@ jyadmin:
   code-generate:
     # 数据库名，用来查找表结构信息
     db-name: jyadmin
+  # rsa加密密钥
+  rsa:
+    # 公钥
+    public-key: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtUbSlGyO4TDMj1ijgD+4\nirqv2ZYL3tZL+c+v0y7SMDc/q3SZYJla9wogvp7WwuNTEYetjLeRv42gqolJnbEx\nfWGaJQwpF4vJCUZo4Nn1KvW1uR8aPqXm1I1I3rFwAw3/Uw6izQxDnrC4YuxoixZ6\nfXGwcx0if3jZ8AwPCDntiQtUPxLh91LhUhVdIgRuCALLWLSjusLKVwRS/Kyj6Yfy\nNimlQ4c7s5QTEsA47q4RoL4si86r+LwmqVokyLBBCR2YAHjxI44/bWOjzuOTX4Bk\nKCLB9Fv0ol093/pgr2Ed4/9PRvS5FRZyf5+rlyi/09f51Ecm9+lpEhu2YhKHyGdB\nJQIDAQAB\n-----END PUBLIC KEY-----\n"
+    # 私钥
+    private-key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAtUbSlGyO4TDMj1ijgD+4irqv2ZYL3tZL+c+v0y7SMDc/q3SZ\nYJla9wogvp7WwuNTEYetjLeRv42gqolJnbExfWGaJQwpF4vJCUZo4Nn1KvW1uR8a\nPqXm1I1I3rFwAw3/Uw6izQxDnrC4YuxoixZ6fXGwcx0if3jZ8AwPCDntiQtUPxLh\n91LhUhVdIgRuCALLWLSjusLKVwRS/Kyj6YfyNimlQ4c7s5QTEsA47q4RoL4si86r\n+LwmqVokyLBBCR2YAHjxI44/bWOjzuOTX4BkKCLB9Fv0ol093/pgr2Ed4/9PRvS5\nFRZyf5+rlyi/09f51Ecm9+lpEhu2YhKHyGdBJQIDAQABAoIBAQC1H+CEILvaUXHy\nwHQNTp3LL6FI3N1bd+9N2bAqaBvnxSw+2i/uDwyOzXXOQNMAwzZay6Aie8CLDq27\n95SwlT2Hs5/a6H2eYzMpq0pbcCvBEuTR5TvJ4OX09n4a1FvBEZlNmdAc5OYjhxuU\n6/XBE2KsOI4/VpsDlvLbIJFcfNTUGekoTEFjKJ4uBcTi7q9a2sXJeXtNg8t70p+A\nJt84ENR/fq5wPNbwJmvlZxoaOJwXSrh3A7In5hIAEsh8Jv6YCb4bgUxizenQRPCW\nSf4srszrbmeMQtsT077TFclfQzwzyEZpTsPyY28gMsnbz9W/zpYlQBNSUm+pTzZl\ncxrs+qUBAoGBANxOYaDvImuIm/MILnGhtoAH42iQRbeqWQKUHUo0CgFJZZGcivvE\ngzON+U5uomaJ0WTBuhPkANBBtq9InXZqr5PNOaqbF8WpgRL1U1oIsijYm6LB2wT8\n2ilFZlOvVLy8cicYAHFTQtysVjsAhUXxA+qLXkbCizIWAheWUa5G3KyFAoGBANKl\nngFJVDH8iDxReia9sJnVId9mIo6VMEEgj8puVOGzOsLBAHWlZ/nYgZRejeQ/FHBl\n6U3HdtANJ5bQKjTPzBfmJ5umUHkhkZLoxNn6A677sh1Jb16aO+Du2Tch4ujxLTXA\nO7+T8obWfjOpL7HnAJq6fJzMwGO1yepHA1koYjQhAoGACD/PHA2YRlqJLGKECrE5\nejXRaBru4V+5kYUmS58DOOUcroUkFyVWnFmWmj8+SYSjmJhAdXo2JZYwVwPrEYIR\nLQGkRSUlkLs2IBWbl2V39luWCFQl9Vvad20n1b5c9+w+ggQ+EABEIqs5V2A/nUzX\nDrNFRnUGbUuxrFxulo4EuVkCgYEAi6iooJu4icevn6Y5gZQEkYmAgrgZs0TwkE2B\naCpMdrO5AsSphFadIEZOa0thcfHsoDTBQQM9H+WI2PG8+fTHkRTUL9tNwXHjLW7M\njOS5KnvP9KDqiONjTdeuBmKeKek1G00PkA4MHx/43lGOwLmyaeO4mNEbwUAW1hAt\nBSDEM2ECgYBIrMx4SYDnfGN/PPPZ8gpaSG6ygs4RU+bIXQ7F0+gNPcCOx6C6yEQ/\nMDQHZ6OJRuW8K5hN70tetao4opCclMgtZZC2aBkMt2NnZQeUWaxPVR7k0ZKrdrxy\nejkfH2qWvHxtYyq/SqHEwHwBQbOC4mjbTsBDWVqQtKnJyhMEuzmrLw==\n-----END RSA PRIVATE KEY-----\n"

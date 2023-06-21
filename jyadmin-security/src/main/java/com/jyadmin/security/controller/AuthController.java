@@ -3,6 +3,7 @@ package com.jyadmin.security.controller;
 import cn.hutool.captcha.generator.MathGenerator;
 import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.config.properties.JyAuthProperties;
+import com.jyadmin.config.properties.JyRsaProperties;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
@@ -46,6 +47,8 @@ public class AuthController {
     private AuthService authService;
     @Resource
     private JyAuthProperties jyAuthProperties;
+    @Resource
+    private JyRsaProperties jyRsaProperties;
 
     /**
      * 登录
@@ -121,6 +124,16 @@ public class AuthController {
     public Result<String> doQueryIdempotentToken() {
         String idempotentToken = this.authService.getIdempotentToken();
         return Result.ok(idempotentToken);
+    }
+
+    /**
+     * 获取RSA加密公钥
+     * @return /
+     */
+    @ApiOperation(value = "获取RSA加密公钥", notes = "")
+    @GetMapping("/rsa-public-key")
+    public Result<String> doQueryRsaPublicKey() {
+        return Result.ok(jyRsaProperties.getPublicKey());
     }
 
     /**

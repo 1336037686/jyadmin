@@ -20,10 +20,10 @@ import com.jyadmin.security.domain.User;
 import com.jyadmin.security.mapper.AuthMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
-import com.jyadmin.util.EncrypUtil;
 import com.jyadmin.util.IpUtil;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RedisUtil;
+import com.jyadmin.util.RsaUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -70,7 +70,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     public Map<String, Object> login(HttpServletRequest request, String username, String password) {
         SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(username);
         // 解密密码
-        String decryptPassword = EncrypUtil.decrypt(password);
+        String decryptPassword = RsaUtil.decrypt(password);
         if (!passwordEncoder.matches(decryptPassword, userDetails.getPassword())) {
             throw new BadCredentialsException("密码不正确");
         }
