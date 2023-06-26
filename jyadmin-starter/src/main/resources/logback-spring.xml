@@ -4,28 +4,48 @@
         xsi:noNamespaceSchemaLocation="http://www.padual.com/java/logback.xsd"
         debug="false" scan="true" scanPeriod="30 second">
 
-    <property name="PROJECT" value="jyadmin" />
-    <property name="ROOT" value="./logs/${PROJECT}/" />
-    <property name="FILESIZE" value="500KB" />
-    <property name="MAXHISTORY" value="1000" />
-    <timestamp key="DATETIME" datePattern="yyyy-MM-dd HH:mm:ss" />
+    <!--设置变量-->
+    <property name="PROJECT" value="jyadmin"/>
+    <property name="ROOT" value="./logs/${PROJECT}/"/>
+    <property name="FILESIZE" value="1MB"/>
+    <property name="MAXHISTORY" value="100"/>
+
+    <!--时间变量-->
+    <timestamp key="DATETIME" datePattern="yyyy-MM-dd HH:mm:ss"/>
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <!--<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
+    <!--控制台日志格式-->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%logger){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!--文件日志格式-->
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %m%n"/>
+
+
     <!-- 控制台打印 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <!--使用SpringBoot profile功能-->
-        <springProfile name="dev">
-            <encoder charset="utf-8">
-                <pattern>[%-5level] === %d{${DATETIME}} [%thread] %logger{36} - %m%n
-                </pattern>
-            </encoder>
-        </springProfile>
+<!--        &lt;!&ndash;使用SpringBoot profile功能&ndash;&gt;-->
+<!--        <springProfile name="dev">-->
+<!--            <encoder charset="utf-8">-->
+<!--                <pattern>[%-5level] === %d{${DATETIME}} [%thread] %logger{36} - %m%n</pattern>-->
+<!--            </encoder>-->
+<!--        </springProfile>-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度,%msg：日志消息，%n是换行符-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
     </appender>
     <!-- ERROR 输入到文件，按日期和文件大小 -->
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder charset="utf-8">
-            <pattern>[%-5level] %d{${DATETIME}} [%thread] %logger{36} - %m%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 此日志文件只记录ERROR级别的，上级别和下级别都不会记录 -->
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
@@ -33,8 +53,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${ROOT}%d/error.%i.log</fileNamePattern>
             <maxHistory>${MAXHISTORY}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${FILESIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
@@ -42,8 +61,7 @@
     <!-- WARN 输入到文件，按日期和文件大小 -->
     <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder charset="utf-8">
-            <pattern>[%-5level] %d{${DATETIME}} [%thread] %logger{36} - %m%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
@@ -61,8 +79,7 @@
     <!-- INFO 输入到文件，按日期和文件大小 -->
     <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder charset="utf-8">
-            <pattern>[%-5level] %d{${DATETIME}} [%thread] %logger{36} - %m%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
@@ -80,8 +97,7 @@
     <!-- DEBUG 输入到文件，按日期和文件大小 -->
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder charset="utf-8">
-            <pattern>[%-5level] %d{${DATETIME}} [%thread] %logger{36} - %m%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
@@ -91,8 +107,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${ROOT}%d/debug.%i.log</fileNamePattern>
             <maxHistory>${MAXHISTORY}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${FILESIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
@@ -100,37 +115,52 @@
     <!-- TRACE 输入到文件，按日期和文件大小 -->
     <appender name="TRACE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder charset="utf-8">
-            <pattern>[%-5level] %d{${DATETIME}} [%thread] %logger{36} - %m%n
-            </pattern>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>TRACE</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy
-                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${ROOT}%d/trace.%i.log</fileNamePattern>
             <maxHistory>${MAXHISTORY}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${FILESIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
+    <!-- com.alibaba.druid.filter.stat.StatFilter 输出SQL脚本-->
+    <logger name="com.alibaba.druid.filter.stat.StatFilter" level="ERROR" additivity="false">
+        <!--SQL语句日志输出 主要用于慢查询 -->
+        <appender class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <encoder charset="utf-8">
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${ROOT}%d/sql.%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <!--保存文件的大小，超过该大小自动创建新文件。旧文件压缩保存到daily目录下 -->
+                    <maxFileSize>${FILESIZE}</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <!--&lt;!&ndash; 每产生一个日志文件，该日志文件的保存期限天数 &ndash;&gt; -->
+                <maxHistory>${MAXHISTORY}</maxHistory>
+            </rollingPolicy>
+        </appender>
+    </logger>
 
     <!-- SQL相关日志输出-->
-    <logger name="org.apache.ibatis" level="INFO" additivity="false" />
-    <logger name="org.mybatis.spring" level="INFO" additivity="false" />
-    <logger name="orcom.github.miemiedev.mybatis.paginat" level="INFO" additivity="false" />
+    <logger name="org.apache.ibatis" level="INFO" additivity="false"/>
+    <logger name="org.mybatis.spring" level="INFO" additivity="false"/>
+    <logger name="orcom.github.miemiedev.mybatis.paginat" level="INFO" additivity="false"/>
 
     <!-- Logger 根目录 -->
     <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="DEBUG" />
-        <appender-ref ref="ERROR" />
-        <appender-ref ref="WARN" />
-        <appender-ref ref="INFO" />
-        <appender-ref ref="TRACE" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="TRACE"/>
     </root>
 </configuration>

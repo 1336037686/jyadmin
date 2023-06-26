@@ -50,6 +50,11 @@ public class RsaUtil {
         }
     }
 
+    /**
+     * RSA加密
+     * @param data 待加密数据
+     * @return /
+     */
     public static String encrypt(String data) {
         JyRsaProperties rsaProperties = SpringUtil.getBean(JyRsaProperties.class);
         if (StringUtils.isBlank(rsaProperties.getPublicKey())) throw new RuntimeException("PublicKey not exist");
