@@ -1,4 +1,4 @@
-package com.jyadmin.domain;
+package com.jyadmin.domain.base;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

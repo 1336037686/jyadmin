@@ -1,5 +1,5 @@
 # =====================
-# 【开发环境】 配置
+# 【预发布环境】 配置
 # =====================
 
 # 服务配置
@@ -49,8 +49,8 @@ spring:
     host: localhost
     # 服务器连接端口 (default:6379)
     port: 6379
-#    # 服务器连接密码 (default:空)
-#    password: WxmJFVqOc0*^D^@Kp
+    #    # 服务器连接密码 (default:空)
+    #    password: WxmJFVqOc0*^D^@Kp
     # 连接超时时间 (毫秒)
     timeout: 5000
     lettuce:

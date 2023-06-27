@@ -1,4 +1,4 @@
-package com.jyadmin.domain;
+package com.jyadmin.domain.base;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

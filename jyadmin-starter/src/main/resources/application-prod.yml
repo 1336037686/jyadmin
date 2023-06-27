@@ -1,9 +1,23 @@
+# =====================
+# 【生产环境】 配置
+# =====================
+
+# 服务配置
+server:
+  # 端口号配置
+  port: 8081
+# 日志配置
+logging:
+  level:
+    # 日志级别 debug | info | warn | error
+    root: info
+    com.alibaba.druid.filter.stat.StatFilter: error
 spring:
   #数据库配置
   datasource:
-    url: jdbc:mysql://43.138.158.111:3306/jyblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    username: root
-    password: y.sdAdsdfcxaer.
+    url: jdbc:mysql://localhost:3306/jyadmin?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: ENC(USERNAME)
+    password: ENC(PASSWORD)
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       initialSize: 10
@@ -11,7 +25,8 @@ spring:
       maxWait: 60000
       minIdle: 1
       timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
+      minEvictableIdleTimeMillis: 160000
+      maxEvictableIdleTimeMillis: 230000
       testWhileIdle: true
       testOnBorrow: true
       testOnReturn: false
@@ -30,12 +45,12 @@ spring:
   redis:
     # 数据库索引 (default:0)
     database: 0
-    # 服务器地址 (default:localhost)
-    host: 43.138.158.111
+    # 服务器地址 (default:localhost， 175.178.96.162)
+    host: localhost
     # 服务器连接端口 (default:6379)
     port: 6379
-    # 服务器连接密码 (default:空)
-    password: WxmJFVqOc0*^D^@Kp
+    #    # 服务器连接密码 (default:空)
+    #    password: WxmJFVqOc0*^D^@Kp
     # 连接超时时间 (毫秒)
     timeout: 5000
     lettuce:
@@ -49,7 +64,6 @@ spring:
         # 连接池中的最小空闲连接 (default:0)
         min-idle: 1
 
-
 #  autoconfigure:
 #    #跳过security自动配置
 #    exclude:
@@ -58,16 +72,94 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true               # 开启mybatis的二级缓存
   global-config:
     db-config:
       logic-delete-field: deleted     # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
       logic-delete-value: 1           # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0       # 逻辑未删除值(默认为 0)
 
-# JWT配置
-jwt:
-  accessTokenExpiration: 3600 # accessToken过期时间 1h
-  refreshTokenExpiration: 7200 # refreshToken过期时间 2h
-  tokenSignKey: jyadmin # Token Key
-  loginUserKey: login-user
-  verificationCodeKey: verification-code
+jyadmin:
+  # 鉴权相关配置
+  auth:
+    # 登录用户缓存前缀
+    auth-user-prefix: login_user
+    # 认证用户缓存过期时间
+    auth-user-expiration: 43200
+    # 登录验证码前缀
+    verification-code-prefix: verification_code
+    # 登录验证码过期时间
+    verification-code-expiration: 300
+    # JWT Token 生成配置
+    jwt:
+      # 系统加密密钥
+      secret-key: jyadmin
+      # accessToken过期时间 1h
+      access-token-expiration: 1200
+      # refreshToken过期时间 12h
+      refresh-token-expiration: 43200
+  # 安全相关配置
+  safe:
+    # SpringSecurity自定义配置
+    security:
+      ignore-urls:
+        - /api/auth/login               # 登录
+        - /api/auth/register            # 注册
+        - /api/auth/captcha/{uniqueId}  # 验证码
+        - /api/auth/refreshToken        # 登陆续期
+        - /api/auth/rsa-public-key      # 获取RSA公钥
+        - /api/basic-setting/list       # 基础配置
+      # 放行所有接口，只允许测试不需要登陆的接口时才可放开
+      permit-all: false
+      # 只允许唯一IP登录
+      single-ip-login: false
+    # XSS校验配置
+    xss:
+      # 是否放行全部
+      permit-all: true
+  # 限流配置
+  rate-limit:
+    # 是否启用
+    enabled: true
+    # 缓存key前缀
+    prefix: jyadmin_limit
+    # 间隔时间
+    default-period: 2
+    # 访问次数
+    default-count: 1
+    # 限制类型
+    limit-type: CUSTOMER
+  # 幂等接口配置
+  idempotent:
+    # 是否启用
+    enabled: true
+    # 缓存key前缀
+    prefix: jyadmin_idempotent
+    # 默认过期时间
+    default-period: 1800
+  # Api文档配置
+  document:
+    # 文档描述
+    description: "jyadmin RESTful API文档"
+    # 服务URL
+    terms-of-service-url: "https://www.baidu.com"
+    contact: "linguoxiang1997@163.com"
+    version: "v1.0"
+    groupName: "默认文档"
+    base-package: com.jyadmin
+  # 日志配置
+  log:
+    # 系统实时运行日志配置
+    runtime-log:
+      # 系统运行日志路径
+      base-path: F:\CodeProject\Java_Projects\my-project\jyadmin\jyadmin\logs\jyadmin
+  # 代码生成器配置
+  code-generate:
+    # 数据库名，用来查找表结构信息
+    db-name: jyadmin
+  # rsa加密密钥
+  rsa:
+    # 公钥
+    public-key: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtUbSlGyO4TDMj1ijgD+4\nirqv2ZYL3tZL+c+v0y7SMDc/q3SZYJla9wogvp7WwuNTEYetjLeRv42gqolJnbEx\nfWGaJQwpF4vJCUZo4Nn1KvW1uR8aPqXm1I1I3rFwAw3/Uw6izQxDnrC4YuxoixZ6\nfXGwcx0if3jZ8AwPCDntiQtUPxLh91LhUhVdIgRuCALLWLSjusLKVwRS/Kyj6Yfy\nNimlQ4c7s5QTEsA47q4RoL4si86r+LwmqVokyLBBCR2YAHjxI44/bWOjzuOTX4Bk\nKCLB9Fv0ol093/pgr2Ed4/9PRvS5FRZyf5+rlyi/09f51Ecm9+lpEhu2YhKHyGdB\nJQIDAQAB\n-----END PUBLIC KEY-----\n"
+    # 私钥
+    private-key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAtUbSlGyO4TDMj1ijgD+4irqv2ZYL3tZL+c+v0y7SMDc/q3SZ\nYJla9wogvp7WwuNTEYetjLeRv42gqolJnbExfWGaJQwpF4vJCUZo4Nn1KvW1uR8a\nPqXm1I1I3rFwAw3/Uw6izQxDnrC4YuxoixZ6fXGwcx0if3jZ8AwPCDntiQtUPxLh\n91LhUhVdIgRuCALLWLSjusLKVwRS/Kyj6YfyNimlQ4c7s5QTEsA47q4RoL4si86r\n+LwmqVokyLBBCR2YAHjxI44/bWOjzuOTX4BkKCLB9Fv0ol093/pgr2Ed4/9PRvS5\nFRZyf5+rlyi/09f51Ecm9+lpEhu2YhKHyGdBJQIDAQABAoIBAQC1H+CEILvaUXHy\nwHQNTp3LL6FI3N1bd+9N2bAqaBvnxSw+2i/uDwyOzXXOQNMAwzZay6Aie8CLDq27\n95SwlT2Hs5/a6H2eYzMpq0pbcCvBEuTR5TvJ4OX09n4a1FvBEZlNmdAc5OYjhxuU\n6/XBE2KsOI4/VpsDlvLbIJFcfNTUGekoTEFjKJ4uBcTi7q9a2sXJeXtNg8t70p+A\nJt84ENR/fq5wPNbwJmvlZxoaOJwXSrh3A7In5hIAEsh8Jv6YCb4bgUxizenQRPCW\nSf4srszrbmeMQtsT077TFclfQzwzyEZpTsPyY28gMsnbz9W/zpYlQBNSUm+pTzZl\ncxrs+qUBAoGBANxOYaDvImuIm/MILnGhtoAH42iQRbeqWQKUHUo0CgFJZZGcivvE\ngzON+U5uomaJ0WTBuhPkANBBtq9InXZqr5PNOaqbF8WpgRL1U1oIsijYm6LB2wT8\n2ilFZlOvVLy8cicYAHFTQtysVjsAhUXxA+qLXkbCizIWAheWUa5G3KyFAoGBANKl\nngFJVDH8iDxReia9sJnVId9mIo6VMEEgj8puVOGzOsLBAHWlZ/nYgZRejeQ/FHBl\n6U3HdtANJ5bQKjTPzBfmJ5umUHkhkZLoxNn6A677sh1Jb16aO+Du2Tch4ujxLTXA\nO7+T8obWfjOpL7HnAJq6fJzMwGO1yepHA1koYjQhAoGACD/PHA2YRlqJLGKECrE5\nejXRaBru4V+5kYUmS58DOOUcroUkFyVWnFmWmj8+SYSjmJhAdXo2JZYwVwPrEYIR\nLQGkRSUlkLs2IBWbl2V39luWCFQl9Vvad20n1b5c9+w+ggQ+EABEIqs5V2A/nUzX\nDrNFRnUGbUuxrFxulo4EuVkCgYEAi6iooJu4icevn6Y5gZQEkYmAgrgZs0TwkE2B\naCpMdrO5AsSphFadIEZOa0thcfHsoDTBQQM9H+WI2PG8+fTHkRTUL9tNwXHjLW7M\njOS5KnvP9KDqiONjTdeuBmKeKek1G00PkA4MHx/43lGOwLmyaeO4mNEbwUAW1hAt\nBSDEM2ECgYBIrMx4SYDnfGN/PPPZ8gpaSG6ygs4RU+bIXQ7F0+gNPcCOx6C6yEQ/\nMDQHZ6OJRuW8K5hN70tetao4opCclMgtZZC2aBkMt2NnZQeUWaxPVR7k0ZKrdrxy\nejkfH2qWvHxtYyq/SqHEwHwBQbOC4mjbTsBDWVqQtKnJyhMEuzmrLw==\n-----END RSA PRIVATE KEY-----\n"

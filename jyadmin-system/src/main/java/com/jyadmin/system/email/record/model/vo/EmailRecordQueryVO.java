@@ -1,7 +1,7 @@
 package com.jyadmin.system.email.record.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.jyadmin.domain.BasePageVO;
+import com.jyadmin.domain.base.BasePageVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

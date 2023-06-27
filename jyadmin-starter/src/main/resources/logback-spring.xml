@@ -9,7 +9,6 @@
     <property name="ROOT" value="./logs/${PROJECT}/"/>
     <property name="FILESIZE" value="1MB"/>
     <property name="MAXHISTORY" value="100"/>
-
     <!--时间变量-->
     <timestamp key="DATETIME" datePattern="yyyy-MM-dd HH:mm:ss"/>
     <!-- 彩色日志 -->
@@ -18,14 +17,11 @@
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
     <!-- 彩色日志格式 -->
-    <!--<property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>-->
     <!--控制台日志格式-->
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%thread]){faint} %clr(%logger){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <!--文件日志格式-->
     <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %m%n"/>
-
-
-    <!-- 控制台打印 -->
+    <!-- STDOUT 控制台打印 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 <!--        &lt;!&ndash;使用SpringBoot profile功能&ndash;&gt;-->
 <!--        <springProfile name="dev">-->
@@ -148,12 +144,10 @@
             </rollingPolicy>
         </appender>
     </logger>
-
     <!-- SQL相关日志输出-->
     <logger name="org.apache.ibatis" level="INFO" additivity="false"/>
     <logger name="org.mybatis.spring" level="INFO" additivity="false"/>
     <logger name="orcom.github.miemiedev.mybatis.paginat" level="INFO" additivity="false"/>
-
     <!-- Logger 根目录 -->
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>

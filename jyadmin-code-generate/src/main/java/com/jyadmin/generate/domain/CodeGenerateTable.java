@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
 
-import com.jyadmin.domain.BaseEntity;
+import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: jyadmin
   profiles:
     active: dev
 jasypt:

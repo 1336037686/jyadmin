@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
-import com.jyadmin.domain.BaseEntity;
-import com.jyadmin.system.config.template.domain.ConfigTemplateJsonModel;
+import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 
 /**

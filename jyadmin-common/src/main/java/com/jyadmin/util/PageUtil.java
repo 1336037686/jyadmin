@@ -2,7 +2,7 @@ package com.jyadmin.util;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jyadmin.domain.BasePageVO;
+import com.jyadmin.domain.base.BasePageVO;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
 

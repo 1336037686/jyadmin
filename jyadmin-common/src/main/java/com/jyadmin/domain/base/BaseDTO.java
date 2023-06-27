@@ -1,4 +1,4 @@
-package com.jyadmin.domain;
+package com.jyadmin.domain.base;
 
 import lombok.Data;
 

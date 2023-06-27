@@ -1,6 +1,6 @@
 package com.jyadmin.system.config.detail.model.vo;
 
-import com.jyadmin.domain.BasePageVO;
+import com.jyadmin.domain.base.BasePageVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
