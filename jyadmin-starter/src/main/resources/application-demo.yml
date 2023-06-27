@@ -80,6 +80,10 @@ mybatis-plus:
       logic-not-delete-value: 0       # 逻辑未删除值(默认为 0)
 
 jyadmin:
+  # 基础配置
+  base:
+    # 超级管理员账号
+    super-admin: admin
   # 鉴权相关配置
   auth:
     # 登录用户缓存前缀

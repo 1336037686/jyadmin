@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Create by 2022-07-04 22:30 <br>
  * @description: JyApiDocumentProperties <br>
  */
-@ConfigurationProperties(prefix = "jyadmin.document")
+@ConfigurationProperties(prefix = JyConfigItemConstant.API_DOC)
 @Component
 @Data
 public class JyApiDocumentProperties {

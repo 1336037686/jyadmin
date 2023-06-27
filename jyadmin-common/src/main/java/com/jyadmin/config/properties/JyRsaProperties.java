@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * Create by 2023-06-21 18:00 <br>
  * @description: JyRsaProperties <br>
  */
-@ConfigurationProperties(prefix = "jyadmin.rsa")
+@ConfigurationProperties(prefix = JyConfigItemConstant.RSA)
 @Component
 @Data
 public class JyRsaProperties {

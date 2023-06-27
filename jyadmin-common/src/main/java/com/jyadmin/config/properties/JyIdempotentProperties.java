@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "jyadmin.idempotent")
+@ConfigurationProperties(prefix = JyConfigItemConstant.IDEMPOTENT)
 public class JyIdempotentProperties {
 
     /**

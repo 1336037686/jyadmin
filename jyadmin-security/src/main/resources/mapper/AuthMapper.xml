@@ -46,7 +46,7 @@
         INNER JOIN tr_permission_role_menu tprm on tur.role_id  = tprm.role_id
         INNER JOIN tr_permission_menu_action tpma on tprm.menu_id = tpma.menu_id
         INNER JOIN sys_permission_action spa on spa.id = tpma.action_id
-        WHERE tur.user_id = #{userId} and spa.deleted = 0 and spa.status = 1
+        WHERE tur.deleted = 0 and tprm.deleted = 0 and tpma.deleted = 0 and tur.user_id = #{userId} and spa.deleted = 0 and spa.status = 1
     </select>
 
     <select id="selectMenus" resultType="java.util.Map">
@@ -58,7 +58,7 @@
         FROM tr_user_role tur
         INNER JOIN tr_permission_role_menu tprm ON tur.role_id  = tprm.role_id
         INNER JOIN sys_permission_menu spm ON spm.id = tprm.menu_id
-        WHERE tur.user_id = #{userId} AND spm.deleted = 0 AND spm.status = 1
+        WHERE tur.deleted = 0 and tprm.deleted = 0 and tur.user_id = #{userId} AND spm.deleted = 0 AND spm.status = 1
         ORDER BY spm.sort
     </select>
 
@@ -69,7 +69,7 @@
                sr.create_time, sr.update_time
         FROM tr_user_role tur
         INNER JOIN sys_role sr ON sr.id = tur.role_id
-        WHERE sr.status = 1 AND sr.deleted = 0 AND tur.user_id = #{userId}
+        WHERE tur.deleted = 0 and sr.status = 1 AND sr.deleted = 0 AND tur.user_id = #{userId}
     </select>
 
     <select id="selectApiPermissionByUserId" resultType="java.lang.String">
@@ -78,7 +78,7 @@
         FROM sys_user su
         INNER JOIN tr_user_role tur ON tur.user_id = su.id
         INNER JOIN sys_role sr ON sr.id = tur.role_id
-        WHERE su.`status` = 1 AND su.deleted = 0 AND sr.deleted = 0 and sr.`status` = 1 and su.id = #{userId}
+        WHERE tur.deleted = 0 and su.`status` = 1 AND su.deleted = 0 AND sr.deleted = 0 and sr.`status` = 1 and su.id = #{userId}
     </select>
 
 

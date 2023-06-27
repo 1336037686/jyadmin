@@ -15,7 +15,7 @@ import java.util.List;
  * Create by 2023-05-08 20:10 <br>
  * @description: JySecurityConfig <br>
  */
-@ConfigurationProperties(prefix = "jyadmin.safe.security")
+@ConfigurationProperties(prefix = JyConfigItemConstant.SAFE_SECURITY)
 @Component
 @Data
 public class JySecurityProperties {

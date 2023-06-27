@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Create by 2022-07-04 22:57 <br>
  * @description: JyJwtProperties <br>
  */
-@ConfigurationProperties(prefix = "jyadmin.auth.jwt")
+@ConfigurationProperties(prefix = JyConfigItemConstant.AUTH_JWT)
 @Component
 @Data
 public class JyJwtProperties {

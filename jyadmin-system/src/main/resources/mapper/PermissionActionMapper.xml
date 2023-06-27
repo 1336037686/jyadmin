@@ -31,10 +31,10 @@
             spa.id, spa.name, spa.code, spa.description, spa.group_id, spa.sort,
             spa.status, spa.create_by, spa.update_by, spa.create_time, spa.update_time, spa.deleted
         from tr_user_role tur
-             left join tr_permission_role_menu tprm on tur.role_id  = tprm.role_id
-             left join tr_permission_menu_action tpma on tprm.menu_id = tpma.menu_id
-             left join sys_permission_action spa on spa.id = tpma.action_id
-        where tur.user_id = #{userId} and spa.deleted = '0' and spa.status = '1'
+        left join tr_permission_role_menu tprm on tur.role_id  = tprm.role_id
+        left join tr_permission_menu_action tpma on tprm.menu_id = tpma.menu_id
+        left join sys_permission_action spa on spa.id = tpma.action_id
+        where tur.deleted = 0 and tprm.deleted = 0 and tpma.deleted = 0 and spa.deleted = 0 and tur.user_id = #{userId} and spa.status = '1'
     </select>
 
     <select id="selectTree" resultType="java.util.Map">

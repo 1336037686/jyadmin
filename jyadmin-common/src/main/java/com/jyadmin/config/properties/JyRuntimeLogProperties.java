@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Create by 2023-06-04 09:51 <br>
  * @description: JyRuntimeLogProperties <br>
  */
-@ConfigurationProperties(prefix = "jyadmin.log.runtime-log")
+@ConfigurationProperties(prefix = JyConfigItemConstant.LOG_RUNTIME_LOG)
 @Component
 @Data
 public class JyRuntimeLogProperties {

@@ -15,7 +15,7 @@ import java.util.List;
  * Create by 2022-07-04 22:57 <br>
  * @description: JyXssFilterProperties <br>
  */
-@ConfigurationProperties(prefix = "jyadmin.safe.xss")
+@ConfigurationProperties(prefix = JyConfigItemConstant.SAFE_XSS)
 @Component
 @Data
 public class JyXssFilterProperties {

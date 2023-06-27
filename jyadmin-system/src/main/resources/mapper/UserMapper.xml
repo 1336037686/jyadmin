@@ -51,9 +51,9 @@
         SELECT
             sr.name
         FROM sys_user su
-                 INNER JOIN tr_user_role tur ON su.ID = tur.user_id
-                 INNER JOIN sys_role sr ON sr.ID = tur.role_id
-        WHERE sr.`status` = 1 AND sr.deleted = 0 and su.`status` = 1 and su.deleted = 0 and su.id = #{userId}
+        INNER JOIN tr_user_role tur ON su.ID = tur.user_id
+        INNER JOIN sys_role sr ON sr.ID = tur.role_id
+        WHERE tur.deleted = 0 and sr.`status` = 1 AND sr.deleted = 0 and su.`status` = 1 and su.deleted = 0 and su.id = #{userId}
     </select>
 
     <select id="selectUserPage" resultMap="FullResultMap">
@@ -70,8 +70,8 @@
         SELECT
             su.*, sd.`name` AS "department_name", sp.`name` AS "post_name"
         FROM sys_user su
-                 LEFT JOIN sys_department sd ON su.department = sd.id AND sd.deleted = 0
-                 LEFT JOIN sys_post sp ON sp.id = su.post AND sp.deleted = 0
+        LEFT JOIN sys_department sd ON su.department = sd.id AND sd.deleted = 0
+        LEFT JOIN sys_post sp ON sp.id = su.post AND sp.deleted = 0
         WHERE su.ID = #{userId}
     </select>
 </mapper>
