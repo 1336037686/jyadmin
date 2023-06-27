@@ -5,13 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 #if($tableType.equals('ot'))
-import com.jyadmin.domain.BaseEntity;
+import com.jyadmin.domain.base.BaseEntity;
 #else
-import com.jyadmin.domain.BaseTrEntity;
+import com.jyadmin.domain.base.BaseTrEntity;
 #end
 import lombok.Data;
 import lombok.experimental.Accessors;
-import java.io.Serializable;
 #foreach($item in $importPackages)
 import $item;
 #end
