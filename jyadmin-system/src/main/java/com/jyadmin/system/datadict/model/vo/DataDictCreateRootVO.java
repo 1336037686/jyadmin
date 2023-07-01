@@ -42,7 +42,6 @@ public class DataDictCreateRootVO {
     @Length(min = 1, max = 50, message = "字典编码长度须在1-50字符之间")
     private String code;
 
-
     /**
      * 排序
      */

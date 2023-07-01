@@ -13,7 +13,7 @@ import java.util.List;
 */
 public interface PermissionMenuMapper extends BaseMapper<PermissionMenu> {
 
-    List<PermissionMenu> selectFromUser(String userId);
+    List<PermissionMenu> selectFromUser(Long userId);
 }
 
 

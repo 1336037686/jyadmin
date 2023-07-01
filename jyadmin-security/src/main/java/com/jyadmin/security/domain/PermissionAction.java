@@ -1,9 +1,9 @@
 package com.jyadmin.security.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 
@@ -20,12 +20,6 @@ public class PermissionAction extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 动作名称
@@ -49,7 +43,8 @@ public class PermissionAction extends BaseEntity implements Serializable {
      * 所属权限组
      */
     @TableField(value = "group_id")
-    private String groupId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long groupId;
 
     /**
      * 排序

@@ -5,7 +5,7 @@
 <mapper namespace="com.jyadmin.module.blog.mapper.BlogMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.module.blog.domain.Blog">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="intro" column="intro" jdbcType="VARCHAR"/>
             <result property="category" column="category" jdbcType="VARCHAR"/>
@@ -16,8 +16,8 @@
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="visible" column="visible" jdbcType="INTEGER"/>
             <result property="author" column="author" jdbcType="VARCHAR"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>

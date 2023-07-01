@@ -1,5 +1,7 @@
 package com.jyadmin.system.job.manage.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,8 +24,9 @@ public class QuartzJobUpdateVO implements Serializable {
      * ID
      */
     @ApiModelProperty(value = "ID", name = "id")
-    @NotBlank(message = "ID不能为空")
-    private String id;
+    @NotNull(message = "ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 任务编号

@@ -1,5 +1,7 @@
 package com.jyadmin.system.user.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BasePageVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,13 +41,15 @@ public class UserQueryVO extends BasePageVO implements Serializable {
      * 所属部门
      */
     @ApiModelProperty(value = "所属部门", name = "department")
-    private String department;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long department;
 
     /**
      * 所属岗位
      */
     @ApiModelProperty(value = "所属岗位", name = "post")
-    private String post;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long post;
 
     /**
      * 账号类型

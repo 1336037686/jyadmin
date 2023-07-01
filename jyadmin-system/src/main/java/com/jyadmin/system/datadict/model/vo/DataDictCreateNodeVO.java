@@ -1,12 +1,13 @@
 package com.jyadmin.system.datadict.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -55,7 +56,8 @@ public class DataDictCreateNodeVO {
      */
     @ApiModelProperty(value = "父类别ID", name = "parentId")
     @NotNull(message = "父类别ID不能为空")
-    private String parentId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
 
 
 }

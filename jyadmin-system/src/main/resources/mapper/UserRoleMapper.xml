@@ -5,10 +5,10 @@
 <mapper namespace="com.jyadmin.system.role.mapper.UserRoleMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.role.domain.UserRole">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="VARCHAR"/>
             <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 

@@ -50,10 +50,10 @@ public class SecurityUtil {
      * 获取系统用户ID
      * @return 系统用户ID
      */
-    public static String getCurrentUserId() {
+    public static Long getCurrentUserId() {
         UserDetails userDetails = getCurrentUser();
         final JSONObject currentUser = new JSONObject(new JSONObject(userDetails.toString()).get("currentUser"));
-        return currentUser.get("id", String.class);
+        return currentUser.get("id", Long.class);
     }
 
 }

@@ -1,14 +1,14 @@
 package com.jyadmin.system.config.detail.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 系统配置信息
@@ -17,11 +17,6 @@ import lombok.Data;
 @TableName(value ="sys_config_detail")
 @Data
 public class ConfigDetail extends BaseEntity implements Serializable {
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 配置名称
@@ -39,7 +34,8 @@ public class ConfigDetail extends BaseEntity implements Serializable {
      * 使用模板ID sys_config_template
      */
     @TableField(value = "template_id")
-    private String templateId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long templateId;
 
     /**
      * 参数数据

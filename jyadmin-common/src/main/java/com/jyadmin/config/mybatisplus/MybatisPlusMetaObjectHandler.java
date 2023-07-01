@@ -21,13 +21,13 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        String currentUserId = null;
+        Long currentUserId = null;
         try {
             currentUserId = SecurityUtil.getCurrentUserId();
         } catch (Exception ignored) {}
 
-        this.strictInsertFill(metaObject, "createBy", String.class, currentUserId); // 起始版本 3.3.0(推荐使用)
-        this.strictInsertFill(metaObject, "updateBy", String.class, currentUserId); // 起始版本 3.3.0(推荐使用)
+        this.strictInsertFill(metaObject, "createBy", Long.class, currentUserId); // 起始版本 3.3.0(推荐使用)
+        this.strictInsertFill(metaObject, "updateBy", Long.class, currentUserId); // 起始版本 3.3.0(推荐使用)
 
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now()); // 起始版本 3.3.0(推荐使用)
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now()); // 起始版本 3.3.0(推荐使用)
@@ -35,12 +35,12 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        String currentUserId = null;
+        Long currentUserId = null;
         try {
             currentUserId = SecurityUtil.getCurrentUserId();
         } catch (Exception ignored) {}
 
-        this.strictUpdateFill(metaObject, "updateBy", String.class, currentUserId); // 起始版本 3.3.0(推荐使用)
+        this.strictUpdateFill(metaObject, "updateBy", Long.class, currentUserId); // 起始版本 3.3.0(推荐使用)
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class,  LocalDateTime.now()); // 起始版本 3.3.0(推荐)
     }
 

@@ -1,9 +1,9 @@
 package com.jyadmin.system.permission.action.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BaseTrEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -23,21 +23,17 @@ public class PermissionMenuAction extends BaseTrEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
-
-    /**
      * 权限菜单ID
      */
     @TableField(value = "menu_id")
-    private String menuId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long menuId;
 
     /**
      * 权限动作ID
      */
     @TableField(value = "action_id")
-    private String actionId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long actionId;
 
 }

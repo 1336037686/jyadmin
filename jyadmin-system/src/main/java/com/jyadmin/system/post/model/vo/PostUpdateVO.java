@@ -1,5 +1,7 @@
 package com.jyadmin.system.post.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +24,8 @@ public class PostUpdateVO implements Serializable {
      * ID
      */
     @ApiModelProperty("ID")
-    @NotBlank(message = "ID不能为空")
+    @NotNull(message = "ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
     private String id;
 
     /**

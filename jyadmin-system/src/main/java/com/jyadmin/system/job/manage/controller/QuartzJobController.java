@@ -20,6 +20,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.scheduling.support.CronExpression;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 系统定时任务管理
@@ -89,14 +91,16 @@ public class QuartzJobController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('quartz-job:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(quartzService.removeJobs(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(quartzService.removeJobs(newIds));
     }
 
     @ApiOperation(value = "根据ID查找系统定时任务信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('quartz-job:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(quartzService.getById(id));
+        return Result.ok(quartzService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "列表查询系统定时任务信息", notes = "")

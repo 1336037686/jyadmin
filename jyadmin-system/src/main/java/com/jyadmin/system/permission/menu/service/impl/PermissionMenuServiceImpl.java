@@ -35,7 +35,7 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveFromRole(String roleId, Set<String> ids) {
+    public boolean saveFromRole(Long roleId, Set<Long> ids) {
         this.permissionRoleMenuService.remove(new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId));
         List<PermissionRoleMenu> roleMenus = ids.stream().map(x -> new PermissionRoleMenu().setRoleId(roleId).setMenuId(x)).collect(Collectors.toList());
         permissionRoleMenuService.saveBatch(roleMenus);
@@ -46,19 +46,19 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean removeByIds(Collection<?> list) {
-        Set<String> removeIds = new HashSet<>();
-        removeIds.addAll(list.stream().map(Object::toString).collect(Collectors.toSet()));
-        LinkedList<String> idQueue = new LinkedList<>();
-        idQueue.addAll(list.stream().map(Object::toString).collect(Collectors.toList()));
+        Set<Long> removeIds = new HashSet<>();
+        removeIds.addAll(list.stream().map(Object::toString).map(Long::parseLong).collect(Collectors.toSet()));
+        LinkedList<Long> idQueue = new LinkedList<>();
+        idQueue.addAll(list.stream().map(Object::toString).map(Long::parseLong).collect(Collectors.toList()));
         // 层序遍历递归查询所有可能的子项
         while (!idQueue.isEmpty()) {
             // 获取当前层所有节点
-            List<String> parentIds = new ArrayList<>();
+            List<Long> parentIds = new ArrayList<>();
             for (int i = 0; i < idQueue.size(); i++) parentIds.add(idQueue.pollFirst());
             if (CollUtil.isNotEmpty(parentIds)) {
                 // 查询当前层所有下级节点
                 List<PermissionMenu> childMenus = this.permissionMenuMapper.selectList(new LambdaQueryWrapper<PermissionMenu>().in(PermissionMenu::getParentId, parentIds));
-                Set<String> childIds = childMenus.stream().map(PermissionMenu::getId).collect(Collectors.toSet());
+                Set<Long> childIds = childMenus.stream().map(PermissionMenu::getId).collect(Collectors.toSet());
                 // 添加到结果
                 removeIds.addAll(childIds);
                 // 设施下级节点为当前层
@@ -69,7 +69,7 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
     }
 
     @Override
-    public List<Map<String, Object>> getFromUser(String userId) {
+    public List<Map<String, Object>> getFromUser(Long userId) {
         List<PermissionMenu> menus = this.permissionMenuMapper.selectFromUser(userId);
         List<Map<String, Object>> menuMaps = menus.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
         Map<String, Map<String, Object>> table = new HashMap<>();

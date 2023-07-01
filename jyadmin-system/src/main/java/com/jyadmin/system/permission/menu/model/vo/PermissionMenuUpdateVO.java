@@ -1,5 +1,7 @@
 package com.jyadmin.system.permission.menu.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,8 +24,9 @@ public class PermissionMenuUpdateVO implements Serializable {
      * ID
      */
     @ApiModelProperty(value = "ID", name = "id")
-    @NotBlank(message = "ID不能为空")
-    private String id;
+    @NotNull(message = "ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 菜单名称
@@ -56,7 +59,8 @@ public class PermissionMenuUpdateVO implements Serializable {
      * 父类ID
      */
     @ApiModelProperty(value = "父类ID", name = "parentId")
-    private String parentId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
 
     /**
      * 路由地址

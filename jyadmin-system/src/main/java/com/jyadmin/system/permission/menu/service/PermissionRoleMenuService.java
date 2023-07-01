@@ -12,5 +12,6 @@ import java.util.Set;
 */
 public interface PermissionRoleMenuService extends IService<PermissionRoleMenu> {
 
-    boolean saveFromRole(String roleId, Set<String> ids);
+    boolean saveFromRole(Long roleId, Set<Long> ids);
+
 }

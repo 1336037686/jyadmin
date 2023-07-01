@@ -18,6 +18,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 数据字典
@@ -82,14 +84,16 @@ public class DataDictController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('data-dict:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(sysDataDictService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(sysDataDictService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID获取当前节点信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('data-dict:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(sysDataDictService.getById(id));
+        return Result.ok(sysDataDictService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "分页查询字典", notes = "")
@@ -110,6 +114,6 @@ public class DataDictController {
     @GetMapping("/query-child/{id}")
     @PreAuthorize("@jy.check('data-dict:queryChild')")
     public Result<Object> doQueryChild(@PathVariable String id) {
-        return Result.ok(sysDataDictService.getChildById(id));
+        return Result.ok(sysDataDictService.getChildById(Long.parseLong(id)));
     }
 }

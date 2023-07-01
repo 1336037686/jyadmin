@@ -75,7 +75,7 @@ public class FileProcessController {
     @GetMapping("download/{id}")
     @PreAuthorize("@jy.check('file-process:download')")
     public Result<Object> doDownload(@PathVariable("id") String id, HttpServletResponse response) {
-        FileRecord fileRecord = fileRecordService.getById(id);
+        FileRecord fileRecord = fileRecordService.getById(Long.parseLong(id));
         Assert.notNull(fileRecord, "当前文件不存在！");
         FileProcessDownloadDTO fileProcessDownloadDTO = new FileProcessDownloadDTO().setFileRecord(fileRecord).setResponse(response);
         fileProcessService.download(fileProcessDownloadDTO);

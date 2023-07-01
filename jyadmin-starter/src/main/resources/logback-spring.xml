@@ -7,7 +7,7 @@
     <!--设置变量-->
     <property name="PROJECT" value="jyadmin"/>
     <property name="ROOT" value="./logs/${PROJECT}/"/>
-    <property name="FILESIZE" value="1MB"/>
+    <property name="FILESIZE" value="5MB"/>
     <property name="MAXHISTORY" value="100"/>
     <!--时间变量-->
     <timestamp key="DATETIME" datePattern="yyyy-MM-dd HH:mm:ss"/>

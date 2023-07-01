@@ -1,12 +1,13 @@
 package com.jyadmin.system.datadict.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,8 +24,9 @@ public class DataDictUpdateVO {
      * 节点ID
      */
     @ApiModelProperty(value = "节点ID", name = "id")
-    @NotEmpty(message = "id不能为空")
-    private String id;
+    @NotNull(message = "id不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
 
     /**

@@ -18,6 +18,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 岗位管理
@@ -68,14 +70,16 @@ public class PostController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('post:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(postService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(postService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID获取当前岗位信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('post:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(postService.getById(id));
+        return Result.ok(postService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "列表查询岗位", notes = "")

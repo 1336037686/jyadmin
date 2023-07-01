@@ -18,6 +18,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 部门管理
@@ -70,14 +72,16 @@ public class DepartmentController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('department:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(departmentService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(departmentService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID获取当前部门信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('department:queryById')")
-    public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(departmentService.getById(id));
+    public Result<Object> doQueryById(@PathVariable("id") String id) {
+        return Result.ok(departmentService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "分页查询部门", notes = "")

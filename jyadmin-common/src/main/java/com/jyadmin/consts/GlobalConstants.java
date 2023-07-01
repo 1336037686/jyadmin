@@ -44,16 +44,16 @@ public class GlobalConstants {
 
     // ======================= 系统菜单 START =======================
     // 顶级菜单父节点ID为0
-    public static final String SYS_MENU_ROOT_PARENT_ID = "0";
+    public static final Long SYS_MENU_ROOT_PARENT_ID = 0L;
     // ======================= 系统菜单 END =======================
 
     // ======================= 系统短信、邮件、附件配置 START =======================
     // 系统附件配置ID
-    public static final String SYS_FILE_CONFIG_ID = "1";
+    public static final Long SYS_FILE_CONFIG_ID = 1L;
     // 系统短信配置ID
-    public static final String SYS_SMS_CONFIG_ID = "2";
+    public static final Long SYS_SMS_CONFIG_ID = 2L;
     // 系统邮件配置ID
-    public static final String SYS_EMAIL_CONFIG_ID = "3";
+    public static final Long SYS_EMAIL_CONFIG_ID = 3L;
     // 系统国家电话默认前缀
     public static final String SYS_PHONE_NUMBER_PREFIX = "+86";
     // 系统短信验证码默认前缀

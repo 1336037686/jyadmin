@@ -5,7 +5,7 @@
 <mapper namespace="com.jyadmin.log.mapper.LogMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.log.domain.Log">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="handleName" column="handle_name" jdbcType="VARCHAR"/>
             <result property="handleDesc" column="handle_desc" jdbcType="VARCHAR"/>
             <result property="ipAddress" column="ip_address" jdbcType="VARCHAR"/>
@@ -22,8 +22,8 @@
             <result property="responseData" column="response_data" jdbcType="VARCHAR"/>
             <result property="errorDesc" column="error_desc" jdbcType="VARCHAR"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>

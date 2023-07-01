@@ -21,12 +21,6 @@ public class Tag extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
-
-    /**
      * 标签名称
      */
     @TableField(value = "name")

@@ -5,7 +5,7 @@
 <mapper namespace="com.jyadmin.system.user.mapper.UserMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.user.domain.User">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
@@ -13,15 +13,15 @@
             <result property="phone" column="phone" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="INTEGER"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap id="FullResultMap" type="com.jyadmin.system.user.model.dto.UserDTO">
-        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
@@ -29,8 +29,8 @@
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
-        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+        <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="deleted" column="deleted" jdbcType="INTEGER"/>

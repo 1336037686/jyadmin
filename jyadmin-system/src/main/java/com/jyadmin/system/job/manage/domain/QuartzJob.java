@@ -1,8 +1,6 @@
 package com.jyadmin.system.job.manage.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jyadmin.domain.base.BaseEntity;
@@ -20,12 +18,6 @@ public class QuartzJob extends BaseEntity implements Serializable {
 
     @JsonIgnore
     public static final String JOB_KEY = "sys_job";
-
-    /**
-     * id
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 任务编号

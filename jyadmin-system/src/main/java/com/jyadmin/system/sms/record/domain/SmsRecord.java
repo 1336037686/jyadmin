@@ -1,8 +1,6 @@
 package com.jyadmin.system.sms.record.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
@@ -16,11 +14,6 @@ import java.io.Serializable;
 @TableName(value ="sys_sms_record")
 @Data
 public class SmsRecord extends BaseEntity implements Serializable {
-    /**
-     * id
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 内容

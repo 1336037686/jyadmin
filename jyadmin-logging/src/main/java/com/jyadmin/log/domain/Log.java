@@ -1,8 +1,6 @@
 package com.jyadmin.log.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jyadmin.domain.base.BaseEntity;
@@ -23,12 +21,6 @@ public class Log extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 操作名称

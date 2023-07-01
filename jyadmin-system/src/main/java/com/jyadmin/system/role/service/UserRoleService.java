@@ -12,5 +12,5 @@ import java.util.Set;
 */
 public interface UserRoleService extends IService<UserRole> {
 
-    boolean saveFromUser(String userId, Set<String> ids);
+    boolean saveFromUser(Long userId, Set<Long> ids);
 }

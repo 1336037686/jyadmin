@@ -17,6 +17,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT
@@ -66,14 +68,16 @@ public class PermissionGroupController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('group:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(permissionActionGroupService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(permissionActionGroupService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID查找组别信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('group:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(permissionActionGroupService.getById(id));
+        return Result.ok(permissionActionGroupService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "列表查询组别信息", notes = "")

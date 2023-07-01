@@ -3,6 +3,8 @@ package com.jyadmin.system.job.log.domain;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,17 +17,21 @@ import java.time.LocalDateTime;
 @TableName(value ="sys_quartz_log")
 @Data
 public class QuartzLog implements Serializable {
+
     /**
-     * id
+     * ID
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+
 
     /**
      * jobId 任务ID sys_quartz_job id
      */
     @TableField(value = "job_id")
-    private String jobId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long jobId;
 
     /**
      * 任务编号

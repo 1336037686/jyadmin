@@ -18,11 +18,11 @@ import java.util.List;
 */
 public interface UserMapper extends BaseMapper<User> {
 
-    List<String> selectRoleNamesByUserId(@Param("userId") String userId);
+    List<String> selectRoleNamesByUserId(@Param("userId") Long userId);
 
     Page<UserDTO> selectUserPage(Page<User> page, @Param(Constants.WRAPPER) LambdaQueryWrapper<User> wrapper);
 
-    UserDTO selectUserDetailById(@Param("userId") String userId);
+    UserDTO selectUserDetailById(@Param("userId") Long userId);
 }
 
 

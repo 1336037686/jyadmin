@@ -1,5 +1,7 @@
 package com.jyadmin.system.permission.group.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -49,8 +51,9 @@ public class PermissionGroupUpdateVO implements Serializable {
      * 父类ID
      */
     @ApiModelProperty(value = "父类ID", name = "parentId")
-    @NotBlank(message = "父类ID不能为空")
-    private String parentId;
+    @NotNull(message = "父类ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
 
     /**
      * 排序

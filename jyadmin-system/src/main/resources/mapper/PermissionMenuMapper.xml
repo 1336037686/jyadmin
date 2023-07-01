@@ -5,12 +5,12 @@
 <mapper namespace="com.jyadmin.system.permission.menu.mapper.PermissionMenuMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.permission.menu.domain.PermissionMenu">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="code" column="code" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="INTEGER"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
             <result property="path" column="path" jdbcType="VARCHAR"/>
             <result property="component" column="component" jdbcType="VARCHAR"/>
@@ -22,8 +22,8 @@
             <result property="visiable" column="visiable" jdbcType="INTEGER"/>
             <result property="link" column="link" jdbcType="INTEGER"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>

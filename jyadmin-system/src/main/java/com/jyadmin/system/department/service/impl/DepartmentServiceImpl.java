@@ -7,6 +7,7 @@ import com.jyadmin.system.department.domain.Department;
 import com.jyadmin.system.department.mapper.DepartmentMapper;
 import com.jyadmin.system.department.model.vo.DepartmentQueryVO;
 import com.jyadmin.system.department.service.DepartmentService;
+import com.jyadmin.util.DataUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -40,12 +41,14 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         );
 
         List<Map<String, Object>> deptMaps = departments.stream().map(BeanUtil::beanToMap)
-                // 格式化创建日期，避免前端日期问题
                 .peek(x -> {
-                    if (Objects.nonNull(x.get("createTime")))
-                        x.put("createTime", ((LocalDateTime) x.get("createTime"))
-                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                        );
+                    // 将ID转换为String
+                    x.put("id", DataUtil.getValueForMap(x, "id"));
+                    x.put("parentId", DataUtil.getValueForMap(x, "parentId"));
+                    // 格式化创建日期，避免前端日期问题
+                    if (Objects.nonNull(x.get("createTime"))) x.put("createTime", ((LocalDateTime) x.get("createTime")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                    // 剔除其他无用字段
+                    DataUtil.removeItemForMap(x, "createBy", "updateBy", "updateTime", "deleted");
                 }).collect(Collectors.toList());
         Set<String> childrenDepts = new HashSet<>();
         Map<String, Map<String, Object>> table = new HashMap<>();

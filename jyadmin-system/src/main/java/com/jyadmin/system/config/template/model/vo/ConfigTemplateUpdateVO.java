@@ -1,5 +1,7 @@
 package com.jyadmin.system.config.template.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,7 +22,8 @@ public class ConfigTemplateUpdateVO implements Serializable {
      */
     @ApiModelProperty(value = "ID", name = "id")
     @NotBlank(message = "ID不能为空")
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 配置模板名称

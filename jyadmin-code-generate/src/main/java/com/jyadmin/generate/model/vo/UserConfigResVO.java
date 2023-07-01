@@ -1,5 +1,7 @@
 package com.jyadmin.generate.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.generate.domain.CodeGenerateField;
 import com.jyadmin.generate.domain.CodeGenerateFieldConfig;
 import com.jyadmin.generate.domain.CodeGenerateTable;
@@ -22,7 +24,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class UserConfigResVO {
 
-    private String tableId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long tableId;
 
     /**
      * 表元数据

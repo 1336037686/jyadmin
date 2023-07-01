@@ -1,5 +1,7 @@
 package com.jyadmin.module.blog.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +24,8 @@ public class BlogUpdateVO {
      */
     @ApiModelProperty(value = "文章ID", name = "id")
     @NotBlank(message = "文章ID不能为空")
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 文章名称

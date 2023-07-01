@@ -1,5 +1,7 @@
 package com.jyadmin.module.tag.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +24,8 @@ public class TagUpdateVO implements Serializable {
      */
     @ApiModelProperty(value = "标签ID", name = "id")
     @NotBlank(message = "标签ID不能为空")
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 标签名称

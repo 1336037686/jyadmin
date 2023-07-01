@@ -19,6 +19,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,14 +74,16 @@ public class RoleController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('role:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(roleService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(roleService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID查找角色信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('role:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(roleService.getById(id));
+        return Result.ok(roleService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "列表查询角色信息", notes = "")
@@ -118,7 +121,9 @@ public class RoleController {
     @PostMapping("/create/user/{userId}")
     @PreAuthorize("@jy.check('role:createFromUser')")
     public Result<Object> doCreateFromUser(@PathVariable("userId") String userId, @RequestBody Set<String> ids) {
-        return ResultUtil.toResult(roleService.saveFromUser(userId, ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(roleService.saveFromUser(Long.parseLong(userId), newIds));
     }
 
     @ApiOperation(value = "获取用户角色", notes = "")
@@ -126,9 +131,9 @@ public class RoleController {
     @PreAuthorize("@jy.check('role:queryFromUser')")
     public Result<List<String>> doQueryFromUser(@PathVariable("userId") String userId) {
         List<UserRole> roles = userRoleService.getBaseMapper().selectList(
-                new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId)
+                new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, Long.parseLong(userId))
         );
-        List<String> roleIds = roles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        List<String> roleIds = roles.stream().map(UserRole::getRoleId).map(Objects::toString).collect(Collectors.toList());
         return Result.ok(roleIds);
     }
 }

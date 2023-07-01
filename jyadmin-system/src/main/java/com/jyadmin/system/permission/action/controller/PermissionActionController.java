@@ -19,6 +19,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,14 +74,16 @@ public class PermissionActionController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('action:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(permissionActionService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(permissionActionService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID查找权限动作信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('action:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(permissionActionService.getById(id));
+        return Result.ok(permissionActionService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "查询权限动作树形数据", notes = "")
@@ -123,7 +126,9 @@ public class PermissionActionController {
     @PostMapping("/create/menu/{menuId}")
     @PreAuthorize("@jy.check('action:createFromMenu')")
     public Result<Object> doCreateFromMenu(@PathVariable("menuId") String menuId, @RequestBody Set<String> ids) {
-        return ResultUtil.toResult(permissionActionService.saveFromMenu(menuId, ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(permissionActionService.saveFromMenu(Long.parseLong(menuId), newIds));
     }
 
     @ApiOperation(value = "获取菜单权限", notes = "")
@@ -133,7 +138,8 @@ public class PermissionActionController {
         List<PermissionMenuAction> permissionMenuActions = permissionMenuActionService.getBaseMapper().selectList(
                 new LambdaQueryWrapper<PermissionMenuAction>().eq(PermissionMenuAction::getMenuId, menuId)
         );
-        List<String> actionIds = permissionMenuActions.stream().map(PermissionMenuAction::getActionId).collect(Collectors.toList());
+        List<String> actionIds = permissionMenuActions.stream().map(PermissionMenuAction::getActionId)
+                .map(Objects::toString).collect(Collectors.toList());
         return Result.ok(actionIds);
     }
 
@@ -141,7 +147,7 @@ public class PermissionActionController {
     @GetMapping("/query/user/{userId}")
     @PreAuthorize("@jy.check('action:queryFromUser')")
     public Result<List<PermissionAction>> doQueryFromUser(@PathVariable("userId") String userId) {
-        List<PermissionAction> permissionActions = this.permissionActionService.getFromUser(userId);
+        List<PermissionAction> permissionActions = this.permissionActionService.getFromUser(Long.parseLong(userId));
         return Result.ok(permissionActions);
     }
 

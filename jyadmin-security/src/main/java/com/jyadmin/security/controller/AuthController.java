@@ -9,6 +9,7 @@ import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.Result;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.log.annotation.Log;
+import com.jyadmin.security.domain.UserInfo;
 import com.jyadmin.security.domain.UserLoginVO;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.util.JWTUtil;
@@ -97,9 +98,9 @@ public class AuthController {
      */
     @ApiOperation(value = "获取用户信息", notes = "")
     @GetMapping("/info")
-    public Result<Map<String, Object>> doQueryUserInfo() {
-        String userId = SecurityUtil.getCurrentUserId();
-        Map<String, Object> userInfo = this.authService.getUserInfo(userId);
+    public Result<UserInfo> doQueryUserInfo() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        UserInfo userInfo = this.authService.getUserInfo(userId);
         return Result.ok(userInfo);
     }
 
@@ -110,7 +111,7 @@ public class AuthController {
     @ApiOperation(value = "获取用户菜单", notes = "")
     @GetMapping("/menus")
     public Result<List<Map<String, Object>>> doQueryMenus() {
-        String userId = SecurityUtil.getCurrentUserId();
+        Long userId = SecurityUtil.getCurrentUserId();
         List<Map<String, Object>> menus = this.authService.getMenus(userId);
         return Result.ok(menus);
     }

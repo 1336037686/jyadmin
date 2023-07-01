@@ -1,14 +1,12 @@
 package com.jyadmin.generate.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * 代码生成器-数据库表信息
@@ -18,11 +16,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Data
 public class CodeGenerateTable extends BaseEntity implements Serializable {
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 表名

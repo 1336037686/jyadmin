@@ -5,12 +5,12 @@
 <mapper namespace="com.jyadmin.system.config.module.mapper.ModuleConfigMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.config.module.domain.ModuleConfig">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="storageType" column="storage_type" jdbcType="VARCHAR"/>
             <result property="config" column="config" jdbcType="VARCHAR"/>
             <result property="module" column="module" jdbcType="VARCHAR"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>

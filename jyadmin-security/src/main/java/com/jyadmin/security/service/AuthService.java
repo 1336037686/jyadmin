@@ -3,6 +3,7 @@ package com.jyadmin.security.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.User;
+import com.jyadmin.security.domain.UserInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,11 +25,11 @@ public interface AuthService extends IService<User> {
 
     List<PermissionAction> getAllPermissions();
 
-    List<PermissionAction> getPermissionsByUserId(String userId);
+    List<PermissionAction> getPermissionsByUserId(Long userId);
 
-    List<Map<String, Object>> getMenus(String userId);
+    List<Map<String, Object>> getMenus(Long userId);
 
-    Map<String, Object> getUserInfo(String userId);
+    UserInfo getUserInfo(Long userId);
 
     void logout(String username);
 
@@ -38,7 +39,7 @@ public interface AuthService extends IService<User> {
 
     String refreshToken(String refreshToken);
 
-    List<String> getApiPermissionByUserId(String id);
+    List<String> getApiPermissionByUserId(Long id);
 
 
 }

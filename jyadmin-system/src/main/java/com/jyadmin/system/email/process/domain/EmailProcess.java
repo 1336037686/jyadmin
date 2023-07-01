@@ -1,5 +1,7 @@
 package com.jyadmin.system.email.process.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,6 +15,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class EmailProcess {
 
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
 }

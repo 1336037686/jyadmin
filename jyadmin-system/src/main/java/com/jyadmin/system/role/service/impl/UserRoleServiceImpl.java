@@ -24,7 +24,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     private UserRoleService userRoleService;
 
     @Override
-    public boolean saveFromUser(String userId, Set<String> ids) {
+    public boolean saveFromUser(Long userId, Set<Long> ids) {
         userRoleService.remove(
                 new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId)
         );

@@ -1,6 +1,5 @@
 package com.jyadmin.generate.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.PageResult;
@@ -8,7 +7,6 @@ import com.jyadmin.domain.Result;
 import com.jyadmin.generate.domain.CodeGenerateFieldType;
 import com.jyadmin.generate.domain.CodeGenerateTable;
 import com.jyadmin.generate.model.vo.*;
-
 import com.jyadmin.generate.service.CodeGenerateFieldTypeService;
 import com.jyadmin.generate.service.CodeGenerateService;
 import com.jyadmin.generate.service.CodeGenerateTableService;
@@ -17,6 +15,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -61,25 +59,27 @@ public class CodeGenerateController {
     @ApiOperation(value = "同步数据库表", notes = "")
     @PutMapping("/update/table/{tableId}")
     public Result<Object> doUpdate(@PathVariable("tableId") String tableId) {
-        return ResultUtil.toResult(codeGenerateService.updateTable(tableId));
+        return ResultUtil.toResult(codeGenerateService.updateTable(Long.parseLong(tableId)));
     }
 
     @ApiOperation(value = "删除数据库表", notes = "")
     @DeleteMapping("/remove/table")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(codeGenerateService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(codeGenerateService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "代码生成接口", notes = "")
     @GetMapping("/generate/{tableId}")
     public void doGenerateCode(@PathVariable("tableId") String tableId, HttpServletResponse response) {
-        codeGenerateService.generateCode(tableId, response);
+        codeGenerateService.generateCode(Long.parseLong(tableId), response);
     }
 
     @ApiOperation(value = "代码预览接口", notes = "")
     @GetMapping("/generate-preview/{tableId}")
     public Result<List<CodePreviewResVO>> doGeneratePreviewCode(@PathVariable("tableId") String tableId) {
-        List<CodePreviewResVO> codePreviewResVOS = codeGenerateService.generatePreviewCode(tableId);
+        List<CodePreviewResVO> codePreviewResVOS = codeGenerateService.generatePreviewCode(Long.parseLong(tableId));
         return Result.ok(codePreviewResVOS);
     }
 
@@ -92,7 +92,7 @@ public class CodeGenerateController {
     @ApiOperation(value = "分页获取数据库表列表", notes = "")
     @GetMapping("/query-table-exist/{tableId}")
     public Result<Object> doQueryTableExist(@PathVariable("tableId") String tableId) {
-        return Result.ok(codeGenerateService.getTableExist(tableId));
+        return Result.ok(codeGenerateService.getTableExist(Long.parseLong(tableId)));
     }
 
     @ApiOperation(value = "分页获取数据库表列表（选择器）", notes = "")
@@ -118,7 +118,7 @@ public class CodeGenerateController {
     @ApiOperation(value = "获取数据库表具体配置", notes = "")
     @GetMapping("/query/{tableId}")
     public Result<UserConfigResVO> doQueryTableConfig(@PathVariable("tableId") String tableId) {
-        return Result.ok(codeGenerateService.getTableConfig(tableId));
+        return Result.ok(codeGenerateService.getTableConfig(Long.parseLong(tableId)));
     }
 
     @ApiOperation(value = "根据ID获取单一数据库表信息", notes = "")

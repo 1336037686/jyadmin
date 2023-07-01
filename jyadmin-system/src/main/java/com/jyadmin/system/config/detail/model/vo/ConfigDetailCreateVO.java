@@ -1,6 +1,7 @@
 package com.jyadmin.system.config.detail.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,7 +36,8 @@ public class ConfigDetailCreateVO implements Serializable {
      * 使用模板ID
      */
     @ApiModelProperty(value = "使用模板ID", name = "templateId")
-    @NotBlank(message = "使用模板ID不能为空")
+    @NotNull(message = "使用模板ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
     private String templateId;
 
     /**

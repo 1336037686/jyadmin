@@ -3,10 +3,13 @@ package com.jyadmin.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +29,8 @@ public class UserCacheInfo implements Serializable {
      * ID
      */
     @ApiModelProperty(value = "id", name = "id")
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 登录用户
@@ -69,13 +73,15 @@ public class UserCacheInfo implements Serializable {
      * 部门
      */
     @ApiModelProperty(value = "部门", name = "department")
-    private String department;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long department;
 
     /**
      * 岗位
      */
     @ApiModelProperty(value = "岗位", name = "post")
-    private String post;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long post;
 
     /**
      * 状态

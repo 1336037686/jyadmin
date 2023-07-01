@@ -19,6 +19,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -73,14 +74,16 @@ public class PermissionMenuController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('menu:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(permissionMenuService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(permissionMenuService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID查找菜单信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('menu:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(permissionMenuService.getById(id));
+        return Result.ok(permissionMenuService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "列表查询菜单信息", notes = "")
@@ -138,7 +141,9 @@ public class PermissionMenuController {
     @PostMapping("/create/role/{roleId}")
     @PreAuthorize("@jy.check('menu:createFromRole')")
     public Result<Object> doCreateFromRole(@PathVariable("roleId") String roleId, @RequestBody Set<String> ids) {
-        return ResultUtil.toResult(permissionMenuService.saveFromRole(roleId, ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(permissionMenuService.saveFromRole(Long.parseLong(roleId), newIds));
     }
 
     @ApiOperation(value = "获取角色菜单", notes = "")
@@ -146,9 +151,9 @@ public class PermissionMenuController {
     @PreAuthorize("@jy.check('menu:queryFromRole')")
     public Result<List<String>> doQueryFromRole(@PathVariable("roleId") String roleId) {
         List<PermissionRoleMenu> roles = permissionRoleMenuService.getBaseMapper().selectList(
-                new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId)
+                new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, Long.parseLong(roleId))
         );
-        List<String> menuIds = roles.stream().map(PermissionRoleMenu::getMenuId).collect(Collectors.toList());
+        List<String> menuIds = roles.stream().map(PermissionRoleMenu::getMenuId).map(Objects::toString).collect(Collectors.toList());
         return Result.ok(menuIds);
     }
 
@@ -156,7 +161,7 @@ public class PermissionMenuController {
     @GetMapping("/query/user/{userId}")
     @PreAuthorize("@jy.check('menu:queryFromUser')")
     public Result<List<Map<String, Object>>> doQueryFromUser(@PathVariable("userId") String userId) {
-        List<Map<String, Object>> menus = this.permissionMenuService.getFromUser(userId);
+        List<Map<String, Object>> menus = this.permissionMenuService.getFromUser(Long.parseLong(userId));
         return Result.ok(menus);
     }
 }

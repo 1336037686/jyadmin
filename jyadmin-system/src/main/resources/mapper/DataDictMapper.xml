@@ -5,16 +5,15 @@
 <mapper namespace="com.jyadmin.system.datadict.mapper.DataDictMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.datadict.domain.DataDict">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="dictType" column="dict_type" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="code" column="code" jdbcType="VARCHAR"/>
-            <result property="value" column="value" jdbcType="VARCHAR"/>
             <result property="sort" column="sort" jdbcType="INTEGER"/>
-            <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
             <result property="isRoot" column="is_root" jdbcType="INTEGER"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
@@ -22,7 +21,7 @@
 
     <sql id="Base_Column_List">
         id,dict_type,name,
-        code,value,sort,
+        code,sort,
         parent_id,is_root,create_by,
         update_by,create_time,update_time,
         deleted

@@ -16,12 +16,12 @@ public interface ModuleConfigService extends IService<ModuleConfig> {
      * 获取当前的配置
      * @return ModuleConfigWrapper 配置包装类
      */
-    ModuleConfigWrapper getEnableConfigDetail(String moduleId);
+    ModuleConfigWrapper getEnableConfigDetail(Long moduleId);
 
     /**
      * 获取当前的配置
      * @return MultiModuleConfigWrapper 配置包装类
      */
-    MultiModuleConfigWrapper getEnableMultiConfigDetail(String moduleId);
+    MultiModuleConfigWrapper getEnableMultiConfigDetail(Long moduleId);
 
 }

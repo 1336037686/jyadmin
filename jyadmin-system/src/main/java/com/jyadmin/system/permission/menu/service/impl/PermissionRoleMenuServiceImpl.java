@@ -24,7 +24,7 @@ public class PermissionRoleMenuServiceImpl extends ServiceImpl<PermissionRoleMen
     private PermissionRoleMenuService permissionRoleMenuService;
 
     @Override
-    public boolean saveFromRole(String roleId, Set<String> ids) {
+    public boolean saveFromRole(Long roleId, Set<Long> ids) {
         permissionRoleMenuService.remove(
                 new LambdaQueryWrapper<PermissionRoleMenu>().eq(PermissionRoleMenu::getRoleId, roleId)
         );

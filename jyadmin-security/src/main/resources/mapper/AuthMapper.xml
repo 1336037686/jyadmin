@@ -5,7 +5,7 @@
 <mapper namespace="com.jyadmin.security.mapper.AuthMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.security.domain.User">
-            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
@@ -13,8 +13,8 @@
             <result property="phone" column="phone" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="INTEGER"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
@@ -52,9 +52,7 @@
     <select id="selectMenus" resultType="java.util.Map">
         SELECT
             DISTINCT spm.id, spm.name, spm.code,spm.type, spm.description, spm.parent_id "parentId", spm.url, spm.path, spm.method, spm.icon,
-            spm.style, spm.sort, spm.cache,spm.visiable, spm.link, spm.status, spm.component,
-            spm.create_by "createBy", spm.update_by "updateBy", spm.create_time "createTime",
-            spm.update_time "updateTime", spm.deleted
+            spm.style, spm.sort, spm.cache,spm.visiable, spm.link, spm.status, spm.component
         FROM tr_user_role tur
         INNER JOIN tr_permission_role_menu tprm ON tur.role_id  = tprm.role_id
         INNER JOIN sys_permission_menu spm ON spm.id = tprm.menu_id
@@ -65,8 +63,7 @@
     <select id="selectRoles" resultType="java.util.Map">
         select
                DISTINCT sr.id, sr.name, sr.code, sr.description,
-               sr.sort, sr.status, sr.create_by, sr.update_by,
-               sr.create_time, sr.update_time
+               sr.sort, sr.status
         FROM tr_user_role tur
         INNER JOIN sys_role sr ON sr.id = tur.role_id
         WHERE tur.deleted = 0 and sr.status = 1 AND sr.deleted = 0 AND tur.user_id = #{userId}

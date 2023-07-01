@@ -1,9 +1,9 @@
 package com.jyadmin.system.role.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BaseTrEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -22,22 +22,19 @@ public class UserRole extends BaseTrEntity implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 用户ID
      */
     @TableField(value = "user_id")
-    private String userId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long userId;
 
     /**
      * 角色ID
      */
     @TableField(value = "role_id")
-    private String roleId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long roleId;
 
 }

@@ -26,15 +26,14 @@ import java.util.stream.Collectors;
 @Service
 public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> implements DataDictService {
 
-    public boolean removeByIds(Collection<?> list) {
+    public boolean removeByIds(Set<Long> ids) {
         // 层序便利，获取当前节点以及下属节点
-        Set<String> ids = list.stream().map(Object::toString).collect(Collectors.toSet());
         LinkedList<DataDict> queue = new LinkedList<>();
-        List<DataDict> baseSysDataDicts = this.baseMapper.selectList(new LambdaQueryWrapper<DataDict>().in(DataDict::getId, list));
+        List<DataDict> baseSysDataDicts = this.baseMapper.selectList(new LambdaQueryWrapper<DataDict>().in(DataDict::getId, ids));
         queue.addAll(baseSysDataDicts);
         while (!queue.isEmpty()) {
             int size = queue.size();
-            Set<String> inIds = new HashSet<>();
+            Set<Long> inIds = new HashSet<>();
             for (int i = 0; i < size; i++) inIds.add(Objects.requireNonNull(queue.pollFirst()).getId());
             List<DataDict> sysDataDicts = this.baseMapper.selectList(new LambdaQueryWrapper<DataDict>().in(DataDict::getParentId, inIds));
             if (CollUtil.isEmpty(sysDataDicts)) continue;
@@ -45,7 +44,7 @@ public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> i
     }
 
     @Override
-    public List<DataDict> getChildById(String id) {
+    public List<DataDict> getChildById(Long id) {
         return this.baseMapper.selectList(new LambdaQueryWrapper<DataDict>().eq(DataDict::getParentId, id));
     }
 

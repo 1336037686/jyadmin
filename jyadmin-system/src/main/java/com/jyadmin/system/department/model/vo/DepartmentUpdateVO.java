@@ -1,5 +1,7 @@
 package com.jyadmin.system.department.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,8 +24,9 @@ public class DepartmentUpdateVO implements Serializable {
      * ID
      */
     @ApiModelProperty("ID")
-    @NotBlank(message = "ID不能为空")
-    private String id;
+    @NotNull(message = "ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 部门名称
@@ -50,8 +53,9 @@ public class DepartmentUpdateVO implements Serializable {
      * 上级部门ID
      */
     @ApiModelProperty("上级部门ID")
-    @NotBlank(message = "上级部门ID不能为空")
-    private String parentId;
+    @NotNull(message = "上级部门ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
 
     /**
      * 描述

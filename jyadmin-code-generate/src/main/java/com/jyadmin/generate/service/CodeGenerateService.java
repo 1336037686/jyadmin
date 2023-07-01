@@ -18,17 +18,17 @@ public interface CodeGenerateService {
 
     boolean saveTable(String tableName);
 
-    boolean updateTable(String tableId);
+    boolean updateTable(Long tableId);
 
-    boolean removeByIds(Set<String> ids);
+    boolean removeByIds(Set<Long> ids);
 
-    boolean getTableExist(String tableId);
+    boolean getTableExist(Long tableId);
 
     boolean updateTableConfig(UserConfigReqVO vo);
 
-    void generateCode(String tableId, HttpServletResponse response);
+    void generateCode(Long tableId, HttpServletResponse response);
 
-    UserConfigResVO getTableConfig(String tableId);
+    UserConfigResVO getTableConfig(Long tableId);
 
-    List<CodePreviewResVO> generatePreviewCode(String tableId);
+    List<CodePreviewResVO> generatePreviewCode(Long tableId);
 }

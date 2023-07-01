@@ -5,22 +5,22 @@
 <mapper namespace="com.jyadmin.system.email.record.mapper.EmailRecordMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.email.record.domain.EmailRecord">
-            <result property="id" column="id" jdbcType="VARCHAR"/>
-            <result property="from" column="from" jdbcType="VARCHAR"/>
-            <result property="to" column="to" jdbcType="VARCHAR"/>
+            <result property="id" column="id" jdbcType="BIGINT"/>
+            <result property="sender" column="sender" jdbcType="VARCHAR"/>
+            <result property="receiver" column="receiver" jdbcType="VARCHAR"/>
             <result property="subject" column="subject" jdbcType="VARCHAR"/>
             <result property="body" column="body" jdbcType="VARCHAR"/>
             <result property="source" column="source" jdbcType="VARCHAR"/>
             <result property="relevance" column="relevance" jdbcType="VARCHAR"/>
-            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
-            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,from,to,
+        id,sender,receiver,
         subject,body,source,
         relevance,create_by,update_by,
         create_time,update_time,deleted

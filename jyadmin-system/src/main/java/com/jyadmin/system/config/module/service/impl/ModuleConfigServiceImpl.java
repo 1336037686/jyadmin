@@ -37,7 +37,7 @@ public class ModuleConfigServiceImpl extends ServiceImpl<ModuleConfigMapper, Mod
      * @return ConfigDetail 配置详情
      */
     @Override
-    public ModuleConfigWrapper getEnableConfigDetail(String moduleId) {
+    public ModuleConfigWrapper getEnableConfigDetail(Long moduleId) {
         ModuleConfig fileConfig = this.getById(moduleId);
         ConfigDetail enabledConfig = this.configDetailService.getOne(new LambdaQueryWrapper<ConfigDetail>().eq(true, ConfigDetail::getCode, fileConfig.getConfig()));
         enabledConfig.setJsonObjs(StringUtils.isBlank(enabledConfig.getData()) ? new ArrayList<>() :
@@ -47,7 +47,7 @@ public class ModuleConfigServiceImpl extends ServiceImpl<ModuleConfigMapper, Mod
     }
 
     @Override
-    public MultiModuleConfigWrapper getEnableMultiConfigDetail(String moduleId) {
+    public MultiModuleConfigWrapper getEnableMultiConfigDetail(Long moduleId) {
         ModuleConfig fileConfig = this.getById(moduleId);
         List<ConfigDetail> enabledConfigs = this.configDetailService.list(new LambdaQueryWrapper<ConfigDetail>().likeRight(true, ConfigDetail::getCode, fileConfig.getConfig()));
         enabledConfigs.stream().peek(x -> {

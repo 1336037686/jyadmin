@@ -1,5 +1,7 @@
 package com.jyadmin.system.permission.action.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,8 +24,9 @@ public class PermissionActionUpdateVO implements Serializable {
      * ID
      */
     @ApiModelProperty(value = "ID", name = "id")
-    @NotBlank(message = "ID不能为空")
-    private String id;
+    @NotNull(message = "ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 动作名称
@@ -50,8 +53,9 @@ public class PermissionActionUpdateVO implements Serializable {
      * 所属权限组
      */
     @ApiModelProperty(value = "所属权限组", name = "groupId")
-    @NotBlank(message = "所属权限组不能为空")
-    private String groupId;
+    @NotNull(message = "所属权限组不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long groupId;
 
     /**
      * 排序

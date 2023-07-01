@@ -1,8 +1,6 @@
 package com.jyadmin.system.role.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
@@ -19,12 +17,6 @@ public class Role extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 角色名称

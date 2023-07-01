@@ -1,5 +1,7 @@
 package com.jyadmin.system.job.log.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BasePageVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,6 +23,7 @@ public class QuartzLogQueryVO extends BasePageVO implements Serializable {
      * 任务ID
      */
     @ApiModelProperty(value = "任务ID", name = "jobId")
-    private String jobId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long jobId;
 
 }

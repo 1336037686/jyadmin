@@ -1,10 +1,10 @@
 package com.jyadmin.domain.base;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,18 +23,25 @@ public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1;
 
     /**
+     * ID
+     */
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+
+    /**
      * 创建人
      */
     @JsonIgnore
     @TableField(value = "create_by", fill = FieldFill.INSERT)
-    private String createBy;
+    private Long createBy;
 
     /**
      * 更新人
      */
     @JsonIgnore
     @TableField(value = "update_by", fill = FieldFill.INSERT_UPDATE)
-    private String updateBy;
+    private Long updateBy;
 
     /**
      * 创建时间

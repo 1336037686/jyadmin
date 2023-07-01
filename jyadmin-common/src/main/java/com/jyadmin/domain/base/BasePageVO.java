@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @description: BasePageVO <br>
  */
 @Data
-public class BasePageVO implements Serializable {
+public class BasePageVO extends BaseReqVO implements Serializable {
 
     private static final long serialVersionUID = 97792549823353464L;
 

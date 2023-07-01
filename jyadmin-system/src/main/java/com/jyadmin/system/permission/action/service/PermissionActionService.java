@@ -14,9 +14,9 @@ import java.util.Set;
 */
 public interface PermissionActionService extends IService<PermissionAction> {
 
-    boolean saveFromMenu(String menuId, Set<String> ids);
+    boolean saveFromMenu(Long menuId, Set<Long> ids);
 
-    List<PermissionAction> getFromUser(String userId);
+    List<PermissionAction> getFromUser(Long userId);
 
     List<Map<String, Object>> getTree();
 }

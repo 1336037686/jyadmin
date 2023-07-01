@@ -17,15 +17,15 @@ import java.util.Map;
 */
 public interface AuthMapper extends BaseMapper<User> {
 
-    List<String> selectApiPermissionByUserId(@Param("userId") String userId);
+    List<String> selectApiPermissionByUserId(@Param("userId") Long userId);
 
     List<PermissionAction> selectAllPermissions();
 
-    List<PermissionAction> selectPermissionsByUserId(@Param("userId") String userId);
+    List<PermissionAction> selectPermissionsByUserId(@Param("userId") Long userId);
 
-    List<Map<String, Object>> selectMenus(@Param("userId") String userId);
+    List<Map<String, Object>> selectMenus(@Param("userId") Long userId);
 
-    List<Map<String, Object>> selectRoles(@Param("userId") String userId);
+    List<Map<String, Object>> selectRoles(@Param("userId") Long userId);
 
 }
 

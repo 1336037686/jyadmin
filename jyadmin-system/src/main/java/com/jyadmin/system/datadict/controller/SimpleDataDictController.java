@@ -17,6 +17,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 通用数据字典
@@ -68,14 +70,16 @@ public class SimpleDataDictController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('simple-datadict:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(simpleDataDictService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(simpleDataDictService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID查找通用数据字典信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('simple-datadict:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(simpleDataDictService.getById(id));
+        return Result.ok(simpleDataDictService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "分页查询通用数据字典信息", notes = "")

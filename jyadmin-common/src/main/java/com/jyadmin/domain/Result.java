@@ -1,6 +1,7 @@
 package com.jyadmin.domain;
 
 import com.jyadmin.consts.ResultStatus;
+import com.jyadmin.domain.base.BaseResult;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,18 +19,9 @@ import java.io.Serializable;
 @ApiModel("统一返回值")
 @Data
 @Accessors(chain = true)
-public class Result<T> implements Serializable {
+public class Result<T> extends BaseResult implements Serializable {
 
     private static final long serialVersionUID = 97792549823353463L;
-
-    @ApiModelProperty(value = "状态码", name = "code")
-    private Integer code;
-
-    @ApiModelProperty(value = "执行状态", name = "success")
-    private Boolean success;
-
-    @ApiModelProperty(value = "响应消息", name = "msg")
-    private String msg;
 
     @ApiModelProperty(value = "响应数据", name = "data")
     private T data;
@@ -37,29 +29,21 @@ public class Result<T> implements Serializable {
     public Result() {}
 
     public Result(Integer code, Boolean success, String msg) {
-        this.code = code;
-        this.success = success;
-        this.msg = msg;
+        super(code, success, msg);
     }
 
     public Result(Integer code, Boolean success, String msg, T data) {
-        this.code = code;
-        this.success = success;
-        this.msg = msg;
+        super(code, success, msg);
         this.data = data;
     }
 
     public Result(ResultStatus status, Boolean success, T data) {
-        this.code = status.getValue();
-        this.msg = status.getReasonPhrase();
-        this.success = success;
+        super(status.getValue(), success, status.getReasonPhrase());
         this.data = data;
     }
 
     public Result(ResultStatus status, String msg, Boolean success, T data) {
-        this.code = status.getValue();
-        this.msg = msg;
-        this.success = success;
+        super(status.getValue(), success, msg);
         this.data = data;
     }
 
@@ -164,23 +148,22 @@ public class Result<T> implements Serializable {
     }
 
     public Result<T> status(ResultStatus status) {
-        this.code = status.getValue();
-        this.msg = status.getReasonPhrase();
+        super.setStatus(status);
         return this;
     }
 
     public Result<T> status(Integer code) {
-        this.code = code;
+        super.setCode(code);
         return this;
     }
 
     public Result<T> msg(String msg) {
-        this.msg = msg;
+        super.setMsg(msg);
         return this;
     }
 
     public Result<T> success(Boolean success) {
-        this.success = success;
+        super.setSuccess(success);
         return this;
     }
 

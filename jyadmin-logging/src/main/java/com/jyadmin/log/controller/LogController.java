@@ -18,6 +18,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +48,16 @@ public class LogController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('log:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(logService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(logService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID获取当前日志信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('log:queryById')")
-    public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(logService.getById(id));
+    public Result<Object> doQueryById(@PathVariable("id") String id) {
+        return Result.ok(logService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "分页查询日志", notes = "")
@@ -84,7 +87,7 @@ public class LogController {
                         .eq(Objects.nonNull(vo.getExecuteStatus()), Log::getExecuteStatus, vo.getExecuteStatus())
                         .like(StringUtils.isNotBlank(vo.getUsername()), Log::getUsername, vo.getUsername())
                         .eq(true, Log::getRequestPath, GlobalConstants.SYS_LOGIN_URI)
-                        .eq(true, Log::getCreateBy, userId)
+                        .eq(true, Log::getCreateBy, Long.parseLong(userId))
                         .orderByDesc(Log::getCreateTime)
         );
 

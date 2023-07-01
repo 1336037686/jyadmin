@@ -15,7 +15,7 @@ import java.util.Map;
 public interface PermissionActionMapper extends BaseMapper<PermissionAction> {
 
 
-    List<PermissionAction> selectFromUser(String userId);
+    List<PermissionAction> selectFromUser(Long userId);
 
     List<Map<String, Object>> selectTree();
 }

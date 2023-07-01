@@ -28,7 +28,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public UserDTO getUserDetailById(String id) {
+    public UserDTO getUserDetailById(Long id) {
         return this.baseMapper.selectUserDetailById(id);
     }
 }

@@ -1,10 +1,10 @@
 package com.jyadmin.system.user.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 
@@ -20,12 +20,6 @@ public class User extends BaseEntity implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 帐号
@@ -68,13 +62,15 @@ public class User extends BaseEntity implements Serializable {
      * 所属部门
      */
     @TableField(value = "department")
-    private String department;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long department;
 
     /**
      * 所属岗位
      */
     @TableField(value = "post")
-    private String post;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long post;
 
     /**
      * 状态

@@ -1,5 +1,7 @@
 package com.jyadmin.system.file.process.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,7 +18,8 @@ public class FileProcess {
     /**
      * 文件记录ID
      */
-    private String fileRecordId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long fileRecordId;
 
     /**
      * 文件url地址

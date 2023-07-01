@@ -15,9 +15,9 @@ import java.util.Set;
 */
 public interface PermissionMenuService extends IService<PermissionMenu> {
 
-    boolean saveFromRole(String roleId, Set<String> ids);
+    boolean saveFromRole(Long roleId, Set<Long> ids);
 
-    List<Map<String, Object>> getFromUser(String userId);
+    List<Map<String, Object>> getFromUser(Long userId);
 
     List<Map<String, Object>> getLayer(PermissionMenuQueryVO vo);
 }

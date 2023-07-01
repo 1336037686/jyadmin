@@ -1,6 +1,8 @@
 package com.jyadmin.log.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -22,7 +24,8 @@ public class UserLoginLog {
      * ID
      */
     @ApiModelProperty("ID")
-    private String id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 操作用户

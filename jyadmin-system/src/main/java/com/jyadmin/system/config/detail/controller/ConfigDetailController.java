@@ -19,16 +19,14 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -73,14 +71,16 @@ public class ConfigDetailController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('config-detail:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(configDetailService.removeByIds(ids));
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        return ResultUtil.toResult(configDetailService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID获取当前配置信息信息", notes = "")
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('config-detail:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        ConfigDetail configDetail = configDetailService.getById(id);
+        ConfigDetail configDetail = configDetailService.getById(Long.parseLong(id));
         configDetail.setJsonObjs(
                 StringUtils.isBlank(configDetail.getData()) ? new ArrayList<>() :
                         JSON.parseArray(configDetail.getData(), ConfigDetailJsonModel.class)
@@ -96,7 +96,7 @@ public class ConfigDetailController {
     public Result<List<ConfigDetail>> doQueryList(ConfigDetailQueryVO vo) {
 
         List<ConfigDetail> configDetails = this.configDetailService.list(new LambdaQueryWrapper<ConfigDetail>()
-                .eq(StringUtils.isNotBlank(vo.getTemplateId()), ConfigDetail::getTemplateId, vo.getTemplateId())
+                .eq(Objects.nonNull(vo.getTemplateId()), ConfigDetail::getTemplateId, vo.getTemplateId())
                 .like(StringUtils.isNotBlank(vo.getName()), ConfigDetail::getName, vo.getName())
                 .like(StringUtils.isNotBlank(vo.getCode()), ConfigDetail::getCode, vo.getCode())
                 .orderByDesc(ConfigDetail::getCreateTime)
@@ -117,7 +117,7 @@ public class ConfigDetailController {
     public PageResult<ConfigDetail> doQueryPage(ConfigDetailQueryVO vo) {
         Page<ConfigDetail> page = this.configDetailService.page(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                 new LambdaQueryWrapper<ConfigDetail>()
-                        .eq(StringUtils.isNotBlank(vo.getTemplateId()), ConfigDetail::getTemplateId, vo.getTemplateId())
+                        .eq(Objects.nonNull(vo.getTemplateId()), ConfigDetail::getTemplateId, vo.getTemplateId())
                         .like(StringUtils.isNotBlank(vo.getName()), ConfigDetail::getName, vo.getName())
                         .like(StringUtils.isNotBlank(vo.getCode()), ConfigDetail::getCode, vo.getCode())
                         .orderByDesc(ConfigDetail::getCreateTime)

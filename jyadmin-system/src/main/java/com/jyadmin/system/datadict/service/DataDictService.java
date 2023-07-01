@@ -1,14 +1,14 @@
 package com.jyadmin.system.datadict.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.jyadmin.system.datadict.domain.DataDict;
 import com.jyadmin.system.datadict.model.dto.DataDictQueryDTO;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.jyadmin.system.datadict.model.vo.DataDictQueryVO;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
 * @author 13360
@@ -17,9 +17,9 @@ import java.util.Map;
 */
 public interface DataDictService extends IService<DataDict> {
 
-    boolean removeByIds(Collection<?> list);
+    boolean removeByIds(Set<Long> list);
 
-    List<DataDict> getChildById(String id);
+    List<DataDict> getChildById(Long id);
 
     Page<DataDict> getPage(DataDictQueryDTO copyProperties);
 

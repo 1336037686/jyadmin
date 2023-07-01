@@ -17,6 +17,7 @@ import com.jyadmin.exception.ApiException;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
 import com.jyadmin.security.domain.User;
+import com.jyadmin.security.domain.UserInfo;
 import com.jyadmin.security.mapper.AuthMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
@@ -126,7 +127,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
-    public List<String> getApiPermissionByUserId(String userId) {
+    public List<String> getApiPermissionByUserId(Long userId) {
         return authMapper.selectApiPermissionByUserId(userId);
     }
 
@@ -137,14 +138,19 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     }
 
     @Override
-    public List<PermissionAction> getPermissionsByUserId(String userId) {
+    public List<PermissionAction> getPermissionsByUserId(Long userId) {
         return authMapper.selectPermissionsByUserId(userId);
     }
 
     @Override
     @Cacheable(value = "AuthService:getMenus", key = "#userId")
-    public List<Map<String, Object>> getMenus(String userId) {
+    public List<Map<String, Object>> getMenus(Long userId) {
         List<Map<String, Object>> menus = this.authMapper.selectMenus(userId);
+        for (Map<String, Object> menu : menus) {
+            menu.put("id", menu.get("id").toString());
+            menu.put("parentId", menu.get("parentId").toString());
+        }
+
         List<Map<String, Object>> menuMaps = menus.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
         Map<String, Map<String, Object>> table = new HashMap<>();
         for (Map<String, Object> menu : menuMaps) table.put(menu.get("id").toString(), menu);
@@ -157,12 +163,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
             children.add(menu);
             parentMenu.put("children", children);
         }
-        return menuMaps.stream().filter(x -> GlobalConstants.SYS_MENU_ROOT_PARENT_ID.equals(x.get("parentId"))).collect(Collectors.toList());
+        return menuMaps.stream().filter(x -> Objects.equals(GlobalConstants.SYS_MENU_ROOT_PARENT_ID.toString(), x.get("parentId"))).collect(Collectors.toList());
     }
 
     @Override
     @Cacheable(value = "AuthService:getUserInfo", key = "#userId")
-    public Map<String, Object> getUserInfo(String userId) {
+    public UserInfo getUserInfo(Long userId) {
         User user = getById(userId);
         List<Map<String, Object>> rolesMap = authMapper.selectRoles(userId);
         List<String> roles = rolesMap.stream()
@@ -175,11 +181,10 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
                 .map(x -> x.get("code").toString())
                 .collect(Collectors.toList());
 
-        Map<String, Object> userInfo = BeanUtil.beanToMap(user);
-        // 删除密码字段
-        userInfo.remove("password");
-        userInfo.put("roles", roles);
-        userInfo.put("permissions", permissions);
+        UserInfo userInfo = new UserInfo();
+        BeanUtil.copyProperties(user, userInfo);
+        userInfo.setRoles(roles);
+        userInfo.setPermissions(permissions);
         return userInfo;
     }
 

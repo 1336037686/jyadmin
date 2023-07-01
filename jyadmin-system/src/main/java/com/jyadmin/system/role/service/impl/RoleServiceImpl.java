@@ -26,7 +26,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     private UserRoleService userRoleService;
 
     @Override
-    public boolean saveFromUser(String userId, Set<String> ids) {
+    public boolean saveFromUser(Long userId, Set<Long> ids) {
         this.userRoleService.remove(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));
         List<UserRole> userRoles = ids.stream().map(x -> new UserRole().setUserId(userId).setRoleId(x)).collect(Collectors.toList());
         userRoleService.saveBatch(userRoles);

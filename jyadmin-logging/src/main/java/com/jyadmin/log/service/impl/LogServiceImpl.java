@@ -29,14 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
 
-    /**
-     *
-     * @param result
-     * @param execStatus
-     * @param execTime
-     * @param joinPoint
-     * @param errorMsg
-     */
     @Override
     public void save(Object result, Integer execStatus, Integer execTime, ProceedingJoinPoint joinPoint, String errorMsg) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

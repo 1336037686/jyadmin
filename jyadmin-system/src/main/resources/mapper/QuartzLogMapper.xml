@@ -5,7 +5,7 @@
 <mapper namespace="com.jyadmin.system.job.log.mapper.QuartzLogMapper">
 
     <resultMap id="BaseResultMap" type="com.jyadmin.system.job.log.domain.QuartzLog">
-            <result property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="id" column="id" jdbcType="BIGINT"/>
             <result property="code" column="code" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="bean" column="bean" jdbcType="VARCHAR"/>
@@ -19,7 +19,6 @@
             <result property="email" column="email" jdbcType="VARCHAR"/>
             <result property="isNotify" column="is_notify" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -28,7 +27,7 @@
         bean,method,params,
         cron_expression,exec_status,exec_time,
         error_desc,principal,email,
-        is_notify,create_time,update_time,
+        is_notify,create_time,
         deleted
     </sql>
 </mapper>

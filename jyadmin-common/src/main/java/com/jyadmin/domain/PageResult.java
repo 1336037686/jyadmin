@@ -1,6 +1,7 @@
 package com.jyadmin.domain;
 
 import com.jyadmin.consts.ResultStatus;
+import com.jyadmin.domain.base.BaseResult;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,27 +20,9 @@ import java.util.List;
 @ApiModel("统一分页返回值")
 @Data
 @Accessors(chain = true)
-public class PageResult<T> implements Serializable {
+public class PageResult<T> extends BaseResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 状态码
-     */
-    @ApiModelProperty(value = "状态码", name = "code")
-    private Integer code;
-
-    /**
-     * 执行状态
-     */
-    @ApiModelProperty(value = "执行状态", name = "success")
-    private Boolean success;
-
-    /**
-     * 响应消息
-     */
-    @ApiModelProperty(value = "响应消息", name = "msg")
-    private String msg;
 
     /**
      * 当前页页码
@@ -84,13 +67,12 @@ public class PageResult<T> implements Serializable {
     private Boolean hasNext;
 
     public PageResult<T> setStatus(ResultStatus status) {
-        this.code = status.getValue();
-        this.msg = status.getReasonPhrase();
+        super.setStatus(status);
         return this;
     }
 
     public PageResult<T> setSuccess(Boolean success) {
-        this.success = success;
+        super.setSuccess(success);
         return this;
     }
 }

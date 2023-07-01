@@ -30,7 +30,7 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
 
     @Transactional
     @Override
-    public boolean saveFromMenu(String menuId, Set<String> ids) {
+    public boolean saveFromMenu(Long menuId, Set<Long> ids) {
         permissionMenuActionService.remove(
                 new LambdaQueryWrapper<PermissionMenuAction>().eq(PermissionMenuAction::getMenuId, menuId)
         );
@@ -42,7 +42,7 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
     }
 
     @Override
-    public List<PermissionAction> getFromUser(String userId) {
+    public List<PermissionAction> getFromUser(Long userId) {
         return permissionActionMapper.selectFromUser(userId);
     }
 

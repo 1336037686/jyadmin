@@ -1,9 +1,9 @@
 package com.jyadmin.generate.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,17 +18,13 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @Data
 public class CodeGenerateFieldConfig extends BaseEntity implements Serializable {
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 属性ID
      */
     @TableField(value = "field_id")
-    private String fieldId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long fieldId;
 
     /**
      * 属性对应的Java类型

@@ -1,14 +1,12 @@
 package com.jyadmin.system.config.template.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.List;
-
 import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 系统配置模板
@@ -17,11 +15,6 @@ import lombok.Data;
 @TableName(value ="sys_config_template")
 @Data
 public class ConfigTemplate extends BaseEntity implements Serializable {
-    /**
-     * ID
-     */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private String id;
 
     /**
      * 配置模板名称

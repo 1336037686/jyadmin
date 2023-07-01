@@ -108,12 +108,12 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateTable(String tableId) {
+    public boolean updateTable(Long tableId) {
         // 获取旧数据 数据库表所有数据，表信息、表配置、字段信息、字段配置
         CodeGenerateTable oldTable = codeGenerateTableService.getById(tableId);
         CodeGenerateTableConfig oldTableConfig = codeGenerateTableConfigService.getOne(new LambdaQueryWrapper<CodeGenerateTableConfig>().eq(CodeGenerateTableConfig::getTableId, oldTable.getId()));
         List<CodeGenerateField> oldFields = codeGenerateFieldService.list(new LambdaQueryWrapper<CodeGenerateField>().eq(CodeGenerateField::getTableId, oldTable.getId()));
-        List<String> oldFieldIds = oldFields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<Long> oldFieldIds = oldFields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
         List<CodeGenerateFieldConfig> oldFieldConfigs = codeGenerateFieldConfigService.list(new LambdaQueryWrapper<CodeGenerateFieldConfig>().in(CodeGenerateFieldConfig::getFieldId, oldFieldIds));
         // 获取实时数据 当前数据库表所有数据，表信息、表配置、字段信息、字段配置
         CodeGenerateTable newTable = null;
@@ -135,7 +135,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         // 2.1.1 获取不存在的字段信息
         List<CodeGenerateField> fieldsToDelete = oldFields.stream().filter(x -> !newFieldNames.contains(x.getFieldName())).collect(Collectors.toList());
         // 2.1.2 获取不存在的字段配置
-        List<String> fieldIdsToDelete = fieldsToDelete.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<Long> fieldIdsToDelete = fieldsToDelete.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
         List<CodeGenerateFieldConfig> fieldConfigsToDelete = oldFieldConfigs.stream().filter(x -> fieldIdsToDelete.contains(x.getFieldId())).collect(Collectors.toList());
         // 2.1.3 删除多余数据
         codeGenerateFieldService.removeByIds(fieldsToDelete);
@@ -159,7 +159,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         }).collect(Collectors.toList());
         codeGenerateFieldService.updateBatchById(fieldsToUpdate);
         // 2.3.2 更新原始存在字段配置
-        Map<String, List<CodeGenerateFieldConfig>> oldFieldConfigMaps = oldFieldConfigs.stream().collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
+        Map<Long, List<CodeGenerateFieldConfig>> oldFieldConfigMaps = oldFieldConfigs.stream().collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
         List<CodeGenerateFieldConfig> fieldConfigsToUpdate = fieldsToUpdate.stream().map(x -> updateCodeGenerateFieldConfigs(x, oldFieldConfigMaps.get(x.getId()).get(0))).collect(Collectors.toList());
         codeGenerateFieldConfigService.updateBatchById(fieldConfigsToUpdate);
         return true;
@@ -167,7 +167,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean removeByIds(Set<String> ids) {
+    public boolean removeByIds(Set<Long> ids) {
         // 查找所有表数据
         List<CodeGenerateTable> tables = codeGenerateTableService.listByIds(ids);
         // 查找所有表配置数据
@@ -190,7 +190,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
-    public boolean getTableExist(String tableId) {
+    public boolean getTableExist(Long tableId) {
         CodeGenerateTable table = this.codeGenerateTableService.getById(tableId);
         try (Connection conn = dataSource.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
@@ -213,7 +213,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
-    public void generateCode(String tableId, HttpServletResponse response) {
+    public void generateCode(Long tableId, HttpServletResponse response) {
         TemplateContextDTO templateContext = buildTemplateContext(tableId);
         try {
             VelocityEngine velocityEngine = VelocityUtils.createVelocityEngine();
@@ -242,7 +242,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
-    public UserConfigResVO getTableConfig(String tableId) {
+    public UserConfigResVO getTableConfig(Long tableId) {
         // 获取数据 数据库表所有数据，表信息、表配置、字段信息、字段配置
         // 拼接表数据
         CodeGenerateTable table = codeGenerateTableService.getById(tableId);
@@ -254,11 +254,11 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
         List<CodeGenerateField> fields = codeGenerateFieldService.list(
                 new LambdaQueryWrapper<CodeGenerateField>().eq(CodeGenerateField::getTableId, table.getId())
         );
-        List<String> oldFieldIds = fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<Long> oldFieldIds = fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
         List<CodeGenerateFieldConfig> fieldConfigs = codeGenerateFieldConfigService.list(
                 new LambdaQueryWrapper<CodeGenerateFieldConfig>().in(CodeGenerateFieldConfig::getFieldId, oldFieldIds)
         );
-        Map<String, List<CodeGenerateFieldConfig>> fieldMaps = fieldConfigs.stream()
+        Map<Long, List<CodeGenerateFieldConfig>> fieldMaps = fieldConfigs.stream()
                 .collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
         List<UserConfigResVO.FieldExtend> fieldExtends = fields.stream()
                 .map(x -> new UserConfigResVO.FieldExtend().setField(x).setFieldConfig(fieldMaps.get(x.getId()).get(0)))
@@ -268,7 +268,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     }
 
     @Override
-    public List<CodePreviewResVO> generatePreviewCode(String tableId) {
+    public List<CodePreviewResVO> generatePreviewCode(Long tableId) {
         try {
             List<CodePreviewResVO> res = Lists.newArrayList();
             TemplateContextDTO templateContext = buildTemplateContext(tableId);
@@ -332,14 +332,14 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
      * @param tableId
      * @return
      */
-    public TemplateContextDTO buildTemplateContext(String tableId) {
+    public TemplateContextDTO buildTemplateContext(Long tableId) {
         // 获取数据 数据库表所有数据，表信息、表配置、字段信息、字段配置
         CodeGenerateTable table = codeGenerateTableService.getById(tableId);
         CodeGenerateTableConfig tableConfig = codeGenerateTableConfigService.getOne(new LambdaQueryWrapper<CodeGenerateTableConfig>().eq(CodeGenerateTableConfig::getTableId, table.getId()));
         List<CodeGenerateField> fields = codeGenerateFieldService.list(new LambdaQueryWrapper<CodeGenerateField>().eq(CodeGenerateField::getTableId, table.getId()));
-        List<String> oldFieldIds = fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
+        List<Long> oldFieldIds = fields.stream().map(CodeGenerateField::getId).collect(Collectors.toList());
         List<CodeGenerateFieldConfig> fieldConfigs = codeGenerateFieldConfigService.list(new LambdaQueryWrapper<CodeGenerateFieldConfig>().in(CodeGenerateFieldConfig::getFieldId, oldFieldIds));
-        Map<String, List<CodeGenerateFieldConfig>> fieldConfigMaps = fieldConfigs.stream().collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
+        Map<Long, List<CodeGenerateFieldConfig>> fieldConfigMaps = fieldConfigs.stream().collect(Collectors.groupingBy(CodeGenerateFieldConfig::getFieldId));
         List<String> importPackages = fieldConfigs.stream().map(CodeGenerateFieldConfig::getClassName).filter(StringUtils::isNotBlank).collect(Collectors.toList());
 
         // fields
@@ -449,7 +449,7 @@ public class CodeGenerateServiceImpl implements CodeGenerateService {
     public CodeGenerateTableConfig getCodeGenerateTableConfig(CodeGenerateTable table) {
         String tableNameCamelCase = StrUtil.toCamelCase(table.getTableName());
 
-        String tableId = table.getId();
+        Long tableId = table.getId();
         String tableRemark = table.getTableRemark();
         if (StringUtils.isBlank(tableRemark)) tableRemark = tableNameCamelCase;
         String packageName = CodeGenerateConstant.TABLE_CONFIG_PACKAGE_NAME_PREFIX + StrUtil.DOT + tableNameCamelCase;

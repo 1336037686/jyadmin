@@ -1,15 +1,15 @@
 package com.jyadmin.system.datadict.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 通用数据字典详情
@@ -39,8 +39,9 @@ public class SimpleDataDictDetailCreateVO implements Serializable {
      * 通用字典ID
      */
     @ApiModelProperty(value = "通用字典ID", name = "dataDictId")
-    @NotBlank(message = "通用字典ID不能为空")
-    private String dataDictId;
+    @NotNull(message = "通用字典ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long dataDictId;
 
     /**
      * 备注

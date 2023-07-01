@@ -19,6 +19,7 @@ import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +29,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 系统用户
@@ -98,6 +100,8 @@ public class UserController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('user:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
+        if (CollectionUtils.isEmpty(ids)) return Result.fail();
+        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
         return ResultUtil.toResult(userService.removeByIds(ids));
     }
 
@@ -105,7 +109,7 @@ public class UserController {
     @GetMapping("/query/{id}")
     @PreAuthorize("@jy.check('user:queryById')")
     public Result<Object> doQueryById(@PathVariable String id) {
-        UserDTO user = userService.getUserDetailById(id);
+        UserDTO user = userService.getUserDetailById(Long.parseLong(id));
         return Result.ok(user);
     }
 
