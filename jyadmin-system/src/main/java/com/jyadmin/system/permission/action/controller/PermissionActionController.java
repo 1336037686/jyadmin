@@ -136,7 +136,7 @@ public class PermissionActionController {
     @PreAuthorize("@jy.check('action:queryFromMenu')")
     public Result<List<String>> doQueryFromMenu(@PathVariable("menuId") String menuId) {
         List<PermissionMenuAction> permissionMenuActions = permissionMenuActionService.getBaseMapper().selectList(
-                new LambdaQueryWrapper<PermissionMenuAction>().eq(PermissionMenuAction::getMenuId, menuId)
+                new LambdaQueryWrapper<PermissionMenuAction>().eq(PermissionMenuAction::getMenuId, Long.parseLong(menuId))
         );
         List<String> actionIds = permissionMenuActions.stream().map(PermissionMenuAction::getActionId)
                 .map(Objects::toString).collect(Collectors.toList());

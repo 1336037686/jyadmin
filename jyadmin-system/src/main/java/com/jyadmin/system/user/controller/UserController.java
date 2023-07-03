@@ -102,7 +102,7 @@ public class UserController {
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
         if (CollectionUtils.isEmpty(ids)) return Result.fail();
         Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(userService.removeByIds(ids));
+        return ResultUtil.toResult(userService.removeByIds(newIds));
     }
 
     @ApiOperation(value = "根据ID获取当前用户信息", notes = "")

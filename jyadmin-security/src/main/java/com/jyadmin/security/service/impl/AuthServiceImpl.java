@@ -21,10 +21,7 @@ import com.jyadmin.security.domain.UserInfo;
 import com.jyadmin.security.mapper.AuthMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
-import com.jyadmin.util.IpUtil;
-import com.jyadmin.util.JWTUtil;
-import com.jyadmin.util.RedisUtil;
-import com.jyadmin.util.RsaUtil;
+import com.jyadmin.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -146,12 +143,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Cacheable(value = "AuthService:getMenus", key = "#userId")
     public List<Map<String, Object>> getMenus(Long userId) {
         List<Map<String, Object>> menus = this.authMapper.selectMenus(userId);
-        for (Map<String, Object> menu : menus) {
-            menu.put("id", menu.get("id").toString());
-            menu.put("parentId", menu.get("parentId").toString());
-        }
 
-        List<Map<String, Object>> menuMaps = menus.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
+        List<Map<String, Object>> menuMaps = menus.stream().map(BeanUtil::beanToMap).peek(x -> {
+            x.put("id", DataUtil.getValueForMap(x, "id"));
+            x.put("parentId", DataUtil.getValueForMap(x, "parentId"));
+        }).collect(Collectors.toList());
+
         Map<String, Map<String, Object>> table = new HashMap<>();
         for (Map<String, Object> menu : menuMaps) table.put(menu.get("id").toString(), menu);
         for (Map<String, Object> menu : menuMaps) {

@@ -11,11 +11,14 @@ import com.jyadmin.system.permission.menu.mapper.PermissionMenuMapper;
 import com.jyadmin.system.permission.menu.model.vo.PermissionMenuQueryVO;
 import com.jyadmin.system.permission.menu.service.PermissionMenuService;
 import com.jyadmin.system.permission.menu.service.PermissionRoleMenuService;
+import com.jyadmin.util.DataUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -101,7 +104,13 @@ public class PermissionMenuServiceImpl extends ServiceImpl<PermissionMenuMapper,
                         .orderByAsc(PermissionMenu::getSort)
         );
 
-        List<Map<String, Object>> menuMaps = permissionMenus.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
+        List<Map<String, Object>> menuMaps = permissionMenus.stream().map(BeanUtil::beanToMap).peek(x -> {
+            x.put("id", DataUtil.getValueForMap(x, "id"));
+            x.put("parentId", DataUtil.getValueForMap(x, "parentId"));
+            if (Objects.nonNull(x.get("createTime"))) x.put("createTime", ((LocalDateTime) x.get("createTime")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            DataUtil.removeItemForMap(x, "createBy", "updateBy", "updateTime", "deleted");
+        }).collect(Collectors.toList());
+
         Set<String> childrenMenus = new HashSet<>();
         Map<String, Map<String, Object>> table = new HashMap<>();
         for (Map<String, Object> menu : menuMaps) table.put(menu.get("id").toString(), menu);

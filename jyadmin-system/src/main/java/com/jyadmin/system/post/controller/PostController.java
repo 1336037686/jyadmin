@@ -93,6 +93,7 @@ public class PostController {
         ));
     }
 
+
     @ApiOperation(value = "分页查询岗位", notes = "")
     @GetMapping("/query")
     @PreAuthorize("@jy.check('post:query')")

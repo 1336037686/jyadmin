@@ -7,6 +7,7 @@ import com.jyadmin.system.permission.action.domain.PermissionMenuAction;
 import com.jyadmin.system.permission.action.mapper.PermissionActionMapper;
 import com.jyadmin.system.permission.action.service.PermissionActionService;
 import com.jyadmin.system.permission.action.service.PermissionMenuActionService;
+import com.jyadmin.util.DataUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,9 +55,9 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
         List<Map<String, Object>> groups = treeList.stream()
                 .map(x -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("id", x.get("groupId"));
-                    map.put("name", x.get("groupName"));
-                    map.put("code", x.get("groupCode"));
+                    map.put("id", DataUtil.getValueForMap(x, "groupId"));
+                    map.put("name", DataUtil.getValueForMap(x, "groupName"));
+                    map.put("code", DataUtil.getValueForMap(x, "groupCode"));
                     map.put("type", "group");
                     return map;
                 })
@@ -69,10 +70,10 @@ public class PermissionActionServiceImpl extends ServiceImpl<PermissionActionMap
         // 归类下属接口
         treeList.stream().map(x -> {
             Map<String, Object> map = new HashMap<>();
-            map.put("groupId", x.get("groupId"));
-            map.put("id", x.get("actionId"));
-            map.put("name", x.get("actionName"));
-            map.put("code", x.get("actionCode"));
+            map.put("groupId", DataUtil.getValueForMap(x, "groupId"));
+            map.put("id", DataUtil.getValueForMap(x, "actionId"));
+            map.put("name", DataUtil.getValueForMap(x, "actionName"));
+            map.put("code", DataUtil.getValueForMap(x, "actionCode"));
             map.put("type", "action");
             return map;
         }).forEach(x -> {
