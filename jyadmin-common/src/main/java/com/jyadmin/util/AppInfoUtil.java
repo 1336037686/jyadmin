@@ -39,7 +39,7 @@ public class AppInfoUtil {
         String apiDocUrl = String.format("%s://%s:%s/%s", protocol, hostAddress, serverPort, API_DOC_PAGE);
         String localUrl = String.format("%s://localhost:%s", protocol, serverPort);
         String externalUrl = String.format("%s://%s:%s", protocol, hostAddress, serverPort);
-        String appNameMsg = String.format("'%s' is running! Access URLs: ", appName);
+        String appNameMsg = String.format("'%s' is running!", appName);
 
 
         // 定义矩形边框的左右两个字符
@@ -52,10 +52,12 @@ public class AppInfoUtil {
         // 填充矩形框内的文本内容
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("\t%s Application:    %-" + (width - 19) + "s%s", leftBorderChar, appNameMsg, rightBorderChar)).append("\n");
-        sb.append(String.format("\t%s Local:          %-" + (width - 19) + "s%s", leftBorderChar, localUrl, rightBorderChar)).append("\n");
-        sb.append(String.format("\t%s External:       %-" + (width - 19) + "s%s", leftBorderChar, externalUrl, rightBorderChar)).append("\n");
-        sb.append(String.format("\t%s API doc:        %-" + (width - 19) + "s%s", leftBorderChar, apiDocUrl, rightBorderChar)).append("\n");
-        sb.append(String.format("\t%s Profile(s):     %-" + (width - 19) + "s%s", leftBorderChar, String.join(",", env.getActiveProfiles()), rightBorderChar)).append("\n");
+        sb.append(String.format("\t%s%s%s", leftBorderChar, "━".repeat(width - 2), rightBorderChar)).append("\n");
+        sb.append(String.format("\t%s Access URLs:    %-" + (width - 19) + "s%s", leftBorderChar, "", rightBorderChar)).append("\n");
+        sb.append(String.format("\t%s - Local:        %-" + (width - 19) + "s%s", leftBorderChar, localUrl, rightBorderChar)).append("\n");
+        sb.append(String.format("\t%s - External:     %-" + (width - 19) + "s%s", leftBorderChar, externalUrl, rightBorderChar)).append("\n");
+        sb.append(String.format("\t%s - API doc:      %-" + (width - 19) + "s%s", leftBorderChar, apiDocUrl, rightBorderChar)).append("\n");
+        sb.append(String.format("\t%s - Profile(s):   %-" + (width - 19) + "s%s", leftBorderChar, String.join(",", env.getActiveProfiles()), rightBorderChar)).append("\n");
 
         // 绘制矩形框
         StringBuilder border = new StringBuilder();

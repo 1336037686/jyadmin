@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseResult implements Serializable {
+public abstract class BaseResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1;
 
@@ -33,12 +33,23 @@ public class BaseResult implements Serializable {
     @ApiModelProperty(value = "响应消息", name = "msg")
     private String msg;
 
+    /**
+     * 获取响应数据 数据体
+     */
+    public abstract T getResultData();
+
+    /**
+     * 设置响应数据 返回信息
+     */
     public BaseResult setStatus(ResultStatus status) {
         this.code = status.getValue();
         this.msg = status.getReasonPhrase();
         return this;
     }
 
+    /**
+     * 设置响应数据 执行状态
+     */
     public BaseResult setSuccess(Boolean success) {
         this.success = success;
         return this;

@@ -3,6 +3,7 @@ package com.jyadmin.system.permission.action.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Sets;
 import com.jyadmin.annotation.RateLimit;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
@@ -126,8 +127,7 @@ public class PermissionActionController {
     @PostMapping("/create/menu/{menuId}")
     @PreAuthorize("@jy.check('action:createFromMenu')")
     public Result<Object> doCreateFromMenu(@PathVariable("menuId") String menuId, @RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
+        Set<Long> newIds = CollectionUtils.isEmpty(ids) ? Sets.newHashSet() : ids.stream().map(Long::parseLong).collect(Collectors.toSet());
         return ResultUtil.toResult(permissionActionService.saveFromMenu(Long.parseLong(menuId), newIds));
     }
 

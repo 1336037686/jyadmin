@@ -20,7 +20,7 @@ import java.util.List;
 @ApiModel("统一分页返回值")
 @Data
 @Accessors(chain = true)
-public class PageResult<T> extends BaseResult implements Serializable {
+public class PageResult<T> extends BaseResult<List<T>> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -65,6 +65,12 @@ public class PageResult<T> extends BaseResult implements Serializable {
      */
     @ApiModelProperty(value = "是否存在下一页", name = "hasNext")
     private Boolean hasNext;
+
+
+    @Override
+    public List<T> getResultData() {
+        return this.records;
+    }
 
     public PageResult<T> setStatus(ResultStatus status) {
         super.setStatus(status);

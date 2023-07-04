@@ -19,7 +19,7 @@ import java.io.Serializable;
 @ApiModel("统一返回值")
 @Data
 @Accessors(chain = true)
-public class Result<T> extends BaseResult implements Serializable {
+public class Result<T> extends BaseResult<T> implements Serializable {
 
     private static final long serialVersionUID = 97792549823353463L;
 
@@ -173,4 +173,8 @@ public class Result<T> extends BaseResult implements Serializable {
     }
 
 
+    @Override
+    public T getResultData() {
+        return this.data;
+    }
 }
