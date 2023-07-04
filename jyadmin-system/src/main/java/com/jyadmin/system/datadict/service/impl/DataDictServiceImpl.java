@@ -11,6 +11,7 @@ import com.jyadmin.system.datadict.mapper.DataDictMapper;
 import com.jyadmin.system.datadict.model.dto.DataDictQueryDTO;
 import com.jyadmin.system.datadict.model.vo.DataDictQueryVO;
 import com.jyadmin.system.datadict.service.DataDictService;
+import com.jyadmin.util.DataUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -69,8 +70,13 @@ public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> i
                         .orderByAsc(DataDict::getSort)
         );
 
-        List<Map<String, Object>> dataDictMaps = dataDictList.stream().map(BeanUtil::beanToMap).collect(Collectors.toList());
-        for (Map<String, Object> dataDictMap : dataDictMaps) dataDictMap.put("createTime", ((LocalDateTime) dataDictMap.get("updateTime")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        List<Map<String, Object>> dataDictMaps = dataDictList.stream().map(BeanUtil::beanToMap).peek(x -> {
+            x.put("id", DataUtil.getValueForMap(x, "id"));
+            x.put("parentId", DataUtil.getValueForMap(x, "parentId"));
+            if (Objects.nonNull(x.get("createTime"))) x.put("createTime", ((LocalDateTime) x.get("createTime")).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            DataUtil.removeItemForMap(x, "createBy", "updateBy", "updateTime", "deleted");
+        }).collect(Collectors.toList());
+
         Set<String> childrenMenus = new HashSet<>();
         Map<String, Map<String, Object>> table = new HashMap<>();
         for (Map<String, Object> menu : dataDictMaps) table.put(menu.get("id").toString(), menu);
@@ -82,6 +88,7 @@ public class DataDictServiceImpl extends ServiceImpl<DataDictMapper, DataDict> i
             parentMenu.put("children", children);
             childrenMenus.add(menu.get("id").toString());
         }
+
         // 获取所有顶级节点
         return dataDictMaps.stream().filter(x -> !childrenMenus.contains(x.get("id").toString())).collect(Collectors.toList());
     }

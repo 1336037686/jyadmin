@@ -1,5 +1,6 @@
 package com.jyadmin.domain.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jyadmin.consts.ResultStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public abstract class BaseResult<T> implements Serializable {
     /**
      * 获取响应数据 数据体
      */
+    @JsonIgnore
     public abstract T getResultData();
 
     /**
