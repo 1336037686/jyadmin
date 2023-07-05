@@ -3,11 +3,13 @@ package com.jyadmin.security.domain;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +39,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (CollectionUtils.isEmpty(permissions)) return new ArrayList<>();
         return this.permissions.stream()
                 .filter(StringUtils::isNotBlank)
                 .map(SimpleGrantedAuthority::new)

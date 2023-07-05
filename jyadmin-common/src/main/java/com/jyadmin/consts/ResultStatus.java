@@ -105,6 +105,11 @@ public enum ResultStatus {
     REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "登陆续期失败"),
 
     /**
+     * 0001 0016 登录信息获取错误
+     */
+    LOGIN_INFO_OBTAIN_ERROR(10016, ModuleSeries.AUTH, "登录信息获取错误"),
+
+    /**
      * 0001 0101 RefreshToken不存在
      */
     REFRESH_TOKEN_NOT_EXIST(10101, ModuleSeries.AUTH, "RefreshToken不存在"),
