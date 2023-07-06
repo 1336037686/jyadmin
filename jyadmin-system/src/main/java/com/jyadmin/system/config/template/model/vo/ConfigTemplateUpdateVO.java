@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -21,7 +22,7 @@ public class ConfigTemplateUpdateVO implements Serializable {
      * ID
      */
     @ApiModelProperty(value = "ID", name = "id")
-    @NotBlank(message = "ID不能为空")
+    @NotNull(message = "ID不能为空")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
