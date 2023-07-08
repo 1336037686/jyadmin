@@ -12,6 +12,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -53,7 +54,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         String requestMethod = request.getMethod();
         // 请求参数
         List<Object> requestParam = Arrays.stream(joinPoint.getArgs())
-                .filter(x -> !(x instanceof HttpServletRequest))
+                .filter(x -> !(x instanceof MultipartFile)) // 剔除文件类型
+                .filter(x -> !(x instanceof HttpServletRequest)) // 剔除HttpServletRequest类型
                 .collect(Collectors.toList());
         // 请求时间
         LocalDateTime requestTime = LocalDateTime.now();
