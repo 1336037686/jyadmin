@@ -9,6 +9,7 @@ import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.email.record.domain.EmailRecord;
 import com.jyadmin.system.email.record.model.vo.EmailRecordQueryVO;
 import com.jyadmin.system.email.record.service.EmailRecordService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -46,9 +47,7 @@ public class EmailRecordController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('email-record:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(emailRecordService.removeByIds(newIds));
+        return ResultUtil.toResult(emailRecordService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前邮件记录信息", notes = "")

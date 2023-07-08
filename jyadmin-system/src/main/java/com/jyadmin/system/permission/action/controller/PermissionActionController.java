@@ -15,6 +15,7 @@ import com.jyadmin.system.permission.action.model.vo.PermissionActionQueryVO;
 import com.jyadmin.system.permission.action.model.vo.PermissionActionUpdateVO;
 import com.jyadmin.system.permission.action.service.PermissionActionService;
 import com.jyadmin.system.permission.action.service.PermissionMenuActionService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -75,9 +76,7 @@ public class PermissionActionController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('action:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(permissionActionService.removeByIds(newIds));
+        return ResultUtil.toResult(permissionActionService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID查找权限动作信息", notes = "")

@@ -12,6 +12,7 @@ import com.jyadmin.system.datadict.model.vo.SimpleDataDictCreateVO;
 import com.jyadmin.system.datadict.model.vo.SimpleDataDictQueryVO;
 import com.jyadmin.system.datadict.model.vo.SimpleDataDictUpdateVO;
 import com.jyadmin.system.datadict.service.SimpleDataDictService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -70,9 +71,7 @@ public class SimpleDataDictController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('simple-datadict:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(simpleDataDictService.removeByIds(newIds));
+        return ResultUtil.toResult(simpleDataDictService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID查找通用数据字典信息", notes = "")

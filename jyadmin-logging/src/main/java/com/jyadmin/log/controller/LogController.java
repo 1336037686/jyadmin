@@ -13,6 +13,7 @@ import com.jyadmin.log.domain.Log;
 import com.jyadmin.log.model.vo.LogQueryVO;
 import com.jyadmin.log.model.vo.UserLoginLog;
 import com.jyadmin.log.service.LogService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -48,9 +49,7 @@ public class LogController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('log:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(logService.removeByIds(newIds));
+        return ResultUtil.toResult(logService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前日志信息", notes = "")

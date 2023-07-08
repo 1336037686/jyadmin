@@ -14,6 +14,7 @@ import com.jyadmin.system.user.domain.User;
 import com.jyadmin.system.user.model.dto.UserDTO;
 import com.jyadmin.system.user.model.vo.*;
 import com.jyadmin.system.user.service.UserService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -100,9 +101,7 @@ public class UserController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('user:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(userService.removeByIds(newIds));
+        return ResultUtil.toResult(userService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前用户信息", notes = "")

@@ -12,6 +12,7 @@ import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.module.category.domain.Category;
 import com.jyadmin.module.category.model.vo.CategoryExportResVO;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResponseUtil;
 import com.jyadmin.util.ResultUtil;
@@ -22,6 +23,7 @@ import com.jyadmin.module.category.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,6 +35,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT <br>
@@ -66,13 +69,13 @@ public class CategoryController {
     @ApiOperation(value = "删除类别", notes = "")
     @DeleteMapping("/remove")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(categoryService.removeByIds(ids));
+        return ResultUtil.toResult(categoryService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前类别信息", notes = "")
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(categoryService.getById(id));
+        return Result.ok(categoryService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "分页查询类别", notes = "")

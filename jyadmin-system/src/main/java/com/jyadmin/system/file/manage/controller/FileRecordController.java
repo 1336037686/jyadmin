@@ -9,6 +9,7 @@ import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.file.manage.domain.FileRecord;
 import com.jyadmin.system.file.manage.model.vo.FileRecordQueryVO;
 import com.jyadmin.system.file.manage.service.FileRecordService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -46,9 +47,7 @@ public class FileRecordController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('file-record:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(fileRecordService.removeByIds(newIds));
+        return ResultUtil.toResult(fileRecordService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前附件记录信息", notes = "")

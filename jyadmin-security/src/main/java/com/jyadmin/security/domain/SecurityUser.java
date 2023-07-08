@@ -24,13 +24,14 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 public class SecurityUser implements UserDetails {
 
-    //当前登录用户
+    // 当前登录用户
     private transient User currentUser;
-    //当前权限
+    // 当前权限
     private List<String> permissions;
 
     public SecurityUser() {
     }
+
     public SecurityUser(User user) {
         if (user != null) {
             this.currentUser = user;

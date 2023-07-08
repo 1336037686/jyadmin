@@ -13,6 +13,7 @@ import com.jyadmin.system.datadict.model.vo.DataDictCreateRootVO;
 import com.jyadmin.system.datadict.model.vo.DataDictQueryVO;
 import com.jyadmin.system.datadict.model.vo.DataDictUpdateVO;
 import com.jyadmin.system.datadict.service.DataDictService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -84,9 +85,7 @@ public class DataDictController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('data-dict:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(sysDataDictService.removeByIds(newIds));
+        return ResultUtil.toResult(sysDataDictService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前节点信息", notes = "")

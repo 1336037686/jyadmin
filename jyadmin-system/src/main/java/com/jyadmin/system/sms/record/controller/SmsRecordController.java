@@ -9,6 +9,7 @@ import com.jyadmin.log.annotation.Log;
 import com.jyadmin.system.sms.record.domain.SmsRecord;
 import com.jyadmin.system.sms.record.model.vo.SmsRecordQueryVO;
 import com.jyadmin.system.sms.record.service.SmsRecordService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -45,9 +46,7 @@ public class SmsRecordController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('sms-record:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(smsRecordService.removeByIds(newIds));
+        return ResultUtil.toResult(smsRecordService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前短信记录信息", notes = "")

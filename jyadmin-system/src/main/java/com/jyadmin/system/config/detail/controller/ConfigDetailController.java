@@ -14,6 +14,7 @@ import com.jyadmin.system.config.detail.model.vo.ConfigDetailCreateVO;
 import com.jyadmin.system.config.detail.model.vo.ConfigDetailQueryVO;
 import com.jyadmin.system.config.detail.model.vo.ConfigDetailUpdateVO;
 import com.jyadmin.system.config.detail.service.ConfigDetailService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -71,9 +72,7 @@ public class ConfigDetailController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('config-detail:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(configDetailService.removeByIds(newIds));
+        return ResultUtil.toResult(configDetailService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前配置信息信息", notes = "")

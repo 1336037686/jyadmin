@@ -13,17 +13,20 @@ import com.jyadmin.module.tag.model.vo.TagCreateVO;
 import com.jyadmin.module.tag.model.vo.TagQueryVO;
 import com.jyadmin.module.tag.model.vo.TagUpdateVO;
 import com.jyadmin.module.tag.service.TagService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT <br>
@@ -58,19 +61,18 @@ public class TagController {
         return ResultUtil.toResult(tagService.updateById(tag));
     }
 
-    @Idempotent
     @ApiOperation(value = "删除标签", notes = "")
     @PreAuthorize("@jy.check('tag:remove')")
     @DeleteMapping("/remove")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(tagService.removeByIds(ids));
+        return ResultUtil.toResult(tagService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前标签信息", notes = "")
     @PreAuthorize("@jy.check('tag:queryById')")
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(tagService.getById(id));
+        return Result.ok(tagService.getById(Long.parseLong(id)));
     }
 
 

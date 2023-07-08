@@ -12,6 +12,7 @@ import com.jyadmin.system.permission.group.model.vo.PermissionGroupCreateVO;
 import com.jyadmin.system.permission.group.model.vo.PermissionGroupQueryVO;
 import com.jyadmin.system.permission.group.model.vo.PermissionGroupUpdateVO;
 import com.jyadmin.system.permission.group.service.PermissionActionGroupService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -68,9 +69,7 @@ public class PermissionGroupController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('group:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(permissionActionGroupService.removeByIds(newIds));
+        return ResultUtil.toResult(permissionActionGroupService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID查找组别信息", notes = "")

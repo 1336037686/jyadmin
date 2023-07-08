@@ -13,6 +13,7 @@ import com.jyadmin.system.department.model.vo.DepartmentCreateVO;
 import com.jyadmin.system.department.model.vo.DepartmentQueryVO;
 import com.jyadmin.system.department.model.vo.DepartmentUpdateVO;
 import com.jyadmin.system.department.service.DepartmentService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -72,9 +73,7 @@ public class DepartmentController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('department:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(departmentService.removeByIds(newIds));
+        return ResultUtil.toResult(departmentService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前部门信息", notes = "")

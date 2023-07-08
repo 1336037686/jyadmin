@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import com.jyadmin.module.blog.domain.Blog;
@@ -56,13 +57,13 @@ public class BlogController {
     @ApiOperation(value = "删除博客", notes = "")
     @DeleteMapping("/remove")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(blogService.removeByIds(ids));
+        return ResultUtil.toResult(blogService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前博客信息", notes = "")
     @GetMapping("/query/{id}")
     public Result<Object> doQueryById(@PathVariable String id) {
-        return Result.ok(blogService.getById(id));
+        return Result.ok(blogService.getById(Long.parseLong(id)));
     }
 
     @ApiOperation(value = "分页查询", notes = "")

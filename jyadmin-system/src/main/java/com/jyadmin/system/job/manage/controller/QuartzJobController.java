@@ -15,6 +15,7 @@ import com.jyadmin.system.job.manage.model.vo.QuartzJobQueryVO;
 import com.jyadmin.system.job.manage.model.vo.QuartzJobStatusUpdateVO;
 import com.jyadmin.system.job.manage.model.vo.QuartzJobUpdateVO;
 import com.jyadmin.system.job.manage.service.QuartzJobService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -91,9 +92,7 @@ public class QuartzJobController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('quartz-job:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(quartzService.removeJobs(newIds));
+        return ResultUtil.toResult(quartzService.removeJobs(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID查找系统定时任务信息", notes = "")

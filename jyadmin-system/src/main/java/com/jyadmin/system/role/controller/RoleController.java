@@ -14,6 +14,7 @@ import com.jyadmin.system.role.model.vo.RoleQueryVO;
 import com.jyadmin.system.role.model.vo.RoleUpdateVO;
 import com.jyadmin.system.role.service.RoleService;
 import com.jyadmin.system.role.service.UserRoleService;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -74,9 +75,7 @@ public class RoleController {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('role:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(roleService.removeByIds(newIds));
+        return ResultUtil.toResult(roleService.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID查找角色信息", notes = "")
@@ -121,9 +120,7 @@ public class RoleController {
     @PostMapping("/create/user/{userId}")
     @PreAuthorize("@jy.check('role:createFromUser')")
     public Result<Object> doCreateFromUser(@PathVariable("userId") String userId, @RequestBody Set<String> ids) {
-        if (CollectionUtils.isEmpty(ids)) return Result.fail();
-        Set<Long> newIds = ids.stream().map(Long::parseLong).collect(Collectors.toSet());
-        return ResultUtil.toResult(roleService.saveFromUser(Long.parseLong(userId), newIds));
+        return ResultUtil.toResult(roleService.saveFromUser(Long.parseLong(userId), DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "获取用户角色", notes = "")
