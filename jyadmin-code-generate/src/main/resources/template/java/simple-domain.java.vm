@@ -29,14 +29,7 @@ import $item;
 public class ${realTableNameUpperCamelCase} extends #if($tableType.equals('ot'))BaseEntity#{else}BaseTrEntity#end implements Serializable {
 #foreach($field in $fields)
 #if($field.fieldIgnore == 0)
-    #if($field.pk.equals('1'))
-
-    /**
-     * ${field.fieldRemark}
-     */
-    @TableId(value = "${field.fieldName}", type = IdType.ASSIGN_ID)
-    private ${field.javaType} ${field.realFieldNameLowCamelCase};
-    #else
+    #if($field.pk.equals('1') == false)
 
     /**
      * ${field.fieldRemark}
