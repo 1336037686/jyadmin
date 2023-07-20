@@ -1,5 +1,6 @@
 package com.jyadmin.system.role.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,6 +39,19 @@ public class RoleCreateVO implements Serializable {
     @ApiModelProperty(value = "角色接口权限", name = "apiPermission")
     @NotBlank(message = "角色接口权限不能为空")
     private String apiPermission;
+
+    /**
+     * 数据范围（all=全部，local=本级，other=自定义）
+     */
+    @ApiModelProperty(value = "数据范围", name = "dataScope")
+    @NotBlank(message = "数据范围不能为空")
+    private String dataScope;
+
+    /**
+     * 自定义数据范围（ID集合，数据之间用,分隔）
+     */
+    @ApiModelProperty(value = "自定义数据范围", name = "userDefineDataScope")
+    private String userDefineDataScope;
 
     /**
      * 角色描述

@@ -16,6 +16,7 @@ public class DataAccessControlConstant {
     public static final String BASE_MAPPER_DEFAULT_SELECT_BY_ID = "selectById";
     public static final String BASE_MAPPER_DEFAULT_SELECT_BATCH_IDS = "selectBatchIds";
     public static final String BASE_MAPPER_DEFAULT_SELECT_BY_MAP = "selectByMap";
+    public static final String BASE_MAPPER_DEFAULT_SELECT_ONE = "selectOne";
     public static final String BASE_MAPPER_DEFAULT_SELECT_COUNT = "selectCount";
     public static final String BASE_MAPPER_DEFAULT_SELECT_LIST = "selectList";
     public static final String BASE_MAPPER_DEFAULT_SELECT_MAPS = "selectMaps";
