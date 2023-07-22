@@ -46,6 +46,14 @@ public class DataDictUpdateVO {
     private String code;
 
     /**
+     * 父类别ID
+     */
+    @ApiModelProperty(value = "父类别ID", name = "parentId")
+    @NotNull(message = "父类别ID不能为空")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
+
+    /**
      * 排序
      */
     @ApiModelProperty(value = "排序", name = "sort")
