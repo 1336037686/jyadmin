@@ -74,6 +74,15 @@ public class GlobalConstants {
     public static final String SYS_RUNTIME_LOG_TYPE_FILE = "file";
     // ======================= 运行时日志 END =======================
 
+    // ======================= 角色数据范围 START =======================
+    // 角色数据范围-全部
+    public static final String SYS_ROLE_DATA_SCOPE_ALL = "all";
+    // 角色数据范围-本级
+    public static final String SYS_ROLE_DATA_SCOPE_LOCAL = "local";
+    // 角色数据范围-自定义
+    public static final String SYS_ROLE_DATA_SCOPE_OTHER = "other";
+    // ======================= 角色数据范围 END =======================
+
     // ======================= 枚举 START =======================
 
     /**

@@ -96,7 +96,7 @@ public class SimpleDataDictDetailController {
 
     @ApiOperation(value = "根据Code查询通用数据字典列表", notes = "根据Code查询通用数据字典列表")
     @GetMapping("/queryByCode/{code}")
-    @PreAuthorize("@jy.check('simple-datadict-detail:queryByCode')")
+    // @PreAuthorize("@jy.check('simple-datadict-detail:queryByCode')")
     public Result<List<SimpleDataDictDetail>> doQueryByCode(@PathVariable("code") String code) {
         SimpleDataDict dataDict = simpleDataDictService.getOne(new LambdaQueryWrapper<SimpleDataDict>()
                 .eq(StringUtils.isNotBlank(code), SimpleDataDict::getCode, code));

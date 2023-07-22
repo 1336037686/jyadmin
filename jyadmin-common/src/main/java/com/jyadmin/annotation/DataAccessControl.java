@@ -22,4 +22,10 @@ public @interface DataAccessControl {
      */
     String[] methods() default { };
 
+    /**
+     * 是否对MybatisPlus mapper 默认的方法启用数据权限控制
+     * com.jyadmin.consts.DataAccessControlConstant#DEFAULT_BASE_MAPPER_SELECT_METHODS
+     */
+    boolean enableMybatisPlusDefaultMethods() default false;
+
 }

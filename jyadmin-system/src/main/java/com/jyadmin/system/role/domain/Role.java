@@ -1,5 +1,6 @@
 package com.jyadmin.system.role.domain;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jyadmin.domain.base.BaseEntity;
@@ -45,7 +46,7 @@ public class Role extends BaseEntity implements Serializable {
     /**
      * 自定义数据范围（ID集合，数据之间用,分隔）
      */
-    @TableField(value = "user_define_data_scope")
+    @TableField(value = "user_define_data_scope", updateStrategy = FieldStrategy.IGNORED)
     private String userDefineDataScope;
 
     /**

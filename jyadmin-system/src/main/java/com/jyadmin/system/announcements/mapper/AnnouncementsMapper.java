@@ -1,6 +1,8 @@
 package com.jyadmin.system.announcements.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jyadmin.annotation.DataAccessControl;
+import com.jyadmin.consts.DataAccessControlConstant;
 import com.jyadmin.system.announcements.domain.Announcements;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @Entity com.jyadmin.system.announcements.domain.Announcements
  * @description: AnnouncementsMapper <br>
  */
+@DataAccessControl(enableMybatisPlusDefaultMethods = true)
 @Mapper
 public interface AnnouncementsMapper extends BaseMapper<Announcements> {
 

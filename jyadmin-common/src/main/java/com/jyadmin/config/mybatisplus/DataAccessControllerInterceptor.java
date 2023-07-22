@@ -4,6 +4,8 @@ import cn.hutool.core.util.ArrayUtil;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.jyadmin.annotation.DataAccessControl;
+import com.jyadmin.consts.DataAccessControlConstant;
+import com.jyadmin.util.SecurityUtil;
 import com.jyadmin.util.ThrowableUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,13 +53,46 @@ public class DataAccessControllerInterceptor implements InnerInterceptor {
         }
         String originalSql = boundSql.getSql();
         Object parameterObject = boundSql.getParameterObject();
-        String newSql = "SELECT * FROM (" + originalSql + ") T WHERE T.deleted=0 AND T.id = 100";
+
+        String newSql = buildDataAccessSQL(originalSql);
         BoundSql newBoundSql = new BoundSql(ms.getConfiguration(), newSql, boundSql.getParameterMappings(), parameterObject);
         // 将修改后的SQL语句打印出来，以便于调试
-        log.debug("new sql: {}", newSql);
+        log.debug("data access new sql: {}", newSql);
         PluginUtils.mpBoundSql(boundSql).sql(newSql);
     }
 
+    /**
+     * 构建权限查询临时表
+     * @return /
+     */
+    public String buildDataAccessSQL(String originalSql) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("\nWITH tmp_user_dept AS (");
+        sb.append("\n	SELECT  ");
+        sb.append("\n		sr.data_scope, ");
+        sb.append("\n			CASE sr.data_scope ");
+        sb.append("\n				WHEN 'local' THEN su.department ");
+        sb.append("\n				WHEN 'other' THEN sr.user_define_data_scope ");
+        sb.append("\n				ELSE (SELECT GROUP_CONCAT(id SEPARATOR ',') all_depts FROM sys_department sd WHERE sd.deleted = 0 and  sd.`status` = 1) ");
+        sb.append("\n		END depts ");
+        sb.append("\n	FROM sys_user su  ");
+        sb.append("\n	LEFT JOIN tr_user_role tur ON tur.user_id = su.id AND tur.deleted = 0 ");
+        sb.append("\n	LEFT JOIN sys_role sr ON sr.id = tur.role_id  AND sr.deleted = 0 ");
+        sb.append("\n	WHERE su.id = " + SecurityUtil.getCurrentUserId() + " ");
+        sb.append("\n) ");
+        sb.append("\nSELECT  ");
+        sb.append("\n	tmp_real_search.*  ");
+        sb.append("\nFROM  ");
+        sb.append("\n(" + originalSql + ") tmp_real_search ");
+        sb.append("\nINNER JOIN ( ");
+        sb.append("\n	SELECT  ");
+        sb.append("\n		DISTINCT data_access_su.id ");
+        sb.append("\n	FROM sys_user data_access_su  ");
+        sb.append("\n	INNER JOIN tmp_user_dept ON tmp_user_dept.depts LIKE CONCAT('%', data_access_su.department, '%')  ");
+        sb.append("\n	WHERE data_access_su.deleted = 0 ");
+        sb.append("\n) tmp_data_access ON tmp_data_access.id = tmp_real_search.create_by ");
+        return sb.toString();
+    }
 
     /**
      * 获取当前执行的Mapper方法信息
@@ -86,12 +121,15 @@ public class DataAccessControllerInterceptor implements InnerInterceptor {
             Boolean hasDataAccess = false;
             // 如果当前mapper类存在权限控制注解，且当前执行mapper方法在注解内部定义方法内部，则表示需要数据权限控制
             if (Objects.nonNull(classDataAccessControl)) {
-                String[] methods = classDataAccessControl.methods();
+                // 用户自定义方法
+                String[] userDefineMethods = classDataAccessControl.methods();
+                // 是否启用对mybatis plus 底层mapper方法的权限控制
+                String[] mybatisPlusDefaultMethods = classDataAccessControl.enableMybatisPlusDefaultMethods() ? DataAccessControlConstant.BASE_MAPPER_DEFAULT_SELECT_METHODS : new String[] {};
+                String[] methods = ArrayUtil.addAll(userDefineMethods, mybatisPlusDefaultMethods);
                 if (ArrayUtil.isNotEmpty(methods))  hasDataAccess = Arrays.stream(methods).anyMatch(methodName::equals);
             }
             // 如果当前执行mapper方法上面存在权限控制注解，则表示需要数据权限控制
             if (Boolean.FALSE.equals(hasDataAccess)) hasDataAccess = Objects.nonNull(fieldDataAccessControl);
-
             // 返回数据
             return new ExecMapperMethodInfo().setSuccess(true)
                     .setClazz(clazz).setClassDataAccessControl(classDataAccessControl)

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.annotation.RateLimit;
+import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
 import com.jyadmin.log.annotation.Log;
@@ -66,7 +67,9 @@ public class RoleController {
     public Result<Object> doUpdate(@RequestBody @Valid RoleUpdateVO vo) {
         Role role = roleService.getById(vo.getId());
         BeanUtil.copyProperties(vo, role);
-        return ResultUtil.toResult(roleService.updateById(role));
+        // 如果不是自定义范围，则清空自定义数据范围
+        if (!GlobalConstants.SYS_ROLE_DATA_SCOPE_OTHER.equals(role.getDataScope())) role.setUserDefineDataScope(null);
+        return ResultUtil.toResult(roleService.saveOrUpdate(role));
     }
 
     @RateLimit
