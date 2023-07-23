@@ -28,196 +28,198 @@ public enum ResultStatus {
     FAIL(400, ModuleSeries.BASE, "服务异常"),
     // endregion------------------------
 
-    // region--- 0001 xxxx 权限相关状态码 ---
+    // region--- 2200 xxxx 基础系统设施 ---
     /**
-     * 0001 0001 权限不足
+     * 2200 0001 访问次数超出限制
      */
-    INSUFFICIENT_PERMISSIONS(10001, ModuleSeries.AUTH, "权限不足"),
-
-    /**
-     * 0001 0002 请求未授权
-     */
-    REQUEST_NOT_AUTHORIZED(10002, ModuleSeries.AUTH, "请求未授权"),
+    LIMIT_EXCEEDED(22000001, ModuleSeries.SYS_INFRASTRUCTURE, "访问次数超出限制"),
 
     /**
-     * 0001 0003 账号被锁定
+     * 2200 0002 重复操作
      */
-    ACCOUNT_LOCKOUT(10003, ModuleSeries.AUTH, "账号被锁定，请联系管理员"),
+    REPEAT_OPERATION(22000002, ModuleSeries.SYS_INFRASTRUCTURE, "请勿重复操作"),
+    // endregion------------------------
+
+    // region--- 2201 xxxx 权限相关状态码 ---
+    /**
+     * 2201 0001 权限不足
+     */
+    INSUFFICIENT_PERMISSIONS(22010001, ModuleSeries.AUTH, "权限不足"),
 
     /**
-     * 0001 0004 密码过期
+     * 2201 0002 请求未授权
      */
-    PASSWORD_EXPIRATION(10004, ModuleSeries.AUTH, "密码过期，请联系管理员"),
+    REQUEST_NOT_AUTHORIZED(22010002, ModuleSeries.AUTH, "请求未授权"),
 
     /**
-     * 0001 0005 账户过期
+     * 2201 0003 账号被锁定
      */
-    ACCOUNT_EXPIRATION(10005, ModuleSeries.AUTH, "账户过期，请联系管理员"),
+    ACCOUNT_LOCKOUT(22010003, ModuleSeries.AUTH, "账号被锁定，请联系管理员"),
 
     /**
-     * 0001 0006 账户被禁用
+     * 2201 0004 密码过期
      */
-    ACCOUNT_DISABLED(10006, ModuleSeries.AUTH, "账户被禁用，请联系管理员"),
+    PASSWORD_EXPIRATION(22010004, ModuleSeries.AUTH, "密码过期，请联系管理员"),
 
     /**
-     * 0001 0007 用户名或者密码输入错误
+     * 2201 0005 账户过期
      */
-    USERNAME_PASSWORD_ERROR(10007, ModuleSeries.AUTH, "用户名或者密码输入错误，请重新输入"),
+    ACCOUNT_EXPIRATION(22010005, ModuleSeries.AUTH, "账户过期，请联系管理员"),
 
     /**
-     * 0001 0008 当前登录状态过期
+     * 2201 0006 账户被禁用
      */
-    LOGIN_STATUS_EXPIRED(10008, ModuleSeries.AUTH, "当前登录状态过期"),
+    ACCOUNT_DISABLED(22010006, ModuleSeries.AUTH, "账户被禁用，请联系管理员"),
 
     /**
-     * 0001 0009 找不到当前登录的信息
+     * 2201 0007 用户名或者密码输入错误
      */
-    NOT_FOUND_LOGIN_INFO(10009, ModuleSeries.AUTH, "找不到当前登录的信息"),
+    USERNAME_PASSWORD_ERROR(22010007, ModuleSeries.AUTH, "用户名或者密码输入错误，请重新输入"),
 
     /**
-     * 0001 0010 访问次数超出限制
+     * 2201 0008 当前登录状态过期
      */
-    LIMIT_EXCEEDED(10010, ModuleSeries.AUTH, "访问次数超出限制"),
+    LOGIN_STATUS_EXPIRED(22010008, ModuleSeries.AUTH, "登录过期，请重新登录"),
 
     /**
-     * 0001 0011 重复操作
+     * 2201 0009 找不到当前登录的信息
      */
-    REPEAT_OPERATION(10011, ModuleSeries.AUTH, "请勿重复操作"),
+    NOT_FOUND_LOGIN_INFO(22010009, ModuleSeries.AUTH, "找不到当前登录的信息"),
 
     /**
-     * 0001 10012 验证码获取失败
+     * 2201 0010 登陆续期失败
      */
-    CAPTCHA_FETCH_FAIL(10012, ModuleSeries.AUTH, "验证码获取失败"),
+    REFRESH_TOKEN_ERROR(22010010, ModuleSeries.AUTH, "登陆续期失败"),
 
     /**
-     * 0001 0013 验证码过期
+     * 2201 0011 登录信息获取异常
      */
-    CAPTCHA_EXPIRED(10013, ModuleSeries.AUTH, "验证码过期"),
+    LOGIN_INFO_OBTAIN_ERROR(22010011, ModuleSeries.AUTH, "登录信息获取异常"),
 
     /**
-     * 0001 0014 验证码输入错误
+     * 2201 0012 RefreshToken不存在
      */
-    CAPTCHA_INPUT_ERROR(10014, ModuleSeries.AUTH, "验证码输入错误"),
+    REFRESH_TOKEN_NOT_EXIST(22010012, ModuleSeries.AUTH, "RefreshToken不存在"),
 
     /**
-     * 0001 0015 登陆续期失败
+     * 2201 0013 Token不存在
      */
-    REFRESH_TOKEN_ERROR(10015, ModuleSeries.AUTH, "登陆续期失败"),
+    TOKEN_NOT_EXIST(22010013, ModuleSeries.AUTH, "Token不存在"),
 
     /**
-     * 0001 0016 登录信息获取错误
+     * 2201 0014 Token过期
      */
-    LOGIN_INFO_OBTAIN_ERROR(10016, ModuleSeries.AUTH, "登录信息获取错误"),
+    TOKEN_EXPIR_ERROR(22010014, ModuleSeries.AUTH, "登录过期，请重新登录"),
 
     /**
-     * 0001 0101 RefreshToken不存在
+     * 2201 0015 Token格式异常
      */
-    REFRESH_TOKEN_NOT_EXIST(10101, ModuleSeries.AUTH, "RefreshToken不存在"),
+    TOKEN_FORMAT_ERROR(22010015, ModuleSeries.AUTH, "Token格式异常"),
 
     /**
-     * 0001 0102 Token不存在
+     * 2201 0016 异地登录
      */
-    TOKEN_NOT_EXIST(10102, ModuleSeries.AUTH, "Token不存在"),
-
-    /**
-     * 0001 10103 Token过期
-     */
-    TOKEN_EXPIR_ERROR(10103, ModuleSeries.AUTH, "Token过期"),
-
-    /**
-     * 0001 10104 Token格式异常
-     */
-    TOKEN_FORMAT_ERROR(10104, ModuleSeries.AUTH, "Token格式异常"),
-
-    /**
-     * 0001 10151 异地登录
-     */
-    REMOTE_LOGIN_ERROR(10151, ModuleSeries.AUTH, "该账号已在别处登录"),
-
-
+    REMOTE_LOGIN_ERROR(22010016, ModuleSeries.AUTH, "该账号已在别处登录"),
 
     // endregion--------------------
 
-    // region--- 0002 xxxx 参数错误相关状态码 ---
+    // region--- 2202 xxxx 参数错误相关状态码 ---
     /**
-     * 0002 0001 请求参数错误
+     * 2202 0001 请求参数错误
      */
-    PARAM_ERROR(20001, ModuleSeries.PARAM, "请求参数错误"),
+    PARAM_ERROR(22020001, ModuleSeries.PARAM, "请求参数错误"),
 
     /**
-     * 0002 0002 XSS过滤 存在敏感参数信息，不允许访问
+     * 2202 0002 XSS过滤 存在敏感参数信息，不允许访问
      */
-    PARAM_XSS_SENSITIVITY_INFO(20002, ModuleSeries.PARAM, "存在敏感参数信息，不允许访问"),
+    PARAM_XSS_SENSITIVITY_INFO(22020002, ModuleSeries.PARAM, "存在敏感参数信息，不允许访问"),
 
     /**
-     * 0002 0003 XSS过滤异常
+     * 2202 0003 XSS过滤异常
      */
-    PARAM_XSS_ERROR(20003, ModuleSeries.PARAM, "XSS过滤异常，请联系管理员解决"),
+    PARAM_XSS_ERROR(22020003, ModuleSeries.PARAM, "XSS校验异常，请联系管理员解决"),
 
     // endregion---------------------
 
-    // region--- 0005 xxxx 附件相关状态码 ---
+    // region--- 2203 xxxx 登录验证码 ---
     /**
-     * 0005 0001
+     * 2203 0001 验证码获取失败
      */
-    FILE_UPLOAD_FAIL(50001, ModuleSeries.FILE, "文件上传失败"),
+    CAPTCHA_FETCH_FAIL(22030001, ModuleSeries.LOGIN_CAPTCHA, "验证码获取失败"),
 
     /**
-     * 0005 0002
+     * 2203 0002 验证码过期
      */
-    FILE_DOWNLOAD_FAIL(50002, ModuleSeries.FILE, "文件下载失败"),
+    CAPTCHA_EXPIRED(22030002, ModuleSeries.LOGIN_CAPTCHA, "验证码过期"),
 
     /**
-     * 0005 0003
+     * 2203 0003 验证码输入错误
      */
-    FILE_REMOVE_FAIL(50003, ModuleSeries.FILE, "文件删除失败"),
+    CAPTCHA_INPUT_ERROR(22030003, ModuleSeries.LOGIN_CAPTCHA, "验证码输入错误"),
+    // endregion------------------------
+
+    // region--- 2230 xxxx 附件相关状态码 ---
+    /**
+     * 2230 0001 文件上传失败
+     */
+    FILE_UPLOAD_FAIL(22300001, ModuleSeries.FILE, "文件上传失败"),
+
+    /**
+     * 2230 0002 文件下载失败
+     */
+    FILE_DOWNLOAD_FAIL(22300002, ModuleSeries.FILE, "文件下载失败"),
+
+    /**
+     * 2230 0003 文件删除失败
+     */
+    FILE_REMOVE_FAIL(22300003, ModuleSeries.FILE, "文件删除失败"),
     // endregion---------------------
 
-    // region--- 0006 xxxx 短信相关状态码 ---
+    // region--- 2231 xxxx 短信相关状态码 ---
     /**
-     * 0006 0001
+     * 2231 0001
      */
-    SMS_SEND_FAIL(60001, ModuleSeries.SMS, "短信发送失败"),
+    SMS_SEND_FAIL(22310001, ModuleSeries.SMS, "短信发送失败"),
     // endregion--------------------
 
-    // region--- 0007 xxxx 邮件相关状态码 ---
+    // region--- 2232 xxxx 邮件相关状态码 ---
     /**
-     * 0007 0001 邮件发送失败
+     * 2232 0001 邮件发送失败
      */
-    EMAIL_SEND_FAIL(70001, ModuleSeries.EMAIL, "邮件发送失败"),
+    EMAIL_SEND_FAIL(22320001, ModuleSeries.EMAIL, "邮件发送失败"),
 
     // endregion--------------------------
 
-    // region--- 0008 xxxx 代码生成器相关状态码 ---
+    // region--- 2299 xxxx 代码生成器相关状态码 ---
     /**
-     * 0008 0001 获取数据库表元数据失败
+     * 2299 0001 获取数据库表元数据失败
      */
-    CODE_GEN_QUERY_TABLE_METADATA_FAIL(80001, ModuleSeries.EMAIL, "获取数据库表元数据失败"),
+    CODE_GEN_QUERY_TABLE_METADATA_FAIL(22990001, ModuleSeries.EMAIL, "获取数据库表元数据失败"),
 
     /**
-     * 0008 0002 获取数据库表字段元数据失败
+     * 2299 0002 获取数据库表字段元数据失败
      */
-    CODE_GEN_QUERY_FIELD_METADATA_FAIL(80002, ModuleSeries.EMAIL, "获取数据库表字段元数据失败"),
+    CODE_GEN_QUERY_FIELD_METADATA_FAIL(22990002, ModuleSeries.EMAIL, "获取数据库表字段元数据失败"),
 
     /**
-     * 0008 0003 当前数据库表记录已存在
+     * 2299 0003 当前数据库表记录已存在
      */
-    CODE_GEN_TABLE_ALREADY_EXIST(80003, ModuleSeries.EMAIL, "当前数据库表记录已存在"),
+    CODE_GEN_TABLE_ALREADY_EXIST(22990003, ModuleSeries.EMAIL, "当前数据库表记录已存在"),
 
     /**
-     * 0008 0004 当前数据库表数据加载失败
+     * 2299 0004 当前数据库表数据加载失败
      */
-    CODE_GEN_TABLE_LOAD_ERROR(80004, ModuleSeries.EMAIL, "当前数据库表数据加载失败"),
+    CODE_GEN_TABLE_LOAD_ERROR(22990004, ModuleSeries.EMAIL, "当前数据库表数据加载失败"),
 
     /**
-     * 0008 0005 当前数据库表记录不存在
+     * 2299 0005 当前数据库表记录不存在
      */
-    CODE_GEN_TABLE_ALREADY_INEXIST(80005, ModuleSeries.EMAIL, "当前数据库表记录不存在"),
+    CODE_GEN_TABLE_ALREADY_INEXIST(22990005, ModuleSeries.EMAIL, "当前数据库表记录不存在"),
 
     /**
-     * 0008 0006 代码生成失败
+     * 2299 0006 代码生成失败
      */
-    CODE_GEN_ERROR(80006, ModuleSeries.EMAIL, "代码生成失败")
+    CODE_GEN_ERROR(22990006, ModuleSeries.EMAIL, "代码生成失败")
 
     // endregion--------------------------
 
@@ -256,18 +258,22 @@ public enum ResultStatus {
     public enum ModuleSeries {
         // 0 基础
         BASE(0),
-        // 1 权限
-        AUTH(1),
-        // 2 参数异常
-        PARAM(2),
-        // 5 附件
-        FILE(5),
-        // 6 短信
-        SMS(6),
-        // 7 邮件
-        EMAIL(7),
-        // 8 代码生成器
-        CODE_GEN(7);
+        // 2200 基础系统设置
+        SYS_INFRASTRUCTURE(2200),
+        // 2201 权限控制
+        AUTH(2201),
+        // 2202 参数校验
+        PARAM(2202),
+        // 2203 登录验证码
+        LOGIN_CAPTCHA(2203),
+        // 2230 附件上传
+        FILE(2230),
+        // 2231 短信发送
+        SMS(2231),
+        // 2232 邮件发送
+        EMAIL(2232),
+        // 2299 代码生成
+        CODE_GEN(2299);
 
         private final int value;
 
