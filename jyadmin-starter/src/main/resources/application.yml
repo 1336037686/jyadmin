@@ -2,7 +2,7 @@ spring:
   application:
     name: jyadmin
   profiles:
-    active: dev
+    active: demo
 jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
