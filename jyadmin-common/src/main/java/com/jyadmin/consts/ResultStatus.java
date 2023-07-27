@@ -38,6 +38,11 @@ public enum ResultStatus {
      * 2200 0002 重复操作
      */
     REPEAT_OPERATION(22000002, ModuleSeries.SYS_INFRASTRUCTURE, "请勿重复操作"),
+
+    /**
+     * 2200 0003 演示系统，不允许操作
+     */
+    DEMO_SYSTEM_NOT_ALLOW_OPERATION(22000003, ModuleSeries.SYS_INFRASTRUCTURE, "当前系统为演示系统，不允许操作"),
     // endregion------------------------
 
     // region--- 2201 xxxx 权限相关状态码 ---

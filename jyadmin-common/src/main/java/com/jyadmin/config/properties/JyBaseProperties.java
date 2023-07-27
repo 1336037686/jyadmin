@@ -25,4 +25,10 @@ public class JyBaseProperties {
      */
     private List<String> superAdmins = Lists.newArrayList("admin");
 
+    /**
+     * 演示系统拦截功能
+     */
+    private Boolean enableDemoIntercept = false;
+
+
 }
