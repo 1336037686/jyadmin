@@ -85,6 +85,8 @@ jyadmin:
     super-admins:
       - admin
       - lgggx
+    # 开启演示系统拦截（不允许进行POST/PUT/DELETE请求）
+    enable-demo-intercept: false
   # 鉴权相关配置
   auth:
     # 登录用户缓存前缀
