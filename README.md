@@ -253,3 +253,7 @@
 
 ![image-20230307202202968](README.assets/image-20230307202202968.png)
 
+
+```docker
+docker run -d --name jyadmin -p 8081:8081 -v /opt/docker/jyadmin/uploads:/app/uploads -v /opt/docker/jyadmin/logs:/app/logs jyadmin 
+```

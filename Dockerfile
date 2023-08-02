@@ -1,6 +1,10 @@
 # 使用OpenJDK 11 作为基础镜像
 FROM openjdk:11.0
 
+# 在容器内部创建目录
+RUN mkdir -p /app/uploads
+RUN mkdir -p /app/logs
+
 # 设置工作目录
 WORKDIR /app
 
