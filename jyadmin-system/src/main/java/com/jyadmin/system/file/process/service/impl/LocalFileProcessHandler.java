@@ -65,7 +65,6 @@ public class LocalFileProcessHandler implements FileProcessHandler {
         String basePath = configDetailService.getValueByCode(configDetail, BASE_PATH);
         String date = DateUtil.format(new Date(), "yyyy-MM-dd");
         basePath += basePath.charAt(basePath.length() - 1) == '/' ? date + "/" :  "/" + date + "/";
-        String domain = configDetailService.getValueByCode(configDetail, DOMAIN);
         String key = fileProcessUploadDTO.getName();
 
         // 判断目录是否存在，不存在就创建目录
@@ -81,13 +80,12 @@ public class LocalFileProcessHandler implements FileProcessHandler {
         } catch (Exception e) {
             throw new ApiException(ResultStatus.FILE_UPLOAD_FAIL, e.getMessage());
         }
-
-        String fileUrl = domain.charAt(domain.length() - 1) == '/' ? domain + String.join("/", date, key) : String.join("/", domain, date, key);
+        String relativePath = String.join("/", date, key);
 
         // 保存记录
         FileRecord fileRecord = new FileRecord();
         BeanUtil.copyProperties(fileProcessUploadDTO, fileRecord);
-        fileRecord.setPath(fileUrl);
+        fileRecord.setRelativePath(relativePath);
         fileRecord.setSource(fileConfigWrapper.getConfig().getStorageType());
         fileRecordService.save(fileRecord);
 

@@ -48,6 +48,12 @@ public class FileRecord extends BaseEntity implements Serializable {
     private String path;
 
     /**
+     * 文件相对路径
+     */
+    @TableField(value = "relative_path")
+    private String relativePath;
+
+    /**
      * 文件存储平台（阿里云、七牛云、腾讯云、本地）
      */
     @TableField(value = "source")

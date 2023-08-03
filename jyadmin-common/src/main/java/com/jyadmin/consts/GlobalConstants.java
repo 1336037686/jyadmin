@@ -54,6 +54,11 @@ public class GlobalConstants {
     public static final Long SYS_SMS_CONFIG_ID = 2L;
     // 系统邮件配置ID
     public static final Long SYS_EMAIL_CONFIG_ID = 3L;
+    // 文件上传 本地上传 文件存储平台
+    public static final String SYS_FILE_SOURCE_LOACL = "local-oss";
+    // 文件上传 本地上传 基础路径配置 编码
+    public static final String SYS_FILE_LOCAL_CONFIG_BASE_PATH = "basePath";
+
     // 系统国家电话默认前缀
     public static final String SYS_PHONE_NUMBER_PREFIX = "+86";
     // 系统短信验证码默认前缀
@@ -62,6 +67,7 @@ public class GlobalConstants {
     public static final Integer SYS_SMS_VERIFICATION_CODE_LENGTH = 4;
     // 系统短信验证码默认保存时限(秒s)
     public static final Integer SYS_SMS_VERIFICATION_CODE_TIME_LIMIT = 5 * 60;
+
     // ======================= 系统短信、邮件、附件配置 END =======================
 
     // ======================= 系统部门管理 START =======================

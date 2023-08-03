@@ -1,10 +1,13 @@
 package com.jyadmin.system.file.process.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
+import com.jyadmin.system.config.detail.domain.ConfigDetail;
 import com.jyadmin.system.config.detail.domain.ConfigDetailJsonModel;
+import com.jyadmin.system.config.detail.service.ConfigDetailService;
 import com.jyadmin.system.config.module.domain.ModuleConfigWrapper;
 import com.jyadmin.system.config.module.service.ModuleConfigService;
 import com.jyadmin.system.file.manage.domain.FileRecord;
@@ -22,11 +25,11 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Date;
 
 /**
  * @author LGX_TvT <br>
@@ -40,6 +43,9 @@ public class FileProcessServiceImpl implements FileProcessService {
 
     @Resource
     private ModuleConfigService moduleConfigService;
+
+    @Resource
+    private ConfigDetailService configDetailService;
 
     /**
      * 获取当前的附件配置
@@ -77,6 +83,16 @@ public class FileProcessServiceImpl implements FileProcessService {
         ResponseUtil.initFtpResponse(response);
         // 设置文件下载方式：附件下载
         response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(fileRecord.getRealName()));
+        // 如果是本地文件
+        if (!GlobalConstants.SYS_FILE_SOURCE_LOACL.equals(fileRecord.getSource())) this.fetchNetWorkFile(fileProcessDownloadDTO);
+        else fetchLocalFile(fileProcessDownloadDTO);
+    }
+
+    /**
+     * 请求网络文件
+     */
+    public void fetchNetWorkFile(FileProcessDownloadDTO fileProcessDownloadDTO) {
+        HttpServletResponse response = fileProcessDownloadDTO.getResponse();
         // 执行状态
         int fetchIndex = 0;
         boolean fetchStatus = false;
@@ -100,6 +116,27 @@ public class FileProcessServiceImpl implements FileProcessService {
             if (!fetchStatus) {
                 throw new ApiException(ResultStatus.FILE_DOWNLOAD_FAIL, exception.getMessage());
             }
+        }
+    }
+
+    /**
+     * 加载本地文件
+     */
+    public void fetchLocalFile(FileProcessDownloadDTO fileProcessDownloadDTO) {
+        HttpServletResponse response = fileProcessDownloadDTO.getResponse();
+        FileRecord fileRecord = fileProcessDownloadDTO.getFileRecord();
+        // 获取配置信息
+        ModuleConfigWrapper fileConfigWrapper = getEnableFileConfigDetail();
+        ConfigDetail configDetail = fileConfigWrapper.getConfigDetail();
+        // 构建文件路径
+        String basePath = configDetailService.getValueByCode(configDetail, GlobalConstants.SYS_FILE_LOCAL_CONFIG_BASE_PATH);
+        String filePath = basePath + (basePath.charAt(basePath.length() - 1) == '/' ? "" :  "/") + fileRecord.getRelativePath();
+        // 下载文件
+        try {
+            IOUtils.copy(new FileInputStream(filePath), response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ApiException(ResultStatus.FILE_DOWNLOAD_FAIL, e.getMessage());
         }
     }
 }

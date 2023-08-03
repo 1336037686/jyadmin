@@ -81,5 +81,4 @@ public class FileProcessController {
         fileProcessService.download(fileProcessDownloadDTO);
         return Result.ok();
     }
-
 }
