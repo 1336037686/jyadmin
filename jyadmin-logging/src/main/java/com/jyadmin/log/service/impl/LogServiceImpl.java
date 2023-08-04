@@ -15,6 +15,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -56,6 +58,8 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         List<Object> requestParam = Arrays.stream(joinPoint.getArgs())
                 .filter(x -> !(x instanceof MultipartFile)) // 剔除文件类型
                 .filter(x -> !(x instanceof HttpServletRequest)) // 剔除HttpServletRequest类型
+                .filter(x -> !(x instanceof InputStream)) // 剔除InputStream类型
+                .filter(x -> !(x instanceof OutputStream)) // 剔除OutputStream类型
                 .collect(Collectors.toList());
         // 请求时间
         LocalDateTime requestTime = LocalDateTime.now();

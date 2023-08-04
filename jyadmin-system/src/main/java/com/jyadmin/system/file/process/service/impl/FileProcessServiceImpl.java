@@ -55,6 +55,11 @@ public class FileProcessServiceImpl implements FileProcessService {
         return moduleConfigService.getEnableConfigDetail(GlobalConstants.SYS_FILE_CONFIG_ID);
     }
 
+    /**
+     * 文件上传
+     * @param fileProcessUploadDTO 文件上传DTO
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public FileProcess upload(FileProcessUploadDTO fileProcessUploadDTO) {
@@ -75,6 +80,10 @@ public class FileProcessServiceImpl implements FileProcessService {
         return fileProcessHandler.upload(fileProcessUploadDTO, fileConfigWrapper);
     }
 
+    /**
+     * 文件下载
+     * @param fileProcessDownloadDTO 文件下载DTO
+     */
     @Override
     public void download(FileProcessDownloadDTO fileProcessDownloadDTO) {
         FileRecord fileRecord = fileProcessDownloadDTO.getFileRecord();
@@ -131,10 +140,11 @@ public class FileProcessServiceImpl implements FileProcessService {
         // 构建文件路径
         String basePath = configDetailService.getValueByCode(configDetail, GlobalConstants.SYS_FILE_LOCAL_CONFIG_BASE_PATH);
         String filePath = basePath + (basePath.charAt(basePath.length() - 1) == '/' ? "" :  "/") + fileRecord.getRelativePath();
+        log.debug("file url: {}", filePath);
         // 下载文件
         try {
             IOUtils.copy(new FileInputStream(filePath), response.getOutputStream());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ApiException(ResultStatus.FILE_DOWNLOAD_FAIL, e.getMessage());
         }

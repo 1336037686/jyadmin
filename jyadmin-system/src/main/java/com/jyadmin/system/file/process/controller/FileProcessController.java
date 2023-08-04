@@ -44,7 +44,6 @@ public class FileProcessController {
     @Log(title = "附件处理：文件上传", desc = "文件上传")
     @ApiOperation(value = "文件上传", notes = "")
     @PostMapping("upload/{relevance}")
-    @PreAuthorize("@jy.check('file-process:upload')")
     public Result<FileProcess> doUpload(MultipartFile file, @PathVariable("relevance") String relevance) throws Exception {
         // 文件原名称
         String originalFilename = file.getOriginalFilename();
@@ -69,11 +68,9 @@ public class FileProcessController {
         return Result.ok(result);
     }
 
-    @RateLimit
     @Log(title = "附件处理：文件下载", desc = "文件下载")
     @ApiOperation(value = "文件下载", notes = "")
     @GetMapping("download/{id}")
-    @PreAuthorize("@jy.check('file-process:download')")
     public Result<Object> doDownload(@PathVariable("id") String id, HttpServletResponse response) {
         FileRecord fileRecord = fileRecordService.getById(Long.parseLong(id));
         Assert.notNull(fileRecord, "当前文件不存在！");
