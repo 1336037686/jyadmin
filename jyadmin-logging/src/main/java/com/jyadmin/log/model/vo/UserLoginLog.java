@@ -1,5 +1,6 @@
 package com.jyadmin.log.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -68,6 +69,12 @@ public class UserLoginLog {
      */
     @ApiModelProperty("设备")
     private String application;
+
+    /**
+     * 执行耗时
+     */
+    @ApiModelProperty("执行耗时")
+    private Integer executeTime;
 
     /**
      * 请求时间
