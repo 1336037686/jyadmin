@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 获取当前用户的接口权限，角色接口权限（api_permission_portion=根据角色菜单限制接口权限， api_permission_all=拥有全部接口权限）
         List<String> apiPermissions = authService.getApiPermissionByUserId(user.getId());
         // 是否拥有全部接口权限
-        boolean hasAllApiPermission = apiPermissions.stream().filter(x -> x.equals(GlobalConstants.SysApiPermission.API_PERMISSION_ALL.getCode())).findAny().isPresent();
+        boolean hasAllApiPermission = apiPermissions.stream().anyMatch(x -> x.equals(GlobalConstants.SysApiPermission.API_PERMISSION_ALL.getCode()));
         List<PermissionAction> permissions = new ArrayList<>();
         // 如果拥有全部接口权限则查询全部
         if (hasAllApiPermission) permissions = authService.getAllPermissions();

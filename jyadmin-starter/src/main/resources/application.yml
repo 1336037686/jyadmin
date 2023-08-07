@@ -3,7 +3,13 @@ spring:
     name: jyadmin
   profiles:
     active: dev
+# 压缩响应数据提升响应速度，减少数据传输的大小
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
 jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
