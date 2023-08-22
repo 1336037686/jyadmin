@@ -116,6 +116,7 @@ jyadmin:
         - /api/auth/refreshToken        # 登陆续期
         - /api/auth/rsa-public-key      # 获取RSA公钥
         - /api/basic-setting/list       # 基础配置
+        - /api/file-process/download/{id} # 文件下载
       # 放行所有接口，只允许测试不需要登陆的接口时才可放开
       permit-all: false
       # 只允许唯一IP登录
@@ -159,7 +160,7 @@ jyadmin:
     # 系统实时运行日志配置
     runtime-log:
       # 系统运行日志路径
-      base-path: F:\CodeProject\Java_Projects\my-project\jyadmin\jyadmin\logs\jyadmin
+      base-path: /app/logs/jyadmin
   # 代码生成器配置
   code-generate:
     # 数据库名，用来查找表结构信息
