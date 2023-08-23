@@ -63,4 +63,16 @@ public class RedisCacheServiceImpl implements CacheService {
         redisUtil.delete(key);
         return true;
     }
+
+    @Override
+    public boolean lockUser(String username) {
+        String key = jyAuthProperties.getAuthUserLockPrefix() + ":" + username;
+        return redisUtil.setValue(key, 1, jyAuthProperties.getAuthUserLockExpiration(), TimeUnit.SECONDS);
+    }
+
+    @Override
+    public boolean isLocked(String username) {
+        String key = jyAuthProperties.getAuthUserLockPrefix() + ":" + username;
+        return redisUtil.exists(key);
+    }
 }

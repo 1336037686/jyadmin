@@ -59,7 +59,7 @@ public enum ResultStatus {
     /**
      * 2201 0003 账号被锁定
      */
-    ACCOUNT_LOCKOUT(22010003, ModuleSeries.AUTH, "账号被锁定，请联系管理员"),
+    ACCOUNT_LOCKOUT(22010003, ModuleSeries.AUTH, "账号被锁定，请在1小时后重试"),
 
     /**
      * 2201 0004 密码过期

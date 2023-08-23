@@ -6,6 +6,7 @@ import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.SecurityUser;
 import com.jyadmin.security.domain.User;
 import com.jyadmin.security.service.AuthService;
+import com.jyadmin.security.service.CacheService;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +31,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
     private AuthService authService;
+    @Resource
+    private CacheService cacheService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -43,5 +43,15 @@ public class JyAuthProperties {
      */
     private Long verificationCodeExpiration = 5 * 60L;
 
+    /**
+     * 账号锁定缓存前缀
+     */
+    private String authUserLockPrefix = "auth_user_lock";
+
+    /**
+     * 账号锁定缓存过期时间
+     * 默认：60min
+     */
+    private Long authUserLockExpiration = 60 * 60L;
 
 }

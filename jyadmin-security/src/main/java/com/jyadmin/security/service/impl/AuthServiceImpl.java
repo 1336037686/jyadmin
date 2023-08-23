@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -75,7 +76,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Override
     public Map<String, Object> login(HttpServletRequest request, String username, String password) {
         // 基础校验
-        checkAccountLegal(username, password);
+        checkAccountLegal(username, password, request);
 
         // 登录信息构建
         SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(username);
@@ -88,8 +89,6 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
         // 保存用户信息到redis
         cacheService.save(buildUserCacheInfo(userDetails, request));
-        // 更新用户登录信息
-        authMapper.updateById(buildUserLoginInfo(userDetails.getCurrentUser(), request));
 
         // 返回token
         Map<String, Object> tokenMap = new HashMap<>();
@@ -104,20 +103,24 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
      * @param username /
      * @param password /
      */
-    public void checkAccountLegal(String username, String password) {
+    public void checkAccountLegal(String username, String password, HttpServletRequest request) {
         User user = getByUserName(username);
         // 用户名校验
         if (Objects.isNull(user)) throw new UsernameNotFoundException("用户不存在");
         // 禁用校验
         if (GlobalConstants.SysStatus.OFF.getValue().equals(user.getStatus())) throw new DisabledException("账号已禁用");
         // 锁定校验
-        if (jyAuthProperties.getAuthloginAttempts() < user.getLoginAttempts()) throw new LockedException("账号已锁定");
+        if (cacheService.isLocked(username)) throw new LockedException("账号已锁定");
         // 密码校验
-        String decryptPassword = RsaUtil.decrypt(password);
-        if (!passwordEncoder.matches(decryptPassword, user.getPassword())) {
+        if (!passwordEncoder.matches(RsaUtil.decrypt(password), user.getPassword())) {
+            // 增加尝试登录次数
             authMapper.updateById(buildUserLoginFailInfo(user));
+            // 如果登录次数大于限制次数，则锁定账户
+            if (jyAuthProperties.getAuthloginAttempts() <= user.getLoginAttempts()) cacheService.lockUser(username);
             throw new BadCredentialsException("密码不正确");
         }
+        // 校验通过，更新用户登录信息
+        authMapper.updateById(buildUserLoginInfo(user, request));
     }
 
     /**

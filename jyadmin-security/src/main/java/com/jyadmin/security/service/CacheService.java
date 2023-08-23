@@ -18,4 +18,8 @@ public interface CacheService {
 
     boolean remove(String username);
 
+    boolean lockUser(String username);
+
+    boolean isLocked(String username);
+
 }
