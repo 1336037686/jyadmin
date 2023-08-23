@@ -1,6 +1,10 @@
 package com.jyadmin.security.domain;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
+import com.jyadmin.config.properties.JyAuthProperties;
+import com.jyadmin.config.properties.JyJwtProperties;
+import com.jyadmin.consts.GlobalConstants;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -64,7 +68,8 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        JyAuthProperties authProperties = SpringUtil.getBean(JyAuthProperties.class);
+        return authProperties.getAuthloginAttempts() > currentUser.getLoginAttempts();
     }
 
     @Override
@@ -74,7 +79,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return GlobalConstants.SysStatus.ON.getValue().equals(currentUser.getStatus());
     }
 
     // 重要，解决Util工具类无法获取SecurityUser 问题

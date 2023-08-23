@@ -1,7 +1,9 @@
 package com.jyadmin.system.user.domain;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -9,6 +11,7 @@ import com.jyadmin.domain.base.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 用户表
@@ -71,6 +74,25 @@ public class User extends BaseEntity implements Serializable {
     @TableField(value = "post")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long post;
+
+    /**
+     * 登录尝试次数
+     */
+    @JsonIgnore
+    @TableField(value = "login_attempts")
+    private Integer loginAttempts;
+
+    /**
+     * 最后一次登陆时间
+     */
+    @TableField(value = "last_login_time")
+    private LocalDateTime lastLoginTime;
+
+    /**
+     * 最后一次登录IP
+     */
+    @TableField(value = "last_login_ip")
+    private String lastLoginIp;
 
     /**
      * 状态

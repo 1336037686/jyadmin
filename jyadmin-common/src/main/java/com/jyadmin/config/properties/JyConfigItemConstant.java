@@ -28,5 +28,7 @@ public class JyConfigItemConstant {
     public static final String SAFE_SECURITY =      "jyadmin.safe.security";
     /**XSS过滤器配置*/
     public static final String SAFE_XSS =           "jyadmin.safe.xss";
+    /**缓存配置*/
+    public static final String CACHE =              "jyadmin.cache";
 
 }

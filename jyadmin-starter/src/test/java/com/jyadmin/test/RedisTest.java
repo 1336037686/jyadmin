@@ -1,10 +1,19 @@
 package com.jyadmin.test;
 
-import com.jyadmin.util.RedisUtil;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author LGX_TvT <br>
@@ -15,14 +24,11 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class RedisTest {
 
-    @Resource
-    RedisUtil redisUtil;
 
     @Test
-    public void test() {
-        redisUtil.setValue("HelloWorld", "HelloWorld");
-        String helloWorld = (String) redisUtil.getValue("HelloWorld");
-        System.out.printf(helloWorld);
+    public void test() throws Exception {
+
     }
+
 
 }

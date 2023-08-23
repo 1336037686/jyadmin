@@ -44,7 +44,7 @@ public class BasicSettingController {
 
     @ApiOperation(value = "列表查询系统基础配置", notes = "")
     @GetMapping("/list")
-    @Cacheable(value = "BasicSettingController:doQueryList", key = "#root.methodName")
+    @Cacheable(value = "BasicSettingController:doQueryList", cacheManager = "configCacheManager", key = "#root.methodName")
     public Result<List<BasicSetting>> doQueryList() {
         List<BasicSetting> list = this.basicSettingService.list(new LambdaQueryWrapper<BasicSetting>().orderByAsc(BasicSetting::getId));
         return Result.ok(list);

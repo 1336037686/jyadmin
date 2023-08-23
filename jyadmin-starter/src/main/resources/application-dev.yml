@@ -148,6 +148,14 @@ jyadmin:
     prefix: jyadmin_idempotent
     # 默认过期时间
     default-period: 1800
+  # 缓存
+  cache:
+    # 缓存管理器配置
+    cache-managers:
+      - cache-manager-name: "configCacheManager"
+        initial-capacity: 100
+        maximum-size: 1000
+        expire-after-write: 60
   # Api文档配置
   document:
     # 文档描述

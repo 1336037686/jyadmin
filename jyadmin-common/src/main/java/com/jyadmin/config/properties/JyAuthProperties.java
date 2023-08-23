@@ -17,6 +17,11 @@ import org.springframework.stereotype.Component;
 public class JyAuthProperties {
 
     /**
+     * 登录尝试次数
+     */
+    private Integer authloginAttempts = 5;
+
+    /**
      * 登录用户缓存前缀
      */
     private String authUserPrefix = "auth_user";

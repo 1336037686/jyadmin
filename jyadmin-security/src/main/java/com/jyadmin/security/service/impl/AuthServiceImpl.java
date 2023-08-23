@@ -25,9 +25,12 @@ import com.jyadmin.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,14 +52,12 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
     @Resource
     private AuthMapper authMapper;
-
     @Resource
     private UserDetailsService userDetailsService;
     @Resource
     private PasswordEncoder passwordEncoder;
     @Resource
     private CacheService cacheService;
-
     @Resource
     private RedisUtil redisUtil;
     @Resource
@@ -64,14 +65,20 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Resource
     private JyAuthProperties jyAuthProperties;
 
+    /**
+     * 用户登录
+     * @param request /
+     * @param username 用户名
+     * @param password 密码
+     * @return /
+     */
     @Override
     public Map<String, Object> login(HttpServletRequest request, String username, String password) {
+        // 基础校验
+        checkAccountLegal(username, password);
+
+        // 登录信息构建
         SecurityUser userDetails = (SecurityUser) userDetailsService.loadUserByUsername(username);
-        // 解密密码
-        String decryptPassword = RsaUtil.decrypt(password);
-        if (!passwordEncoder.matches(decryptPassword, userDetails.getPassword())) {
-            throw new BadCredentialsException("密码不正确");
-        }
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -81,6 +88,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
 
         // 保存用户信息到redis
         cacheService.save(buildUserCacheInfo(userDetails, request));
+        // 更新用户登录信息
+        authMapper.updateById(buildUserLoginInfo(userDetails.getCurrentUser(), request));
 
         // 返回token
         Map<String, Object> tokenMap = new HashMap<>();
@@ -90,6 +99,57 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         return tokenMap;
     }
 
+    /**
+     * 校验账户合法性
+     * @param username /
+     * @param password /
+     */
+    public void checkAccountLegal(String username, String password) {
+        User user = getByUserName(username);
+        // 用户名校验
+        if (Objects.isNull(user)) throw new UsernameNotFoundException("用户不存在");
+        // 禁用校验
+        if (GlobalConstants.SysStatus.OFF.getValue().equals(user.getStatus())) throw new DisabledException("账号已禁用");
+        // 锁定校验
+        if (jyAuthProperties.getAuthloginAttempts() < user.getLoginAttempts()) throw new LockedException("账号已锁定");
+        // 密码校验
+        String decryptPassword = RsaUtil.decrypt(password);
+        if (!passwordEncoder.matches(decryptPassword, user.getPassword())) {
+            authMapper.updateById(buildUserLoginFailInfo(user));
+            throw new BadCredentialsException("密码不正确");
+        }
+    }
+
+    /**
+     * 构建用户登录成功信息
+     * @param user 用户
+     * @param request /
+     * @return User
+     */
+    private User buildUserLoginInfo(User user, HttpServletRequest request) {
+        String ip = IpUtil.getIp(request);
+        user.setLoginAttempts(0);
+        user.setLastLoginTime(LocalDateTime.now());
+        user.setLastLoginIp(ip);
+        return user;
+    }
+
+    /**
+     * 构建用户登录失败信息
+     * @param user 用户
+     * @return User
+     */
+    private User buildUserLoginFailInfo(User user) {
+        user.setLoginAttempts(user.getLoginAttempts() + 1);
+        return user;
+    }
+
+    /**
+     * 构建用户缓存信息
+     * @param userDetails 用户信息
+     * @param request /
+     * @return UserCacheInfo
+     */
     private UserCacheInfo buildUserCacheInfo(SecurityUser userDetails, HttpServletRequest request) {
         String ip = IpUtil.getIp(request);
         UserCacheInfo userCacheInfo = new UserCacheInfo();
@@ -104,6 +164,11 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
                 .setPermissions(userDetails.getPermissions());
     }
 
+    /**
+     * 刷新Access Token
+     * @param refreshToken 刷新Token
+     * @return /
+     */
     @Override
     public String refreshToken(String refreshToken) {
         String username = JWTUtil.parseToken(refreshToken);
@@ -118,29 +183,52 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         return JWTUtil.createAccessToken(username);
     }
 
+    /**
+     * 根据用户名获取用户信息
+     * @param userName /
+     * @return /
+     */
     @Override
     public User getByUserName(String userName) {
         return this.baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, userName));
     }
 
+    /**
+     * 根据用户名ID获取用户权限信息
+     * @param userId /
+     * @return /
+     */
     @Override
     public List<String> getApiPermissionByUserId(Long userId) {
         return authMapper.selectApiPermissionByUserId(userId);
     }
 
+    /**
+     * 获取所有接口权限
+     * @return /
+     */
     @Override
-    @Cacheable(value = "AuthService:getAllPermissions", key = "#root.methodName")
+    @Cacheable(value = "AuthService:getAllPermissions", cacheManager = "commonCacheManager", key = "#root.methodName")
     public List<PermissionAction> getAllPermissions() {
         return authMapper.selectAllPermissions();
     }
 
+    /**
+     * 根据用户ID获取用户接口权限
+     * @return /
+     */
     @Override
     public List<PermissionAction> getPermissionsByUserId(Long userId) {
         return authMapper.selectPermissionsByUserId(userId);
     }
 
+    /**
+     * 根据用户ID获取菜单
+     * @param userId /
+     * @return /
+     */
     @Override
-    @Cacheable(value = "AuthService:getMenus", key = "#userId")
+    @Cacheable(value = "AuthService:getMenus", cacheManager = "commonCacheManager", key = "#userId")
     public List<Map<String, Object>> getMenus(Long userId) {
         List<Map<String, Object>> menus = this.authMapper.selectMenus(userId);
 
@@ -163,8 +251,13 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         return menuMaps.stream().filter(x -> Objects.equals(GlobalConstants.SYS_MENU_ROOT_PARENT_ID.toString(), x.get("parentId"))).collect(Collectors.toList());
     }
 
+    /**
+     * 根据用户ID获取用户信息
+     * @param userId /
+     * @return /
+     */
     @Override
-    @Cacheable(value = "AuthService:getUserInfo", key = "#userId")
+    @Cacheable(value = "AuthService:getUserInfo", cacheManager = "commonCacheManager", key = "#userId")
     public UserInfo getUserInfo(Long userId) {
         User user = getById(userId);
         List<Map<String, Object>> rolesMap = authMapper.selectRoles(userId);
@@ -185,12 +278,20 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         return userInfo;
     }
 
+    /**
+     * 退出登录
+     * @param username 用户名
+     */
     @Override
     public void logout(String username) {
         cacheService.remove(username);
         SecurityContextHolder.clearContext();
     }
 
+    /**
+     * 生成幂等Token
+     * @return /
+     */
     @Override
     public String getIdempotentToken() {
         String token = StringUtils.join(DateUtil.format(LocalDateTime.now(), "yyyy-MM-dd-HH-mm-ss-SSS"), "-", new Snowflake().nextIdStr());
@@ -199,6 +300,11 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         return token;
     }
 
+    /**
+     * 生成验证码
+     * @param uniqueId 唯一ID
+     * @param response /
+     */
     @Override
     public void getCaptcha(String uniqueId, HttpServletResponse response) {
         try {
