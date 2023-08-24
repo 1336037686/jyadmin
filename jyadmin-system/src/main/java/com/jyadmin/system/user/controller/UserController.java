@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.annotation.RateLimit;
+import com.jyadmin.config.properties.JyAuthProperties;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.PageResult;
@@ -16,6 +17,7 @@ import com.jyadmin.system.user.model.vo.*;
 import com.jyadmin.system.user.service.UserService;
 import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
+import com.jyadmin.util.RedisUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,6 +50,12 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private JyAuthProperties authProperties;
+
     @RateLimit
     @Log(title = "系统管理：新增用户", desc = "新增用户")
     @ApiOperation(value = "新增用户", notes = "")
@@ -78,6 +86,9 @@ public class UserController {
         vo.setPassword(new BCryptPasswordEncoder().encode(vo.getPassword()));
         User user = userService.getById(vo.getId());
         BeanUtil.copyProperties(vo, user);
+        // 去除账户锁定
+        String userLockKey = authProperties.getAuthUserLockPrefix() + ":" + user.getUsername();
+        redisUtil.delete(userLockKey);
         return ResultUtil.toResult(userService.updateById(user));
     }
 

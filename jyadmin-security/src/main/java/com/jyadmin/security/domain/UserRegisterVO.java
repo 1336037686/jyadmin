@@ -6,16 +6,17 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
 /**
- * @author LGX_TvT
- * @date 2022-04-29 10:46
+ * @author LGX_TvT <br>
+ * @version 1.0 <br>
+ * Create by 2023-08-24 10:26 <br>
+ * @description: UserRegisterVO <br>
  */
-@ApiModel("系统用户-用户登录-数据模型")
+@ApiModel("系统用户-用户注册-数据模型")
 @Data
 @Accessors(chain = true)
-public class UserLoginVO implements Serializable {
+public class UserRegisterVO {
 
     /**
      * 用户名
@@ -32,6 +33,13 @@ public class UserLoginVO implements Serializable {
     private String password;
 
     /**
+     * 密码
+     */
+    @ApiModelProperty(value = "手机号码", name = "phone")
+    @NotBlank(message = "手机号码不能为空")
+    private String phone;
+
+    /**
      * 验证码唯一ID
      */
     @ApiModelProperty(value = "验证码唯一ID", name = "uniqueId")
@@ -44,5 +52,6 @@ public class UserLoginVO implements Serializable {
     @ApiModelProperty(value = "验证码", name = "captcha")
     @NotBlank(message = "验证码不能为空")
     private String captcha;
+
 
 }

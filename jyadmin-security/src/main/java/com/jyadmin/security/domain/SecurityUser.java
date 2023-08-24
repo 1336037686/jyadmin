@@ -69,7 +69,7 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         JyAuthProperties authProperties = SpringUtil.getBean(JyAuthProperties.class);
-        return authProperties.getAuthloginAttempts() > currentUser.getLoginAttempts();
+        return authProperties.getAuthloginAttempts() >= currentUser.getLoginAttempts();
     }
 
     @Override

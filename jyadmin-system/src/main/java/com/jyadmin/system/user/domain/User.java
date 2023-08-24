@@ -85,6 +85,7 @@ public class User extends BaseEntity implements Serializable {
     /**
      * 最后一次登陆时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     @TableField(value = "last_login_time")
     private LocalDateTime lastLoginTime;
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jyadmin.security.domain.PermissionAction;
 import com.jyadmin.security.domain.User;
 import com.jyadmin.security.domain.UserInfo;
+import com.jyadmin.security.domain.UserRegisterVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,8 @@ import java.util.Map;
 public interface AuthService extends IService<User> {
 
     Map<String, Object> login(HttpServletRequest request, String username, String password);
+
+    Map<String, Object> register(HttpServletRequest request, UserRegisterVO vo);
 
     User getByUserName(String userName);
 
@@ -40,6 +43,5 @@ public interface AuthService extends IService<User> {
     String refreshToken(String refreshToken);
 
     List<String> getApiPermissionByUserId(Long id);
-
 
 }

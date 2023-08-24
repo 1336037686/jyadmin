@@ -11,6 +11,7 @@ import com.jyadmin.exception.ApiException;
 import com.jyadmin.log.annotation.Log;
 import com.jyadmin.security.domain.UserInfo;
 import com.jyadmin.security.domain.UserLoginVO;
+import com.jyadmin.security.domain.UserRegisterVO;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.util.JWTUtil;
 import com.jyadmin.util.RedisUtil;
@@ -65,6 +66,22 @@ public class AuthController {
         if (Objects.isNull(value)) throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
         if (!new MathGenerator().verify(value.toString(), vo.getCaptcha())) throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
         Map<String, Object> token = authService.login(request, vo.getUsername(), vo.getPassword());
+        return Result.ok(token);
+    }
+
+    /**
+     * 注册
+     */
+    @RateLimit
+    @Log(title = "系统认证：用户注册", desc = "")
+    @ApiOperation(value = "用户注册", notes = "")
+    @PostMapping(value = "/register")
+    public Result<Map<String, Object>> doRegister(@RequestBody @Valid UserRegisterVO vo, HttpServletRequest request) {
+        // 验证验证码是否正确
+        Object value = redisUtil.getValue(jyAuthProperties.getVerificationCodePrefix() + ":" + vo.getUniqueId());
+        if (Objects.isNull(value)) throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
+        if (!Objects.equals(value.toString(), vo.getCaptcha())) throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
+        Map<String, Object> token = authService.register(request, vo);
         return Result.ok(token);
     }
 

@@ -92,7 +92,6 @@ public class User extends BaseEntity implements Serializable {
     @TableField(value = "last_login_ip")
     private String lastLoginIp;
 
-
     /**
      * 状态
      */

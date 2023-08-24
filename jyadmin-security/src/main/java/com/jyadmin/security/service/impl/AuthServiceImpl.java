@@ -6,6 +6,7 @@ import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.config.properties.JyAuthProperties;
@@ -14,14 +15,12 @@ import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.exception.ApiException;
-import com.jyadmin.security.domain.PermissionAction;
-import com.jyadmin.security.domain.SecurityUser;
-import com.jyadmin.security.domain.User;
-import com.jyadmin.security.domain.UserInfo;
+import com.jyadmin.security.domain.*;
 import com.jyadmin.security.mapper.AuthMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,6 +30,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 * @description 针对表【sys_user(用户表)】的数据库操作Service实现
 * @createDate 2022-04-12 23:19:40
 */
+@Slf4j
 @Service
 public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements AuthService {
 
@@ -96,6 +97,33 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         tokenMap.put("refreshToken", refreshToken);
 
         return tokenMap;
+    }
+
+    /**
+     * 用户注册
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Map<String, Object> register(HttpServletRequest request, UserRegisterVO vo) {
+        String password = RsaUtil.decrypt(vo.getPassword());
+        password = new BCryptPasswordEncoder().encode(password);
+        // 构建用户实体
+        User user = new User();
+        user.setUsername(vo.getUsername());
+        user.setPassword(password);
+        user.setNickname(RandomUtil.randomString(GlobalConstants.DEFAULT_USER_NICKNAME_GENERATE_LENGTH));
+        user.setAvatar(GlobalConstants.DEFAULT_USER_AVATAR);
+        user.setPhone(vo.getPhone());
+        user.setType(GlobalConstants.SysUserType.MEMBER.getValue());
+        user.setLoginAttempts(0);
+        user.setLastLoginTime(LocalDateTime.now());
+        user.setLastLoginIp(IpUtil.getIp(request));
+        user.setStatus(GlobalConstants.SysStatus.ON.getValue());
+        authMapper.insert(user);
+        // 用户登录
+        Map<String, Object> login = this.login(request, user.getUsername(), user.getPassword());
+        log.info("用户注册：{}注册成功", user.getUsername());
+        return login;
     }
 
     /**
