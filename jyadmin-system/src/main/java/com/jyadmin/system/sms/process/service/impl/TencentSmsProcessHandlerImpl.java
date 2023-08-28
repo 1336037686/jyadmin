@@ -1,5 +1,6 @@
 package com.jyadmin.system.sms.process.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
 import com.jyadmin.exception.ApiException;
@@ -25,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author LGX_TvT <br>
@@ -53,7 +56,8 @@ public class TencentSmsProcessHandlerImpl implements SmsProcessHandler {
         String templateId = configDetailService.getValueByCode(configDetail, "templateId");
         String templateContent = configDetailService.getValueByCode(configDetail, "templateContent");
         String content = MessageFormat.format(templateContent, smsSendDTO.getBody());
-        String[] templateParamSet = smsSendDTO.getBody();
+
+        String[] templateParamSet = smsSendDTO.getBody().stream().map(SmsSendDTO.SmsBody::getValue).toArray(String[]::new);
         String[] phoneNumberSet = new String[] { GlobalConstants.SYS_PHONE_NUMBER_PREFIX + smsSendDTO.getReceiver() };
 
         try {

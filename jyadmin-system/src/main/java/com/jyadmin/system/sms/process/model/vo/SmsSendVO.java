@@ -18,16 +18,16 @@ import java.io.Serializable;
 public class SmsSendVO implements Serializable {
 
     /**
+     * 唯一ID
+     */
+    private String uniqueId;
+
+    /**
      * 接收者
      */
     @ApiModelProperty(value = "接收者", name = "receiver")
     @NotBlank(message = "接收者不能为空")
     private String receiver;
-
-    /**
-     * 内容
-     */
-    private String[] body;
 
     /**
      * 业务类型

@@ -88,7 +88,7 @@ public class GlobalConstants {
     public static final String SYS_PHONE_NUMBER_PREFIX = "+86";
 
     // 系统短信验证码默认前缀
-    public static final String SYS_SMS_VERIFICATION_CODE_PREFIX = "sms_verification_code";
+    public static final String SYS_SMS_VERIFICATION_CODE_PREFIX = "sys_sms:verification_code";
 
     // 系统短信验证码默认长度
     public static final Integer SYS_SMS_VERIFICATION_CODE_LENGTH = 4;
@@ -157,9 +157,8 @@ public class GlobalConstants {
     /**
      * 系统短信配置枚举类
      */
-    public enum SysSmsConfigId {
-        VERIFICATION_CODE("验证码", "VERIFICATION_CODE", "用于发送验证码的模板"),
-        SIGN_IN("注册成功提示", "SIGN_IN", "用于发送注册成功提示的模板");
+    public enum SysSmsTemplate {
+        VERIFICATION_CODE("验证码", "VERIFICATION_CODE", "用于发送验证码的模板");
 
         // 名称
         private String name;
@@ -180,7 +179,7 @@ public class GlobalConstants {
             return remark;
         }
 
-        SysSmsConfigId(String name, String code, String remark) {
+        SysSmsTemplate(String name, String code, String remark) {
             this.name = name;
             this.code = code;
             this.remark = remark;

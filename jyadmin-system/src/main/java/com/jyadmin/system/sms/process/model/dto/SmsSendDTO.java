@@ -2,8 +2,10 @@ package com.jyadmin.system.sms.process.model.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author LGX_TvT <br>
@@ -16,8 +18,13 @@ import java.io.Serializable;
 public class SmsSendDTO implements Serializable {
 
     /**
+     * 唯一ID
+     */
+    private String uniqueId;
+
+    /**
      * 发送短信类别
-     * SysSmsConfigId 枚举
+     * SysSmsTemplate 枚举
      *
      */
     private String type;
@@ -28,13 +35,33 @@ public class SmsSendDTO implements Serializable {
     private String receiver;
 
     /**
-     * 内容
+     * 内容 json
      */
-    private String[] body;
+    private List<SmsBody> body;
 
     /**
      * 业务类型
      */
     private String relevance;
+
+
+    /**
+     * 内容
+     */
+    @Data
+    @Accessors(chain = true)
+    public static class SmsBody {
+
+        /**
+         * key
+         */
+        private String key;
+
+        /**
+         * value
+         */
+        private String value;
+
+    }
 
 }

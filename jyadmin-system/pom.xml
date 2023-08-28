@@ -47,12 +47,15 @@
             <groupId>com.tencentcloudapi</groupId>
             <artifactId>tencentcloud-sdk-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.apistd.uni</groupId>
+            <artifactId>uni-sdk</artifactId>
+        </dependency>
         <!--quartz-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
-
         <!--oshi-->
         <dependency>
             <groupId>com.github.oshi</groupId>

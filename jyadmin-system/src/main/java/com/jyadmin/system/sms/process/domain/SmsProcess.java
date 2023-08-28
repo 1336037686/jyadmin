@@ -15,7 +15,21 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class SmsProcess {
 
+    /**
+     * 发送是否成功
+     */
+    private Boolean success;
+
+    /**
+     * 发送消息回执
+     */
+    private String message;
+
+    /**
+     * 短信记录ID
+     */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
+
 
 }

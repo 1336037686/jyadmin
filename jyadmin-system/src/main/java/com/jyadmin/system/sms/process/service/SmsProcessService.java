@@ -15,7 +15,4 @@ public interface SmsProcessService {
 
     SmsProcess sendVerificationCode(SmsSendDTO smsSendDTO);
 
-    SmsProcess sendSignInSuccess(SmsSendDTO smsSendDTO);
-
-
 }
