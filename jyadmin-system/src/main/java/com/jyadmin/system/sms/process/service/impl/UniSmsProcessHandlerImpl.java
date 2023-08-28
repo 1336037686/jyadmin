@@ -52,6 +52,7 @@ public class UniSmsProcessHandlerImpl implements SmsProcessHandler {
 
     @Override
     public SmsProcess sendSms(SmsSendDTO smsSendDTO, ModuleConfigWrapper smsConfigWrapper) {
+        log.info("unisms 短信发送: {}", JSON.toJSONString(smsSendDTO));
         ConfigDetail configDetail = smsConfigWrapper.getConfigDetail();
         String accessKeyId = configDetailService.getValueByCode(configDetail, "accessKeyId");
         String accessKeySecret = configDetailService.getValueByCode(configDetail, "accessKeySecret");
@@ -106,7 +107,7 @@ public class UniSmsProcessHandlerImpl implements SmsProcessHandler {
             record.setPhone(smsSendDTO.getReceiver());
             record.setSource(smsConfigWrapper.getConfig().getStorageType());
             record.setRelevance(smsSendDTO.getRelevance());
-            log.debug("sms record: {}", record);
+            log.info("sms record: {}", record);
             smsRecordService.save(record);
             return new SmsProcess().setSuccess(true).setMessage(res.message).setId(record.getId());
         } catch (UniException e) {
