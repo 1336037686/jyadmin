@@ -13,6 +13,11 @@ logging:
     root: debug
     com.alibaba.druid.filter.stat.StatFilter: error
 spring:
+  # 文件上传
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   #数据库配置
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/jyadmin?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
@@ -105,9 +110,9 @@ jyadmin:
       # 系统加密密钥
       secret-key: jyadmin
       # accessToken过期时间 1h
-      access-token-expiration: 1200
+      access-token-expiration: 10
       # refreshToken过期时间 12h
-      refresh-token-expiration: 43200
+      refresh-token-expiration: 30
   # 安全相关配置
   safe:
     # SpringSecurity自定义配置
