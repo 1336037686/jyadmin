@@ -110,9 +110,9 @@ jyadmin:
       # 系统加密密钥
       secret-key: jyadmin
       # accessToken过期时间 1h
-      access-token-expiration: 10
-      # refreshToken过期时间 12h
-      refresh-token-expiration: 30
+      access-token-expiration: 1800
+      # refreshToken过期时间 48h
+      refresh-token-expiration: 172800
   # 安全相关配置
   safe:
     # SpringSecurity自定义配置

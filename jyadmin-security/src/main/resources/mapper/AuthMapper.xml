@@ -78,5 +78,9 @@
         WHERE tur.deleted = 0 and su.`status` = 1 AND su.deleted = 0 AND sr.deleted = 0 and sr.`status` = 1 and su.id = #{userId}
     </select>
 
+    <select id="selectRoleByCode" resultType="java.lang.Long">
+        SELECT ID FROM sys_role where deleted = '0' and `code` = #{roleCode} LIMIT 1
+    </select>
+
 
 </mapper>

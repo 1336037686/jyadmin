@@ -24,9 +24,9 @@ public class JyJwtProperties {
 
     /**
      * refreshToken过期时间
-     * 默认：12h
+     * 默认：48h
      */
-    private Long refreshTokenExpiration = 12 * 60 * 60L;
+    private Long refreshTokenExpiration = 48 * 60 * 60L;
 
     /**
      * 系统加密密钥

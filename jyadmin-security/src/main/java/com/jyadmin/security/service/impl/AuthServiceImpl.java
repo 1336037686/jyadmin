@@ -10,6 +10,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jyadmin.config.properties.JyAuthProperties;
+import com.jyadmin.config.properties.JyBaseProperties;
 import com.jyadmin.config.properties.JyIdempotentProperties;
 import com.jyadmin.consts.GlobalConstants;
 import com.jyadmin.consts.ResultStatus;
@@ -17,6 +18,7 @@ import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.security.domain.*;
 import com.jyadmin.security.mapper.AuthMapper;
+import com.jyadmin.security.mapper.UserRoleMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.*;
@@ -55,6 +57,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Resource
     private AuthMapper authMapper;
     @Resource
+    private UserRoleMapper userRoleMapper;
+    @Resource
     private UserDetailsService userDetailsService;
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -66,6 +70,8 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     private JyIdempotentProperties jyIdempotentProperties;
     @Resource
     private JyAuthProperties jyAuthProperties;
+    @Resource
+    private JyBaseProperties jyBaseProperties;
 
     /**
      * 用户登录
@@ -105,11 +111,18 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Map<String, Object> register(HttpServletRequest request, UserRegisterVO vo) {
-        String password = RsaUtil.decrypt(vo.getPassword());
-        password = new BCryptPasswordEncoder().encode(password);
+        log.info("用户注册，注册参数={}", vo);
+        String catchKey = GlobalConstants.SYS_SMS_VERIFICATION_CODE_PREFIX + ":" + vo.getUniqueId();
+        boolean exists = redisUtil.exists(catchKey);
+        if (Boolean.FALSE.equals(exists)) throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
+        Object captcha = redisUtil.getValue(catchKey);
+        if (!Objects.equals(vo.getCaptcha(), captcha)) throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
+
+        String password = new BCryptPasswordEncoder().encode(GlobalConstants.DEFAULT_USER_PASSWORD);
+
         // 构建用户实体
         User user = new User();
-        user.setUsername(vo.getUsername());
+        user.setUsername(vo.getPhone());
         user.setPassword(password);
         user.setNickname(RandomUtil.randomString(GlobalConstants.DEFAULT_USER_NICKNAME_GENERATE_LENGTH));
         user.setAvatar(GlobalConstants.DEFAULT_USER_AVATAR);
@@ -120,7 +133,15 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         user.setLastLoginIp(IpUtil.getIp(request));
         user.setStatus(GlobalConstants.SysStatus.ON.getValue());
         authMapper.insert(user);
-        // 用户登录
+
+        // 对用户赋予默认【会员】角色
+        Long defaultRoleId = authMapper.selectRoleByCode(GlobalConstants.DEFAULT_USER_ROLE);
+        UserRole userRole = new UserRole();
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(defaultRoleId);
+        userRoleMapper.insert(userRole);
+
+        // 创建成功后自动登录
         Map<String, Object> login = this.login(request, user.getUsername(), user.getPassword());
         log.info("用户注册：{}注册成功", user.getUsername());
         return login;

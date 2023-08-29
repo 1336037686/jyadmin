@@ -27,6 +27,7 @@ public interface AuthMapper extends BaseMapper<User> {
 
     List<Map<String, Object>> selectRoles(@Param("userId") Long userId);
 
+    Long selectRoleByCode(@Param("roleCode") String roleCode);
 }
 
 

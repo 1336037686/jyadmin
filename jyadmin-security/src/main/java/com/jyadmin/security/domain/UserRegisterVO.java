@@ -18,22 +18,9 @@ import javax.validation.constraints.NotBlank;
 @Accessors(chain = true)
 public class UserRegisterVO {
 
-    /**
-     * 用户名
-     */
-    @ApiModelProperty(value = "用户名", name = "username")
-    @NotBlank(message = "用户名不能为空")
-    private String username;
 
     /**
-     * 密码
-     */
-    @ApiModelProperty(value = "密码", name = "password")
-    @NotBlank(message = "密码不能为空")
-    private String password;
-
-    /**
-     * 密码
+     * 手机号码
      */
     @ApiModelProperty(value = "手机号码", name = "phone")
     @NotBlank(message = "手机号码不能为空")

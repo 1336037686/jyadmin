@@ -24,6 +24,12 @@ public class GlobalConstants {
 
     // ======================= 用户基础信息设置 START =======================
 
+    // 默认用户密码
+    public static final String DEFAULT_USER_PASSWORD = "jyadmin123";
+
+    // 默认用户角色编码
+    public static final String DEFAULT_USER_ROLE = "member";
+
     // 默认用户头像
     public static final String DEFAULT_USER_AVATAR = "https://himg.bdimg.com/sys/portrait/item/pp.1.7cc3463a.Sy3bpWfCP6umkh2-3oWVVg.jpg";
 
