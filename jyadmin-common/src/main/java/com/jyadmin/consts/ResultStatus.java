@@ -126,6 +126,11 @@ public enum ResultStatus {
      */
     REMOTE_LOGIN_ERROR(22010016, ModuleSeries.AUTH, "该账号已在别处登录"),
 
+    /**
+     * 2201 0017 当前账户已存在
+     */
+    ACCOUNT_ALREADY_EXIST(22010017, ModuleSeries.AUTH, "当前账户已存在"),
+
     // endregion--------------------
 
     // region--- 2202 xxxx 参数错误相关状态码 ---

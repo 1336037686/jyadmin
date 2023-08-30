@@ -36,11 +36,10 @@ public class SmsProcessController {
     private SmsProcessService smsProcessService;
 
 
-    @RateLimit
+    @RateLimit(period = 60, count = 1)
     @Log(title = "系统短信处理：验证码发送", desc = "验证码发送")
     @ApiOperation(value = "验证码发送", notes = "")
     @PostMapping("/send/verificationCode")
-    @PreAuthorize("@jy.check('sms-process:sendVerificationCode')")
     public Result<Object> doSendVerificationCode(@RequestBody @Valid SmsSendVO vo) {
         SmsSendDTO smsSendDTO = new SmsSendDTO();
         BeanUtil.copyProperties(vo, smsSendDTO);

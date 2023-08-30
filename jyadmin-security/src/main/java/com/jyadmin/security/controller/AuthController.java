@@ -78,7 +78,7 @@ public class AuthController {
     @PostMapping(value = "/register")
     public Result<Map<String, Object>> doRegister(@RequestBody @Valid UserRegisterVO vo, HttpServletRequest request) {
         // 验证验证码是否正确
-        Object value = redisUtil.getValue(jyAuthProperties.getVerificationCodePrefix() + ":" + vo.getUniqueId());
+        Object value = redisUtil.getValue(GlobalConstants.SYS_SMS_VERIFICATION_CODE_PREFIX + ":" + vo.getUniqueId());
         if (Objects.isNull(value)) throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
         if (!Objects.equals(value.toString(), vo.getCaptcha())) throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
         Map<String, Object> token = authService.register(request, vo);

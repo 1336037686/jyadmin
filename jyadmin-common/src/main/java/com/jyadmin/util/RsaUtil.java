@@ -74,10 +74,7 @@ public class RsaUtil {
     }
 
     public static void main(String[] args) {
-        String encrypt = RsaUtil.encrypt("admin123");
-        System.out.println(encrypt);
-        String decrypt = RsaUtil.decrypt(encrypt);
-        System.out.println(decrypt);
+
     }
 
 

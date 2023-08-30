@@ -125,6 +125,7 @@ jyadmin:
         - /api/auth/rsa-public-key      # 获取RSA公钥
         - /api/basic-setting/list       # 基础配置
         - /api/file-process/download/{id} # 文件下载
+        - /api/sms-process/send/verificationCode #短信验证码发送
       # 放行所有接口，只允许测试不需要登陆的接口时才可放开
       permit-all: false
       # 只允许唯一IP登录

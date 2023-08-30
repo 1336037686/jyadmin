@@ -16,7 +16,6 @@ import java.io.Serializable;
  */
 @TableName(value ="tr_user_role")
 @Data
-@Accessors(chain = true)
 public class UserRole extends BaseTrEntity implements Serializable {
 
     @TableField(exist = false)

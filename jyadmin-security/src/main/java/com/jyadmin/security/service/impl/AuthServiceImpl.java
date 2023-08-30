@@ -18,7 +18,7 @@ import com.jyadmin.domain.UserCacheInfo;
 import com.jyadmin.exception.ApiException;
 import com.jyadmin.security.domain.*;
 import com.jyadmin.security.mapper.AuthMapper;
-import com.jyadmin.security.mapper.UserRoleMapper;
+import com.jyadmin.security.mapper.AuthUserRoleMapper;
 import com.jyadmin.security.service.AuthService;
 import com.jyadmin.security.service.CacheService;
 import com.jyadmin.util.*;
@@ -57,7 +57,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Resource
     private AuthMapper authMapper;
     @Resource
-    private UserRoleMapper userRoleMapper;
+    private AuthUserRoleMapper authUserRoleMapper;
     @Resource
     private UserDetailsService userDetailsService;
     @Resource
@@ -112,11 +112,11 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
     @Override
     public Map<String, Object> register(HttpServletRequest request, UserRegisterVO vo) {
         log.info("用户注册，注册参数={}", vo);
-        String catchKey = GlobalConstants.SYS_SMS_VERIFICATION_CODE_PREFIX + ":" + vo.getUniqueId();
-        boolean exists = redisUtil.exists(catchKey);
-        if (Boolean.FALSE.equals(exists)) throw new ApiException(ResultStatus.CAPTCHA_EXPIRED);
-        Object captcha = redisUtil.getValue(catchKey);
-        if (!Objects.equals(vo.getCaptcha(), captcha)) throw new ApiException(ResultStatus.CAPTCHA_INPUT_ERROR);
+        // 校验当前用户信息是否已经注册
+        boolean exists = authMapper.exists(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, vo.getPhone())
+                .or().eq(User::getPhone, vo.getPhone()));
+        if (exists) throw new ApiException(ResultStatus.ACCOUNT_ALREADY_EXIST);
 
         String password = new BCryptPasswordEncoder().encode(GlobalConstants.DEFAULT_USER_PASSWORD);
 
@@ -139,10 +139,10 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
         UserRole userRole = new UserRole();
         userRole.setUserId(user.getId());
         userRole.setRoleId(defaultRoleId);
-        userRoleMapper.insert(userRole);
+        authUserRoleMapper.insert(userRole);
 
         // 创建成功后自动登录
-        Map<String, Object> login = this.login(request, user.getUsername(), user.getPassword());
+        Map<String, Object> login = this.login(request, user.getUsername(), RsaUtil.encrypt(GlobalConstants.DEFAULT_USER_PASSWORD));
         log.info("用户注册：{}注册成功", user.getUsername());
         return login;
     }

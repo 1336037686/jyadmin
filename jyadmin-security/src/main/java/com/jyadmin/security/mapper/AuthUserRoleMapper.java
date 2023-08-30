@@ -10,7 +10,7 @@ import com.jyadmin.security.domain.UserRole;
 * @createDate 2022-04-13 23:22:50
 * @Entity com.jyblog.system.role.domain.UserRole
 */
-public interface UserRoleMapper extends BaseMapper<UserRole> {
+public interface AuthUserRoleMapper extends BaseMapper<UserRole> {
 
 }
 

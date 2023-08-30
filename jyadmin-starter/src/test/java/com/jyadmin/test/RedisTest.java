@@ -2,6 +2,7 @@ package com.jyadmin.test;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.jyadmin.util.RsaUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,10 @@ public class RedisTest {
 
     @Test
     public void test() throws Exception {
-
+        String encrypt = RsaUtil.encrypt("admin123");
+        System.out.println(encrypt);
+        String decrypt = RsaUtil.decrypt(encrypt);
+        System.out.println(decrypt);
     }
 
 
