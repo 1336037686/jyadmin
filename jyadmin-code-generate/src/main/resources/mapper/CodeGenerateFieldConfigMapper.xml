@@ -12,7 +12,7 @@
             <result property="showPage" column="show_page" jdbcType="INTEGER"/>
             <result property="showDetail" column="show_detail" jdbcType="INTEGER"/>
             <result property="showForm" column="show_form" jdbcType="INTEGER"/>
-            <result property="require" column="require" jdbcType="INTEGER"/>
+            <result property="formRequire" column="form_require" jdbcType="INTEGER"/>
             <result property="formType" column="form_type" jdbcType="VARCHAR"/>
             <result property="formDict" column="form_dict" jdbcType="VARCHAR"/>
             <result property="formSelectMethod" column="form_select_method" jdbcType="VARCHAR"/>

@@ -97,13 +97,14 @@ export default {
       }
     },
     tmpVisible(newVal) {
-      this.\$emit('update:visible', newVal)
+      this.$emit('update:visible', newVal)
     },
     deep: true
   },
   methods: {
     handleSubmit(formName) {
-      this.\$refs\[formName\].validate((valid) => {
+      #set($VUE_HANDLE_SUBMIT_FUN_PARAMS_FORMNAME='[formName]')
+      this.$refs${VUE_HANDLE_SUBMIT_FUN_PARAMS_FORMNAME}.validate((valid) => {
         if (valid) {
           if (this.type === 'insert') this.handleCreate()
           else this.handleUpdate()
@@ -112,38 +113,33 @@ export default {
     },
     handleCreate() {
       ${realTableNameLowCamelCase}Api.add(this.form).then(response => {
-        this.\$notify.success({ title: '成功', message: '添加成功' })
-        this.\$parent.getList()
+        this.$notify.success({ title: '成功', message: '添加成功' })
+        this.$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
-      }).catch(e => {
-        this.\$notify.error({ title: '失败', message: '添加失败' })
       })
     },
     handleUpdate() {
       ${realTableNameLowCamelCase}Api.update(this.form).then(response => {
-        this.\$notify.success({ title: '成功', message: '修改成功' })
-        this.\$parent.getList()
+        this.$notify.success({ title: '成功', message: '修改成功' })
+        this.$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
-      }).catch(e => {
-        this.\$notify.error({ title: '失败', message: '修改失败' })
       })
     },
     getById(id) {
       ${realTableNameLowCamelCase}Api.getById(id).then(response => {
         this.form = response.data
-      }).catch(e => {
-        this.\$notify.error({ title: '失败', message: '获取数据失败' })
       })
     },
     resetForm(formName) {
       this.form.id = null
-      this.\$refs\[formName\].resetFields()
+      #set($VUE_RESET_FORM_FUN_PARAMS_FORMNAME='[formName]')
+      this.$refs${VUE_RESET_FORM_FUN_PARAMS_FORMNAME}.resetFields()
       this.tmpVisible = false
     }
   }

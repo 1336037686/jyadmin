@@ -6,7 +6,11 @@
         #if($field.pk.equals('1'))
             <id property="${field.realFieldNameLowCamelCase}" column="${field.fieldName}" jdbcType="${field.fieldType}"/>
         #else
+            #if($field.fieldType.equals('INT'))
+            <result property="${field.realFieldNameLowCamelCase}" column="${field.fieldName}" jdbcType="INTEGER"/>
+            #else
             <result property="${field.realFieldNameLowCamelCase}" column="${field.fieldName}" jdbcType="${field.fieldType}"/>
+            #end
         #end
     #end
     </resultMap>
