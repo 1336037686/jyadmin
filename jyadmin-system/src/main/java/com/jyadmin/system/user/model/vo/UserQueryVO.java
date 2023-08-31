@@ -58,9 +58,20 @@ public class UserQueryVO extends BasePageVO implements Serializable {
     private Integer type;
 
     /**
+     * 所属角色 多个角色用,分隔
+     */
+    @ApiModelProperty(value = "所属角色", name = "roles")
+    private String roles;
+
+    /**
      * 状态
      */
     @ApiModelProperty(value = "状态", name = "status")
     private Integer status;
+
+    /**
+     * 排除角色 多个角色用,分隔
+     */
+    private String excludeRoles;
 
 }

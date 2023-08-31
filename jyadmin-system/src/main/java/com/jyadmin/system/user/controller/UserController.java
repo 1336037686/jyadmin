@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -127,6 +128,9 @@ public class UserController {
     @GetMapping("/query")
     @PreAuthorize("@jy.check('user:query')")
     public PageResult<UserDTO> doQueryPage(UserQueryVO vo) {
+        String roles = StringUtils.isNotBlank(vo.getRoles()) ? Arrays.stream(vo.getRoles().split(",")).map(x -> "'" + x + "'").collect(Collectors.joining(",")) : null;
+        String excludeRoles = StringUtils.isNotBlank(vo.getExcludeRoles()) ? Arrays.stream(vo.getExcludeRoles().split(",")).map(x -> "'" + x + "'").collect(Collectors.joining(",")) : null;
+
         return PageUtil.toPageResult(this.userService.getPage(new Page<>(vo.getPageNumber(), vo.getPageSize()),
                 new LambdaQueryWrapper<User>()
                         .like(StringUtils.isNotBlank(vo.getUsername()), User::getUsername, vo.getUsername())
@@ -137,6 +141,18 @@ public class UserController {
                         .eq(Objects.nonNull(vo.getDepartment()), User::getDepartment, vo.getDepartment())
                         .eq(Objects.nonNull(vo.getPost()), User::getPost, vo.getPost())
                         .eq(true, User::getDeleted, GlobalConstants.SysDeleted.EXIST.getValue())
+                        .exists(StringUtils.isNotBlank(vo.getRoles()),
+                                "SELECT 1 FROM tr_user_role tur INNER " +
+                                        "JOIN sys_role sr ON sr.ID = tur.role_id " +
+                                        "WHERE tur.deleted = 0 AND sr.`status` = 1 AND sr.deleted = 0 " +
+                                        "AND sr.code in (" + roles + ") AND t.ID = tur.user_id"
+                        )
+                        .notExists(StringUtils.isNotBlank(vo.getExcludeRoles()),
+                                "SELECT 1 FROM tr_user_role tur " +
+                                        "INNER JOIN sys_role sr ON sr.ID = tur.role_id " +
+                                        "WHERE tur.deleted = 0 AND sr.`status` = 1 AND sr.deleted = 0 " +
+                                        "AND sr.code in (" + excludeRoles + ") AND t.ID = tur.user_id"
+                        )
                         .orderByDesc(User::getCreateTime)
         ));
     }

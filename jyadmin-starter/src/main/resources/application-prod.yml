@@ -96,8 +96,8 @@ jyadmin:
   auth:
     # 登录用户缓存前缀
     auth-user-prefix: login_user
-    # 认证用户缓存过期时间
-    auth-user-expiration: 43200
+    # 认证用户缓存过期时间 48h 该时间需要与 RefreshToken 一致
+    auth-user-expiration: 172800
     # 登录验证码前缀
     verification-code-prefix: verification_code
     # 登录验证码过期时间
@@ -108,8 +108,8 @@ jyadmin:
       secret-key: jyadmin
       # accessToken过期时间 1h
       access-token-expiration: 1200
-      # refreshToken过期时间 12h
-      refresh-token-expiration: 43200
+      # refreshToken过期时间 48h
+      refresh-token-expiration: 172800
   # 安全相关配置
   safe:
     # SpringSecurity自定义配置

@@ -28,9 +28,10 @@ public class JyAuthProperties {
 
     /**
      * 认证用户缓存过期时间
-     * 默认：2h
+     * 该时间需要与 RefreshToken 一致
+     * 默认：48h = RefreshToken过期时间
      */
-    private Long authUserExpiration = 2 * 60 * 60L;
+    private Long authUserExpiration = 48 * 60 * 60L;
 
     /**
      * 验证码缓存前缀

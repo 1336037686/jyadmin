@@ -99,8 +99,8 @@ jyadmin:
   auth:
     # 登录用户缓存前缀
     auth-user-prefix: login_user
-    # 认证用户缓存过期时间
-    auth-user-expiration: 43200
+    # 认证用户缓存过期时间 48h 该时间需要与 RefreshToken 一致
+    auth-user-expiration: 172800
     # 登录验证码前缀
     verification-code-prefix: verification_code
     # 登录验证码过期时间
