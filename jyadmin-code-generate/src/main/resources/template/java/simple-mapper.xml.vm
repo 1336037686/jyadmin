@@ -8,6 +8,8 @@
         #else
             #if($field.fieldType.equals('INT'))
             <result property="${field.realFieldNameLowCamelCase}" column="${field.fieldName}" jdbcType="INTEGER"/>
+            #elseif($field.fieldType.equals('DATETIME'))
+            <result property="${field.realFieldNameLowCamelCase}" column="${field.fieldName}" jdbcType="TIMESTAMP"/>
             #else
             <result property="${field.realFieldNameLowCamelCase}" column="${field.fieldName}" jdbcType="${field.fieldType}"/>
             #end

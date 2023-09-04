@@ -6,8 +6,13 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
-    <div>
+    <div
+      v-loading="initloading"
+      element-loading-text="加载中，请稍后..."
+      element-loading-spinner="el-icon-loading"
+    >
       <el-descriptions :column="2" border>
   #foreach($field in $fields)
     #if($field.fieldIgnore == 0)
@@ -32,7 +37,7 @@
 <script>
 import ${realTableNameLowCamelCase}Api from '@/api/module/${pageViewPath}/${realTableNameLowCamelCase}-api'
 export default {
-  name: '${realTableNameLowCamelCase}Detail',
+  name: '${realTableNameUpperCamelCase}Detail',
   props: {
     title: {
       type: String,
@@ -50,8 +55,8 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      initloading: false,
       form: {
-        id: null,
   #foreach($field in $fields)
     #if($field.fieldIgnore == 0)
       #if($field.showDetail == 1)
@@ -80,8 +85,12 @@ export default {
   },
   methods: {
     getById(id) {
+      this.initloading = true
       ${realTableNameLowCamelCase}Api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
+      }).catch(e => {
+        this.initloading = false
       })
     }
   }

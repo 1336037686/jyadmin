@@ -346,7 +346,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, User> implements Au
      */
     @Override
     public String getIdempotentToken() {
-        String token = StringUtils.join(DateUtil.format(LocalDateTime.now(), "yyyy-MM-dd-HH-mm-ss-SSS"), "-", new Snowflake().nextIdStr());
+        String token = StringUtils.join(DateUtil.format(LocalDateTime.now(), "yyyy-MM-dd-HH-mm-ss-SSS"), "-", RandomIdUtil.nextIdStr());
         String key = StringUtils.join(jyIdempotentProperties.getPrefix(), ":", token);
         redisUtil.setValue(key, jyIdempotentProperties.getDefaultValue(), jyIdempotentProperties.getDefaultPeriod(), TimeUnit.SECONDS);
         return token;

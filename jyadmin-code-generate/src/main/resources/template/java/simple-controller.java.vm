@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jyadmin.domain.PageResult;
 import com.jyadmin.domain.Result;
+import com.jyadmin.annotation.Idempotent;
+import com.jyadmin.annotation.RateLimit;
 import ${packageName}.domain.${realTableNameUpperCamelCase};
 import ${packageName}.model.vo.${realTableNameUpperCamelCase}CreateReqVO;
 import ${packageName}.model.vo.${realTableNameUpperCamelCase}QueryReqVO;
@@ -39,6 +41,7 @@ public class ${realTableNameUpperCamelCase}Controller {
     @Resource
     private ${realTableNameUpperCamelCase}Service ${realTableNameLowCamelCase}Service;
 
+    @RateLimit @Idempotent
     @ApiOperation(value = "新增${tableRemark}", notes = "")
     @PostMapping("/create")
     @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:create')")
@@ -46,6 +49,7 @@ public class ${realTableNameUpperCamelCase}Controller {
         return ResultUtil.toResult(${realTableNameLowCamelCase}Service.save(BeanUtil.copyProperties(vo, ${realTableNameUpperCamelCase}.class)));
     }
 
+    @RateLimit @Idempotent
     @ApiOperation(value = "更新${tableRemark}", notes = "")
     @PutMapping("/update")
     @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:update')")

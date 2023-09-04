@@ -16,18 +16,20 @@ export default {
     })
   },
 
-  add(data) {
+  add(data, idempotentToken) {
     return request({
       url: '/api/${realTableNameLowCamelCase}/create',
       method: 'post',
+      params: { 'idempotent-token': idempotentToken },
       data
     })
   },
 
-  update(data) {
+  update(data, idempotentToken) {
     return request({
       url: '/api/${realTableNameLowCamelCase}/update',
       method: 'put',
+      params: { 'idempotent-token': idempotentToken },
       data
     })
   },

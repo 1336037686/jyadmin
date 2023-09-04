@@ -1,5 +1,10 @@
 <template>
-  <div style="margin: 10px">
+  <div
+    v-loading="deleteLoading"
+    style="margin: 10px"
+    element-loading-text="删除中，请稍后..."
+    element-loading-spinner="el-icon-loading"
+  >
     <el-card class="box-card" shadow="always">
       <el-form :inline="true" v-show="queryFormVisiable" size="mini"  :model="queryForm" label-width="100px">
   #foreach($field in $fields)
@@ -30,6 +35,7 @@
         <el-row style="float: right">
           <el-button icon="el-icon-search" circle size="mini" @click="() => this.queryFormVisiable = !this.queryFormVisiable" />
           <el-button icon="el-icon-refresh" circle size="mini" @click="handleQuery()" />
+          <el-button icon="el-icon-s-grid" circle size="mini" @click="selectColumns()" />
         </el-row>
       </div>
       <el-table
@@ -41,7 +47,7 @@
         highlight-current-row
         style="width: 100%"
         empty-text="暂无数据"
-        :header-cell-style="{background:'#FAFAFA'}"
+        :header-cell-style="{background:'#F5F7FA', color: '#303133', fontWeight: 700}"
         @row-click="handleTableRowClick"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -49,27 +55,26 @@
   #foreach($field in $fields)
     #if($field.fieldIgnore == 0)
       #if($field.showPage == 1)
-        <el-table-column prop="${field.realFieldNameLowCamelCase}" label="${field.fieldRemark}" align="center" show-overflow-tooltip />
+        <el-table-column prop="${field.realFieldNameLowCamelCase}" v-if="checkColumnDisplayed('${field.realFieldNameLowCamelCase}', columnsData.columns)" label="${field.fieldRemark}" align="center" show-overflow-tooltip />
       #end
     #end
   #end
       </el-table>
+      <div style="text-align: center;margin-top: 10px">
+        <el-pagination
+          v-model="tableData.pageNumber"
+          background
+          layout="prev, pager, next"
+          :page-size="tableData.pageSize"
+          :hide-on-single-page="true"
+          :total="tableData.total"
+          @current-change="handleChangePage"
+        />
+      </div>
     </el-card>
-
-    <div style="text-align: center;margin-top: 10px">
-      <el-pagination
-        v-model="tableData.pageNumber"
-        background
-        layout="prev, pager, next"
-        :page-size="tableData.pageSize"
-        :hide-on-single-page="true"
-        :total="tableData.total"
-        @current-change="handleChangePage"
-      />
-    </div>
-
     <${realTableNameUpperCamelCase}Form :id="editData.id" :title="editData.title" :visible.sync="editData.visiable" />
     <${realTableNameUpperCamelCase}Detail :id="showData.id" :title="showData.title" :visible.sync="showData.visiable" />
+    <select-columns :title="columnsData.title" :columns="columnsData.columns" :visible.sync="columnsData.visiable" />
   </div>
 </template>
 
@@ -77,10 +82,12 @@
 import ${realTableNameLowCamelCase}Api from '@/api/module/${pageViewPath}/${realTableNameLowCamelCase}-api'
 import ${realTableNameUpperCamelCase}Form from '@/views/module/${pageViewPath}/${realTableNameLowCamelCase}-form'
 import ${realTableNameUpperCamelCase}Detail from '@/views/module/${pageViewPath}/${realTableNameLowCamelCase}-detail'
+import SelectColumns from '@/components/SelectColumns'
 export default {
-  components: { ${realTableNameUpperCamelCase}Detail, ${realTableNameUpperCamelCase}Form },
+  components: { SelectColumns, ${realTableNameUpperCamelCase}Detail, ${realTableNameUpperCamelCase}Form },
   data() {
     return {
+      deleteLoading: false,
       queryFormVisiable: true,
       queryForm: {
 #foreach($field in $fields)
@@ -118,6 +125,18 @@ export default {
       selectData: {
         current: null,
         record: []
+      },
+      columnsData: {
+        visiable: false,
+        columns: [
+          #foreach($field in $fields)
+          #if($field.fieldIgnore == 0)
+          #if($field.showPage == 1)
+          { key: '${field.realFieldNameLowCamelCase}', label: '${field.fieldRemark}', _showed: true },
+          #end
+          #end
+          #end
+        ]
       }
     }
   },
@@ -132,6 +151,9 @@ export default {
         this.tableData.loading = false
         this.tableData = response
       })
+    },
+    selectColumns() {
+      this.columnsData.visiable = true
     },
     handleQuery() {
       this.tableData.pageNumber = 1
@@ -180,14 +202,19 @@ export default {
       this.$confirm('此操作将永久删除选中数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        customClass: 'jy-message-box'
       }).then(() => {
         const ids = []
         #set($VUE_HANDLE_REMOVE_FUN_PARAMS_I='[i]')
         for (let i = 0; i < this.$refs.table.selection.length; i++) ids.push(this.$refs.table.selection${VUE_HANDLE_REMOVE_FUN_PARAMS_I}.id)
-          ${realTableNameLowCamelCase}Api.remove(ids).then(response => {
+        this.deleteLoading = true
+        ${realTableNameLowCamelCase}Api.remove(ids).then(response => {
+          this.deleteLoading = false
           this.getList()
           this.$notify.success({ title: '成功', message: '删除成功' })
+        }).catch(e => {
+          this.deleteLoading = false
         })
       })
     },

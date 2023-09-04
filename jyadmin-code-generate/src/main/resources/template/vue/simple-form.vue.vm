@@ -6,13 +6,21 @@
     :close-on-click-modal="false"
     :show-close="false"
     width="30%"
+    class="jy-dialog"
   >
     <div>
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+      <el-form
+       ref="form"
+       v-loading="initloading"
+       :rules="rules"
+       :model="form"
+       label-width="100px"
+       element-loading-text="加载中，请稍后..."
+       element-loading-spinner="el-icon-loading">
 #foreach($field in $fields)
   #if($field.fieldIgnore == 0)
     #if($field.showForm == 1)
-      <el-form-item label="${field.fieldRemark}" prop="${field.realFieldNameLowCamelCase}">
+      <el-form-item label="${field.fieldRemark}：" prop="${field.realFieldNameLowCamelCase}">
         <el-input v-model="form.${field.realFieldNameLowCamelCase}" />
       </el-form-item>
     #end
@@ -22,15 +30,16 @@
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="resetForm('form')">取 消</el-button>
-      <el-button type="primary" @click="handleSubmit('form')">确 定</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="handleSubmit('form')">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
+import { getIdempotentToken } from '@/api/system/auth/jy-auth'
 import ${realTableNameLowCamelCase}Api from '@/api/module/${pageViewPath}/${realTableNameLowCamelCase}-api'
 export default {
-  name: '${realTableNameLowCamelCase}Form',
+  name: '${realTableNameUpperCamelCase}Form',
   props: {
     title: {
       type: String,
@@ -48,6 +57,9 @@ export default {
   data() {
     return {
       tmpVisible: this.visible,
+      idempotentToken: null,
+      initloading: false,
+      submitLoading: false,
       type: 'insert',
       form: {
         id: null,
@@ -83,9 +95,10 @@ export default {
     }
   },
   watch: {
-    visible(newVal) {
+    async visible(newVal) {
       this.tmpVisible = newVal
       if (newVal) {
+        await this.getIdempotentToken()
         // 如果有ID则为修改操作
         if (this.id) {
           this.type = 'update'
@@ -102,6 +115,15 @@ export default {
     deep: true
   },
   methods: {
+    async getIdempotentToken() {
+      this.initloading = true
+      await getIdempotentToken().then(res => {
+        this.idempotentToken = res.data
+        this.initloading = false
+      }).catch(e => {
+        this.initloading = false
+      })
+    },
     handleSubmit(formName) {
       #set($VUE_HANDLE_SUBMIT_FUN_PARAMS_FORMNAME='[formName]')
       this.$refs${VUE_HANDLE_SUBMIT_FUN_PARAMS_FORMNAME}.validate((valid) => {
@@ -112,28 +134,40 @@ export default {
       })
     },
     handleCreate() {
-      ${realTableNameLowCamelCase}Api.add(this.form).then(response => {
+      this.submitLoading = true
+      ${realTableNameLowCamelCase}Api.add(this.form, this.idempotentToken).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '添加成功' })
         this.$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
+      }).catch(e => {
+        this.submitLoading = false
       })
     },
     handleUpdate() {
-      ${realTableNameLowCamelCase}Api.update(this.form).then(response => {
+      this.submitLoading = true
+      ${realTableNameLowCamelCase}Api.update(this.form, this.idempotentToken).then(response => {
+        this.submitLoading = false
         this.$notify.success({ title: '成功', message: '修改成功' })
         this.$parent.getList()
         this.tmpVisible = false
 
         this.resetForm('form')
         this.form.id = null
+      }).catch(e => {
+        this.submitLoading = false
       })
     },
     getById(id) {
+      this.initloading = true
       ${realTableNameLowCamelCase}Api.getById(id).then(response => {
+        this.initloading = false
         this.form = response.data
+      }).catch(e => {
+        this.initloading = false
       })
     },
     resetForm(formName) {
