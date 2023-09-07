@@ -13,6 +13,7 @@ import ${packageName}.model.vo.${realTableNameUpperCamelCase}CreateReqVO;
 import ${packageName}.model.vo.${realTableNameUpperCamelCase}QueryReqVO;
 import ${packageName}.model.vo.${realTableNameUpperCamelCase}UpdateReqVO;
 import ${packageName}.service.${realTableNameUpperCamelCase}Service;
+import com.jyadmin.util.DataUtil;
 import com.jyadmin.util.PageUtil;
 import com.jyadmin.util.ResultUtil;
 import io.swagger.annotations.Api;
@@ -63,7 +64,7 @@ public class ${realTableNameUpperCamelCase}Controller {
     @DeleteMapping("/remove")
     @PreAuthorize("@jy.check('${realTableNameLowCamelCase}:remove')")
     public Result<Object> doRemove(@RequestBody Set<String> ids) {
-        return ResultUtil.toResult(${realTableNameLowCamelCase}Service.removeByIds(ids));
+        return ResultUtil.toResult(${realTableNameLowCamelCase}Service.removeByIds(DataUtil.convertToLongForSet(ids)));
     }
 
     @ApiOperation(value = "根据ID获取当前${tableRemark}", notes = "")
